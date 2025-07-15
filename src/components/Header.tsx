@@ -39,15 +39,15 @@ const Header = () => {
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-<div className="flex items-center">
-  <Link to="/">
-    <img
-      src={logo}
-      alt="Squeegee Samurai Logo"
-      className="h-24 w-auto"
-    />
-  </Link>
-</div>
+            <div className="flex items-center">
+              <Link to="/">
+                <img
+                  src={logo}
+                  alt="Squeegee Samurai Logo"
+                  className="h-24 w-auto"
+                />
+              </Link>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
@@ -176,7 +176,7 @@ const Header = () => {
               <Link
                 to="/free-estimate"
                 className="bg-accent-500 text-white px-6 py-2 rounded-full font-semibold hover:bg-accent-600 transition-colors text-center"
-                  isActive('/about') ? 'text-primary-600' : 'text-neutral-700 hover:text-primary-600'
+              >
                 Free Estimate
               </Link>
             </div>
