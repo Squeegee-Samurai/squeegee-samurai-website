@@ -9,7 +9,13 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <div className="text-2xl font-bold mb-4">🥷 Squeegee Samurai</div>
+            <div className="mb-4">
+              <img
+                src="/src/assets/images/squeegee-samurai-logo.jpg"
+                alt="Squeegee Samurai Logo"
+                className="h-16 w-auto"
+              />
+            </div>
             <p className="text-neutral-300 mb-4">
               Professional window cleaning services with an eco-friendly approach, 
               serving Loudoun County, Virginia.
