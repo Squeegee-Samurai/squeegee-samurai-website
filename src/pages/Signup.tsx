@@ -85,12 +85,28 @@ const Signup = () => {
       return;
     }
 
-    // Form will be submitted to Formspree automatically
-    // The action and method are set on the form element
+    // Form will be submitted to Netlify automatically
+    // The netlify attribute handles the submission
   };
 
   return (
     <div className="min-h-screen bg-neutral-50 py-12 px-4 sm:px-6 lg:px-8">
+      {/* Hidden form for Netlify to detect */}
+      <form name="signup" netlify netlify-honeypot="bot-field" hidden>
+        <input type="text" name="firstName" />
+        <input type="text" name="lastName" />
+        <input type="email" name="email" />
+        <input type="tel" name="phone" />
+        <input type="text" name="windowType" />
+        <input type="text" name="windowSize" />
+        <input type="text" name="address" />
+        <input type="number" name="windowsPerStory" />
+        <input type="text" name="tier" />
+        <input type="checkbox" name="screens" />
+        <input type="password" name="password" />
+        <input type="password" name="confirmPassword" />
+      </form>
+
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-8">
           <UserPlus className="mx-auto h-12 w-12 text-primary-600" />
@@ -110,11 +126,19 @@ const Signup = () => {
           )}
 
           <form 
-            action="https://formspree.io/f/mrblekzb" 
+            name="signup"
             method="POST" 
+            data-netlify="true"
+            data-netlify-honeypot="bot-field"
+            action="/thank-you"
             className="space-y-6"
           >
-            <input type="hidden" name="_redirect" value="/thank-you" />
+            <input type="hidden" name="form-name" value="signup" />
+            <p hidden>
+              <label>
+                Don't fill this out: <input name="bot-field" />
+              </label>
+            </p>
             
             {/* Required Fields */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
