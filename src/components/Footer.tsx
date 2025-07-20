@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Phone, Mail, MapPin, Facebook, Instagram, Star } from 'lucide-react';
+import logo from '../assets/images/squeegee-samurai-logo.jpg'
 
 const Footer = () => {
   return (
