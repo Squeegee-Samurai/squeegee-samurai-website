@@ -109,9 +109,15 @@ const Signup = () => {
             </div>
           )}
 
-          <form 
-            action="https://formspree.io/f/mrblekzb" 
-            method="POST" 
+          <form
+  data-netlify="true"
+  name="signup"
+  netlify-honeypot="bot-field">
+  <input type="hidden" name="form-name" value="signup" />
+  <input type="hidden" name="bot-field" />
+  <input type="hidden" name="redirect" value="/thank-you" /> 
+            data-netlify="true" name="signup" 
+             
             className="space-y-6"
           >
             <input type="hidden" name="_redirect" value="/thank-you" />
