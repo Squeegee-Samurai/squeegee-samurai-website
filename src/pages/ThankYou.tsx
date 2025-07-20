@@ -24,13 +24,10 @@ const ThankYou = () => {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/"
-              className="flex items-center justify-center bg-primary-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-primary-700 transition-colors"
-            >
-              <Home className="w-5 h-5 mr-2" />
-              Return to Home
-            </Link>
+<a
+  href="https://squeegee-samurai.com"
+  className="flex items-center justify-center bg-primary-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-primary-700 transition-colors"
+>
             <a
               href="tel:5403351059"
               className="flex items-center justify-center bg-accent-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-accent-700 transition-colors"
