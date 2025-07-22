@@ -1,8 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Shield, Leaf, Star, Phone, CheckCircle, Users, Building, Utensils } from 'lucide-react';
+import { Shield, Leaf, Star, Phone, CheckCircle, Users, Building, Utensils, ExternalLink } from 'lucide-react';
 
 const Home = () => {
+  const partners = [
+    {
+      name: 'The Parasocial Club',
+      url: 'https://playtheparsocialclub.com/',
+      description: 'Entertainment & Media Partner'
+    },
+    {
+      name: 'Understood Tech',
+      url: 'https://understoodtech.com',
+      description: 'Technology Solutions Partner'
+    }
+  ];
+
   return (
     <div>
       {/* Hero Section */}
@@ -61,6 +74,36 @@ const Home = () => {
               <h3 className="text-xl font-semibold mb-3">5-Star Service</h3>
               <p className="text-neutral-600">Consistently rated 5 stars by our customers. Quality work and exceptional customer service.</p>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Partnership Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-neutral-900 mb-4">Our Partners</h2>
+            <p className="text-lg text-neutral-600">
+              Proud to work alongside these innovative companies
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {partners.map((partner, index) => (
+              <div key={index} className="bg-neutral-50 rounded-lg p-8 text-center hover:shadow-lg transition-shadow">
+                <h3 className="text-xl font-semibold text-neutral-900 mb-2">{partner.name}</h3>
+                <p className="text-neutral-600 mb-4">{partner.description}</p>
+                <a
+                  href={partner.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-primary-600 hover:text-primary-800 font-medium"
+                >
+                  Visit Website
+                  <ExternalLink className="w-4 h-4 ml-2" />
+                </a>
+              </div>
+            ))}
           </div>
         </div>
       </section>
