@@ -109,15 +109,6 @@ const Signup = () => {
       </form>
 
       <div className="max-w-2xl mx-auto">
-        <div className="text-center mb-8">
-          <UserPlus className="mx-auto h-12 w-12 text-primary-600" />
-          <h2 className="mt-6 text-3xl font-bold text-neutral-900">
-            Create your account
-          </h2>
-          <p className="mt-2 text-sm text-neutral-600">
-            Join the Squeegee Samurai portal
-          </p>
-        </div>
 
         <div className="bg-white rounded-lg shadow-lg p-8">
           {errors.general && (
