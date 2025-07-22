@@ -91,24 +91,6 @@ const Signup = () => {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50 py-12 px-4 sm:px-6 lg:px-8">
-      {/* Hidden form for Netlify to detect */}
-      <form name="signup" netlify netlify-honeypot="bot-field" hidden>
-        <input type="text" name="firstName" />
-        <input type="text" name="lastName" />
-        <input type="email" name="email" />
-        <input type="tel" name="phone" />
-        <input type="text" name="windowType" />
-        <input type="text" name="windowSize" />
-        <input type="text" name="address" />
-        <input type="number" name="windowsPerStory" />
-        <input type="text" name="tier" />
-        <input type="checkbox" name="screens" />
-        <input type="password" name="password" />
-        <input type="password" name="confirmPassword" />
-      </form>
-
-      <div className="max-w-2xl mx-auto">
 
         <div className="bg-white rounded-lg shadow-lg p-8">
           {errors.general && (
