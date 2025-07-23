@@ -18,11 +18,13 @@ const Footer = () => {
             <div className="flex space-x-4">
               https://facebook.com/squeegeesamurai
               https://nextdoor.com/pages/squeegee-samurai-leesburg-va/
-              <a
-                href="https://instagram.com/squeegeesamurai"
-                target="_blank"
-                rel="noopener noreferrer"
-                classNamemibold mb-4">Quick Links</h4>
+              https://instagram.com/squeegeesamurai
+            </div>
+          </div>
+
+          {/* Quick Links */}
+          <div>
+            <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-2">
               <li><Link to="/" className="text-neutral-300 hover:text-white transition-colors">Home</Link></li>
               <li><Link to="/about" className="text-neutral-300 hover:text-white transition-colors">About</Link></li>
