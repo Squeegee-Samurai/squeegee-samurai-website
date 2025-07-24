@@ -42,7 +42,7 @@ const Contact = () => {
                 className="flex items-center justify-center bg-blue-600 text-white px-6 py-3 rounded-full font-semibold hover:bg-blue-700 transition-colors"
               >
                 <Phone className="w-5 h-5 mr-2" />
-                Call (571) 555-CLEAN
+                Call (571) 335-1059
               </a>
               <button
                 onClick={() => setIsSubmitted(false)}
