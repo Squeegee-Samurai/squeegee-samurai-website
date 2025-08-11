@@ -60,10 +60,10 @@ const FreeEstimate = () => {
     })
 
       emailjs.send(
-      'service_kbpzqjx',      // Replace with owner EmailJS service ID
-      'template_kiwbkaf',     // Replace with owner EmailJS template ID
+      'service_smyhfg9',      // Replace with owner EmailJS service ID
+      'template_vd06lvr',     // Replace with owner EmailJS template ID
       templateParams,
-      'evFRXqG19P9hQMhwR'       // Replace owner EmailJS public key
+      'tP8oeE5EOGJQXkvGp'       // Replace owner EmailJS public key
     )
 
     .then(() => navigate('/thank-you', { state: { estimatedQuote } }))
