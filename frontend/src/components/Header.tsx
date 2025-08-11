@@ -158,6 +158,15 @@ const Header = () => {
               Careers
             </Link>
 
+            {!user && (
+            <Link
+              to="/login"
+              className="font-medium text-neutral-700 hover:text-primary-600"
+            >
+              Login
+            </Link>
+          )}
+
             
             <Link
               to="/free-estimate"
