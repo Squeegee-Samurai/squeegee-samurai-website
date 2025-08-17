@@ -1,4 +1,5 @@
 import React from 'react';
+import { HelmetProvider } from 'react-helmet-async';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -22,6 +23,12 @@ import Unauthorized from './pages/Unauthorized';
 import SignUpTy from './components/SignUpTy';
 import ThankYou from './pages/ThankYou';
 import NowHiring from './pages/NowHiring';
+import LeesburgHome from './pages/LeesburgHome';
+import AshburnHome from './pages/AshburnHome';
+import SterlingHome from './pages/SterlingHome';
+import HerndonHome from './pages/HerndonHome';
+
+
 
 function App() {
   return (
@@ -29,8 +36,13 @@ function App() {
       <div className="min-h-screen bg-white">
         <Header />
         <main>
+          <HelmetProvider>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/leesburg-window-cleaning" element={<LeesburgHome />} />
+            <Route path="/ashburn-window-cleaning" element={<AshburnHome />} />
+            <Route path="/sterling-window-cleaning" element={<SterlingHome />} />
+            <Route path="/herndon-window-cleaning" element={<HerndonHome />} />
             <Route path="/about" element={<About />} />
             <Route path="/services" element={<Services />} />
             <Route path="/services/residential" element={<ResidentialServices />} />
@@ -72,6 +84,7 @@ function App() {
               } 
             />
           </Routes>
+          </HelmetProvider>
         </main>
         <Footer />
       </div>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Leaf, Star, Phone, CheckCircle, Users, Building, Utensils, ExternalLink } from 'lucide-react';
 
-const Home = () => {
+const HerndonHome = () => {
   const partners = [
     {
       name: 'Play The Par Social Club',
@@ -25,7 +25,7 @@ const Home = () => {
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Crystal Clear Window Cleaning<br />
-              <span className="text-accent-400">in Loudoun County, VA</span>
+              <span className="text-accent-400">in Herndon, VA</span>
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-primary-100">
               Professional and eco-friendly window cleaning for homes and businesses
@@ -256,4 +256,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default HerndonHome;

@@ -7,6 +7,8 @@ import { Jobs } from './Jobs.tsx';
 // If using Vite, set VITE_API_BASE in .env (e.g., VITE_API_BASE=http://localhost:8080)
 const API_BASE = import.meta.env.VITE_API_BASE ?? 'http://localhost:8080';
 
+fetch(`${API_BASE}/api/auth/signup`)
+
 type FormErrors = {
   email?: string;
   password?: string;

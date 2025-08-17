@@ -10,7 +10,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // allow all routes
-                .allowedOrigins("http://localhost:5173") // your frontend origin
+            .allowedOrigins(
+                "http://localhost:5173",
+                "https://squeegee-samurai.com",
+                "https://squeegee-samurai.netlify.app"
+            )                
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*");
     }
