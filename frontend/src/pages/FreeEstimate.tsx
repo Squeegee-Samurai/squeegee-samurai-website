@@ -9,9 +9,9 @@ const FreeEstimate = () => {
 
   const [formData, setFormData] = useState({
     firstName: '', lastName: '', email: '', phone: '',
-    address: '', city: '', zipCode: '', propertyType: '',
+    address: 'both', city: '', zipCode: '', propertyType: '',
     serviceType: '', windowCount: '', stories: '', screenCount: '',
-    frequency: '', additionalServices: [], specialRequests: '', uploadedFile,
+    frequency: '', additionalServices: [] as string [], specialRequests: '', uploadedFile, 
     preferredContact: 'phone', bestTimeToCall: ''
   });
 
@@ -27,7 +27,6 @@ function inferSegment(propertyType?: string) {
   return COMMERCIAL_PROPS.has(propertyType) ? "commercial" : "residential";
 }
 
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
@@ -35,9 +34,16 @@ function inferSegment(propertyType?: string) {
 
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
   const windowCount = parseInt(formData.windowCount) || 0;
   const screenCount = parseInt(formData.screenCount) || 0;
-  const estimatedQuote = (windowCount * 10) + (screenCount * 5) + 50;
+
+  const pricePerWindow =
+  formData.serviceType === 'interior' ? 7 :
+  formData.serviceType === 'exterior' ? 10 :
+  17; 
+
+  const estimatedQuote = (windowCount * pricePerWindow) + (screenCount * 5) + 50;
 
 
     const templateParams = {
@@ -53,7 +59,7 @@ function inferSegment(propertyType?: string) {
     stories: formData.stories,
     windowCount: formData.windowCount,
     screenCount: formData.screenCount,
-    additionalServices: formData.additionalServices.join(', '),
+    additionalServices: formData.additionalServices.join(', '), 
     uploadedPhoto: formData.uploadedFile,
     preferredContact: formData.preferredContact,
     bestTimeToCall: formData.bestTimeToCall,
@@ -183,9 +189,9 @@ function inferSegment(propertyType?: string) {
                     <option>Other Commercial</option>
                   </select>
                   <select
-                  name="serviceScope"
+                  name="serviceType"
                   required
-                  defaultValue="both"
+                  value={formData.serviceType}     // <-- controlled
                   onChange={handleInputChange}
                   className="border border-gray-300 rounded-md p-2 w-full"
                 >
@@ -259,13 +265,26 @@ function inferSegment(propertyType?: string) {
             <div className='flex flex-col space-y-2'>
                     {[' Screen cleaning', ' Window sill cleaning', ' Frame cleaning', ' Pressure washing', ' Gutter cleaning', ' Solar panel cleaning'].map(service => (
               <label key={service}>
-                <input
-                  type="checkbox"
-                  name="additionalServices"
-                  value={service}
-                />
-                {service}
-              </label>
+              <input
+                type="checkbox"
+                name="additionalServices"
+                value={service}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  const { checked, value } = e.target;
+                  setFormData(prev => {
+                    const current = new Set(prev.additionalServices);
+                    if (checked) {
+                      current.add(value);
+                    } else {
+                      current.delete(value);
+                    }
+                    return { ...prev, additionalServices: Array.from(current) };
+                  });
+                }}
+              />
+              {service}
+            </label>
+            
             ))}
             </div>
 
@@ -302,3 +321,4 @@ function inferSegment(propertyType?: string) {
 };
 
 export default FreeEstimate;
+
