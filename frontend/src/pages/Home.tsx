@@ -1,7 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Shield, Leaf, Star, Phone, CheckCircle, Users, Building, Utensils, ExternalLink } from 'lucide-react';
-import logo1 from '../assets/images/squeegeesamurai-logo1.png'
+import logo1 from '../assets/images/squeegeesamurai-logo1.png' //change to new logo 
+import cloud from '../assets/images/akatsuki-cloud-orng.png'
+import './Home.css';
+
+//atatsuki cloud hex --> #ba2127
 
 
 const Home = () => {
@@ -21,24 +25,41 @@ const Home = () => {
   return (
     <div>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700 text-white">
-        <div className="absolute inset-0 bg-black opacity-20"></div>
+      <section className="relative overflow-hidden bg-gray-900 text-white">
+        {/* Manga edge lines */}
+        <div
+          className="absolute inset-0 pointer-events-none opacity-30"
+          style={{
+            // radiating spokes
+            backgroundImage:
+              "repeating-conic-gradient(from 0deg at 50% 50%, rgba(255,255,255,.9) 0deg 1.2deg, transparent 1.2deg 5deg)"
+          }}
+        />
+        {/* Hide the center so lines only show at the edges */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            // solid center (same as section bg) fading outward
+            background:
+              "radial-gradient(circle at center, #111827 0 32%, rgba(17,24,39,0) 45%)"
+          }}
+        />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
           <div className="text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
               Crystal Clear Window Cleaning<br />
               <span className="text-accent-400">in Loudoun County, VA</span>
-            </h1>
-            <p className="text-xl md:text-2xl mb-8 text-primary-100">
+              </h1>
+            <p className="text-xl md:text-2xl mb-8 text-white">
               Professional and eco-friendly window cleaning for homes and businesses
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link
-                to="/free-estimate"
-                className="bg-accent-500 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-accent-600 transition-colors"
-              >
-                Get Free Estimate
-              </Link>
+            <Link
+            to="/free-estimate"
+            className="bg-accent-500 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-accent-600 transition-colors"
+            >
+              Get Free Estimate
+            </Link>
               <a
                 href="tel:5403351059"
                 className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white hover:text-primary-900 transition-colors"
@@ -54,10 +75,7 @@ const Home = () => {
       <section className="py-16 bg-neutral-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <img
-              src={logo1}
-              alt="Squeegee Samurai Logo"
-              className="mx-auto mb-6 h-32 w-auto object-contain md:h-40"            />
+            {/*add the logo here */}
             <h2 className="text-3xl font-bold text-neutral-900 mb-4">Why Choose Squeegee Samurai?</h2>
             <p className="text-lg text-neutral-600">Professional service with a commitment to excellence and environmental responsibility</p>
           </div>
@@ -96,7 +114,7 @@ const Home = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {partners.map((partner, index) => (
-              <div key={index} className="bg-neutral-50 rounded-lg p-8 text-center hover:shadow-lg transition-shadow">
+              <div key={index} className="bg-neutral-100 rounded-lg p-8 text-center hover:shadow-lg transition-shadow">
                 <h3 className="text-xl font-semibold text-neutral-900 mb-2">{partner.name}</h3>
                 <p className="text-neutral-600 mb-4">{partner.description}</p>
                 <a
@@ -114,7 +132,7 @@ const Home = () => {
         </div>
       </section>
 
-      <section className="py-16 bg-white">
+      <section className="parallax-clouds py-16 bg-white">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-neutral-900 mb-6">FAQs</h2>
 

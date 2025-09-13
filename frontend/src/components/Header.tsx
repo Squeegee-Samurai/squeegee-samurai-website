@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { getCurrentUser, logout } from '../utils/auth';
 import { Menu, X, Phone, Mail, ChevronDown } from 'lucide-react';
-import logo4 from '../assets/images/squeegee-word-logo.png'
+import wordlogo from '../assets/images/squeegee-word-logo.png'
 
 
 
@@ -26,7 +26,7 @@ const Header = () => {
   return (
     <header className="bg-white shadow-lg sticky top-0 z-50">
       {/* Top Bar */}
-      <div className="bg-primary-800 text-white py-2">
+      <div className="bg-gray-900 text-white py-2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center text-sm">
             <div className="flex items-center space-x-4">
@@ -68,7 +68,7 @@ const Header = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center relative z-10">
             <img
-              src={logo4}
+              src={wordlogo}
               alt="Squeegee Samurai Logo"
               className="h-20 w-auto scale-120 object-contain"
             />
@@ -170,8 +170,8 @@ const Header = () => {
             
             <Link
               to="/free-estimate"
-              className="bg-accent-500 text-white px-6 py-2 rounded-full font-semibold hover:bg-accent-600 transition-colors"
-            >
+              className="bg-accent-500 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-[#8a1a1f] transition-colors"
+              >            
               Free Estimate
             </Link>
             

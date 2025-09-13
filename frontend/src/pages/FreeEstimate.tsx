@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import emailjs from 'emailjs-com';
 import { useNavigate } from 'react-router-dom';
+import './Home.css';
 
 const FreeEstimate = () => {
   const navigate = useNavigate();
@@ -94,7 +95,7 @@ function inferSegment(propertyType?: string) {
 
   return (
 
-    <div className="min-h-screen bg-neutral-50 px-4 py-8">
+    <div className="parallax-clouds min-h-screen bg-neutral-50 px-4 py-8">
         <div className="text-center mb-6">
           <h2 className="text-4xl text-orange-500 font-bold mb-4">Get Your Free Estimate</h2>
           <p>Tell us about your project and we'll provide a free estimated quote and a detailed quote within 24 hours.</p>

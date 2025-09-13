@@ -5,7 +5,19 @@ const About = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-900 via-primary-800 to-primary-700 text-white py-20">
+      <section className="relative overflow-hidden bg-gray-900 text-white py-20">
+        <div
+          className="absolute inset-0 pointer-events-none opacity-30 z-0"
+          style={{
+            backgroundImage:
+              'repeating-conic-gradient(from 0deg at 50% 50%, rgba(255,255,255,.9) 0deg 1.2deg, transparent 1.2deg 5deg)',
+            WebkitMaskImage:
+              'radial-gradient(circle at center, transparent 0 32%, black 45%)',
+            maskImage:
+              'radial-gradient(circle at center, transparent 0 32%, black 45%)'
+          }}
+        />
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-6">About Squeegee Samurai</h1>
@@ -13,6 +25,7 @@ const About = () => {
               Bringing the precision and dedication of the samurai to window cleaning in Loudoun County, Virginia
             </p>
           </div>
+        </div>
         </div>
       </section>
 
