@@ -97,6 +97,12 @@ const Services = () => {
                   </div>
                   <div className="flex items-center">
                     <CheckCircle className="w-5 h-5 text-accent-500 mr-3" />
+
+                    <span className="text-neutral-700">Upto 3rd story window cleaning</span>
+                  </div>
+                  <div className="flex items-center">
+                    <CheckCircle className="w-5 h-5 text-accent-500 mr-3" />
+
                     <span className="text-neutral-700">Storefront & display windows</span>
                   </div>
                   <div className="flex items-center">

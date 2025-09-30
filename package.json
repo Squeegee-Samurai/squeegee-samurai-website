@@ -4,9 +4,16 @@
   "description": "squeegee-samurai",
   "main": "index.js",
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "postbuild": "node scripts/generate-sitemap.mjs",
+    "preview": "vite preview",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
 }
