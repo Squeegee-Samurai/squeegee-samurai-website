@@ -130,7 +130,7 @@ const About = () => {
               <h3 className="text-xl font-semibold mb-4">Professional Equipment</h3>
               <p className="text-neutral-600 mb-4">
                 State-of-the-art equipment including water-fed pole systems, professional squeegees, 
-                and safety gear for high-rise work.
+                and safety gear.
               </p>
             </div>
             

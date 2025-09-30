@@ -8,7 +8,10 @@ import './Home.css';
 const FreeEstimate = () => {
   const navigate = useNavigate();
   //const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const formRef = useRef<HTMLFormElement | null>(null);
+  const [files, setFiles] = useState<FileList | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadedUrls, setUploadedUrls] = useState<string[]>([]);
+
 
 
   const [formData, setFormData] = useState({
@@ -36,100 +39,109 @@ function inferSegment(propertyType?: string) {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const CLOUD_NAME = "dmsnpoex2";
+  const UPLOAD_PRESET = "unsigned_estimates";
+
+  async function uploadAllToCloudinary(fs: FileList): Promise<string[]> {
+    const urls: string[] = [];
+    for (const file of Array.from(fs)) {
+      const body = new FormData();
+      body.append("file", file);
+      body.append("upload_preset", UPLOAD_PRESET);
+      body.append("folder", "estimates");
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`, {
+        method: "POST",
+        body
+      });
+
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(`Cloudinary upload failed: ${txt}`);
+      }
+      const json = await res.json();
+      urls.push(json.secure_url);
+    }
+    return urls;
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-
-  const windowCount = parseInt(formData.windowCount) || 0;
-  const screenCount = parseInt(formData.screenCount) || 0;
-
-  const pricePerWindow =
-  formData.serviceType === 'interior' ? 7 :
-  formData.serviceType === 'exterior' ? 10 :
-  17; 
-
-  const estimatedQuote = (windowCount * pricePerWindow) + (screenCount * 5) + 50;
-
-  const code = (formData.couponCode || '')
-  .trim()
-  .toLowerCase(); // normalize
-
-const discounts: Record<string, number> = {
-  '1stclean': 0.10,
-  'ptpsc':    0.15,
-  'refer5':   0.20,
-};
-
-const discount = discounts[code] ?? 0;
-const finalQuote = Math.max(0, Math.round(estimatedQuote * (1 - discount)));
-
-
-
-  e.preventDefault();
-      const form = e.currentTarget as HTMLFormElement;
-
+    e.preventDefault(); // keep first
+  
+    const form = e.currentTarget as HTMLFormElement;
+  
+    const windowCount = parseInt(formData.windowCount) || 0;
+    const screenCount = parseInt(formData.screenCount) || 0;
+  
+    const pricePerWindow =
+      formData.serviceType === 'interior' ? 7 :
+      formData.serviceType === 'exterior' ? 10 :
+      17;
+  
+    const estimatedQuote = (windowCount * pricePerWindow) + (screenCount * 5) + 50;
+  
+    const code = (formData.couponCode || '').trim().toLowerCase();
+    const discounts: Record<string, number> = { '1stclean': 0.10, 'ptpsc': 0.15, 'refer5': 0.20 };
+    const discount = discounts[code] ?? 0;
+    const finalQuote = Math.max(0, Math.round(estimatedQuote * (1 - discount)));
+  
     const st = (form.querySelector('[name="serviceType"]') as HTMLSelectElement)?.value || '';
     let echo = form.querySelector('input[name="serviceTypeEcho"]') as HTMLInputElement | null;
-    if(!echo) {
-      echo = document.createElement('input');
-      echo.type = 'hidden';
-      echo.name = 'serviceTypeEcho';
-      form.appendChild(echo);
-    }
+    if(!echo) { echo = document.createElement('input'); echo.type = 'hidden'; echo.name = 'serviceTypeEcho'; form.appendChild(echo); }
     echo.value = st;
-    
-    //debugging file upload
-    console.log('files selected:',
-    (form.querySelector('input[name="uploaded_file"]') as HTMLInputElement)
-      ?.files?.length
-);
-
-      // Ensure EmailJS can receive the computed quote (expects a field in the form)
-      let hidden = form.querySelector('input[name="estimatedQuote"]') as HTMLInputElement | null;
-      if (!hidden) {
-        hidden = document.createElement('input');
-        hidden.type = 'hidden';
-        hidden.name = 'estimatedQuote';
-        form.appendChild(hidden);
-      }
-      hidden.value = `$${finalQuote.toFixed(2)}`;
-
-      let couponField = form.querySelector('input[name="couponCode"]') as HTMLInputElement | null;
-      if (!couponField) {
-        couponField = document.createElement('input');
-        couponField.type = 'hidden';
-        couponField.name = 'couponCode';
-        form.appendChild(couponField);
-      }
-      couponField.value = formData.couponCode || '';
-
   
-     // --- EmailJS FIRST (so the file is still on the form) ---
-    await emailjs.sendForm(
-      'service_smyhfg9',      // EmailJS service ID
-      'template_vd06lvr',     // EmailJS template ID
-      form,                   // the <form> element
-      'tP8oeE5EOGJQXkvGp'     // EmailJS public key
-    );
-
-    // --- Netlify submit as multipart/form-data (includes the file) ---
+    let hidden = form.querySelector('input[name="estimatedQuote"]') as HTMLInputElement | null;
+    if (!hidden) { hidden = document.createElement('input'); hidden.type = 'hidden'; hidden.name = 'estimatedQuote'; form.appendChild(hidden); }
+    hidden.value = `$${finalQuote.toFixed(2)}`;
+  
+    let couponField = form.querySelector('input[name="couponCode"]') as HTMLInputElement | null;
+    if (!couponField) { couponField = document.createElement('input'); couponField.type = 'hidden'; couponField.name = 'couponCode'; form.appendChild(couponField); }
+    couponField.value = formData.couponCode || '';
+  
     try {
-      const netlifyData = new FormData(form);
-      netlifyData.append('form-name', 'free-estimate');
-      formData.additionalServices.forEach((service) =>
-        netlifyData.append('additionalServices', service)
+      setUploading(true);
+      let urls: string[] = [];
+      if (files && files.length > 0) {
+        urls = await uploadAllToCloudinary(files);
+      }
+      setUploadedUrls(urls);
+  
+      let urlsField = form.querySelector('input[name="imageUrls"]') as HTMLInputElement | null;
+      if (!urlsField) {
+        urlsField = document.createElement('input');
+        urlsField.type = 'hidden';
+        urlsField.name = 'imageUrls';
+        form.appendChild(urlsField);
+      }
+      urlsField.value = urls.join(', ');
+  
+      await emailjs.sendForm(
+        'service_smyhfg9',
+        'template_vd06lvr',
+        form,
+        'tP8oeE5EOGJQXkvGp'
       );
-
-      await fetch('/', {
-        method: 'POST',
-        body: netlifyData, // don't set Content-Type manually
-      });
-    } catch (e) {
-      console.warn('Netlify submission failed (continuing):', e);
+  
+      try {
+        const netlifyData = new FormData(form);
+        netlifyData.append('form-name', 'free-estimate');
+        formData.additionalServices.forEach((service) => netlifyData.append('additionalServices', service));
+        for (const u of urls) netlifyData.append('imageUrls[]', u);
+  
+        await fetch('/', { method: 'POST', body: netlifyData });
+      } catch (err) {
+        console.warn('Netlify submission failed (continuing):', err);
+      }
+  
+      navigate('/thank-you', { state: { estimatedQuote: finalQuote } });
+    } catch (err) {
+      console.error(err);
+      alert('Upload failed. Please try again or email us the photos directly.');
+    } finally {
+      setUploading(false);
     }
-
-    navigate('/thank-you', { state: { estimatedQuote: finalQuote } });
-
   };
+  
 
   return (
 
@@ -152,6 +164,8 @@ const finalQuote = Math.max(0, Math.round(estimatedQuote * (1 - discount)));
             <input type="hidden" name="bot-field" />
             <input type ="hidden" name="serviceTypeEcho" />
             <input type="hidden" name="couponCode" />
+            <input type="hidden" name="imageUrls" />
+
 
 
             {/* Contact Info */}
@@ -238,7 +252,7 @@ const finalQuote = Math.max(0, Math.round(estimatedQuote * (1 - discount)));
                   onChange={handleInputChange}
                   className="border border-gray-300 rounded-md p-2 w-full"
                 >
-                  <option value="both">Interior + Exterior (recommended)</option>
+                  <option value="Interior + Exterior">Interior + Exterior (recommended)</option>
                   <option value="interior">Interior only</option>
                   <option value="exterior">Exterior only</option>
                 </select>
@@ -262,6 +276,17 @@ const finalQuote = Math.max(0, Math.round(estimatedQuote * (1 - discount)));
                 placeholder='Enter a number (min 1)'        
               />
             </div>
+            <h3 className="text-lg font-bold mb-4">Photos (optional)</h3>
+            <input
+              type="file"
+              name="local_photos"
+              multiple
+              accept="image/*"
+              onChange={(e) => setFiles(e.target.files)}
+              className="block w-full text-sm text-neutral-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-neutral-100 file:font-semibold hover:file:bg-neutral-200"
+            />
+            <p className="mt-1 text-xs text-neutral-500">Add clear photos of windows or problem areas (JPG/PNG).</p>
+
             <div className="flex flex-col">
             <label htmlFor="stories" className="mb-1 text-sm font-medium text-neutral-700">
               Number of Stories

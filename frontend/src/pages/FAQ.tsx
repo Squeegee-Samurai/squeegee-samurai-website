@@ -102,10 +102,6 @@ const FAQ = () => {
           answer: "Yes! We provide comprehensive commercial window cleaning for office buildings, retail stores, restaurants, and other commercial properties throughout Loudoun County."
         },
         {
-          question: "Can you clean high-rise windows?",
-          answer: "Yes, we have the specialized equipment and training to safely clean windows on multi-story buildings and high-rise properties."
-        },
-        {
           question: "Do you offer after-hours service?",
           answer: "Absolutely. We understand that businesses need flexibility, so we offer evening and weekend service to minimize disruption to your operations."
         },

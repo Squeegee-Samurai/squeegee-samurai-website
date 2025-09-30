@@ -167,7 +167,6 @@ const LeesburgHome = () => {
                 <p className="text-neutral-600 mb-4">Regular maintenance for offices, retail stores, and commercial buildings.</p>
                 <ul className="text-sm text-neutral-600 space-y-2 mb-6">
                   <li className="flex items-center"><CheckCircle className="w-4 h-4 text-accent-500 mr-2" />Scheduled maintenance</li>
-                  <li className="flex items-center"><CheckCircle className="w-4 h-4 text-accent-500 mr-2" />High-rise capabilities</li>
                   <li className="flex items-center"><CheckCircle className="w-4 h-4 text-accent-500 mr-2" />Flexible scheduling</li>
                 </ul>
                 <Link to="/services/commercial" className="text-primary-600 font-semibold hover:text-primary-800">
