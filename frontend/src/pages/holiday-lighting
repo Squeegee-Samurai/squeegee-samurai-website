@@ -1,89 +1,39 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <title>Holiday Decorations &amp; Lighting Services | Squeegee Samurai</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="Professional holiday decorations and lighting services in Loudoun County, VA. Design, installation, maintenance, removal & storage—residential and commercial. Get a free quote." />
+---
+title: "Holiday Decorations & Lighting Services"
+description: "Holiday decorations & lighting in Loudoun County, VA—design, install, maintenance, removal & storage for homes and businesses. Get a free quote."
+permalink: /holiday-lighting/
+layout: page
+---
 
-  <!-- Canonical -->
-  https://squeegee-samurai.com/holiday-lighting/
+**Brighten Your Home with Squeegee Samurai in Loudoun County, VA**
 
-  <!-- Open Graph / Twitter -->
-  <meta property="og:title" content="Holiday Decorations &amp; Lighting Services | Squeegee Samurai">
-  <meta property="og:description" content="Holiday lighting & decorations in Loudoun County. Design, install, maintain, remove & store—done safely by local pros. Get a free quote.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://squeegee-samurai.com/holiday-lighting/">
-  <meta property="og:locale" content="en_US">
-  <meta name="twitter:card" content="summary_large_image">
+Transform your holidays with expert decorations and lighting. At Squeegee Samurai, we bring the magic of the season to homes and businesses throughout Loudoun County, VA. Whether you’re dreaming of twinkling lights, festive ornaments, or a dazzling display that will wow your neighbors, our team is ready to help you celebrate in style. We offer professional holiday decorations and lighting services tailored to your unique vision, so you can enjoy a hassle‑free, beautifully decorated space.
 
-  <!-- Minimal page styles (safe to keep even if you have a site CSS) -->
-  <style>
-    :root {
-      --brand: #0f172a;   /* slate-900 */
-      --accent: #0ea5e9;  /* sky-500 */
-      --accent-2: #f59e0b;/* amber-500 */
-      --bg: #ffffff;
-      --muted: #475569;   /* slate-600 */
-      --border: #e2e8f0;  /* slate-200 */
-    }
-    * { box-sizing: border-box; }
-    body { margin: 0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif; color: var(--brand); background: var(--bg); line-height: 1.6; }
-    .wrap { max-width: 1100px; margin: 0 auto; padding: 24px; }
-    .hero {
-      background: linear-gradient(135deg, rgba(14,165,233,.08), rgba(245,158,11,.08));
-      border-bottom: 1px solid var(--border);
-    }
-    .hero h1 { font-size: clamp(28px, 4vw, 44px); margin: 0 0 8px; }
-    .hero p.lede { font-size: clamp(16px, 2.2vw, 20px); color: var(--muted); margin: 0 0 20px; }
-    .cta-row { display: flex; gap: 12px; flex-wrap: wrap; }
-    .btn {
-      display: inline-block; padding: 12px 18px; border-radius: 10px; text-decoration: none; font-weight: 600; border: 1px solid transparent;
-    }
-    .btn.primary { background: var(--accent); color: #fff; }
-    .btn.secondary { background: #fff; color: var(--brand); border-color: var(--border); }
-    section { padding: 28px 0; border-bottom: 1px solid var(--border); }
-    h2 { margin-top: 0; font-size: clamp(22px, 3vw, 28px); }
-    ul { padding-left: 20px; }
-    .two-col { display: grid; grid-template-columns: 1fr; gap: 28px; }
-    @media (min-width: 900px) { .two-col { grid-template-columns: 1fr 1fr; } }
-    .card {
-      border: 1px solid var(--border); border-radius: 12px; padding: 18px; background: #fff;
-    }
-    .muted { color: var(--muted); }
-    .kicker { text-transform: uppercase; letter-spacing: .08em; font-size: 12px; color: var(--accent-2); font-weight: 700; }
-    /* Netlify form */
-    form { display: grid; gap: 12px; }
-    label { font-weight: 600; }
-    input, textarea, select {
-      width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font: inherit;
-    }
-    .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
-    .contact-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
-    @media (min-width: 640px) { .contact-grid { grid-template-columns: 1fr 1fr; } }
-    .footer { font-size: 14px; color: var(--muted); padding: 18px 0 32px; }
-  </style>
-</head>
-<body>
+## Our Holiday Services
+- **Custom Holiday Lighting Installation:** From classic white lights to colorful displays, we design and install lighting that fits your property’s architecture and your personal taste.
+- **Professional Decorations Setup:** Garlands, wreaths, ornaments, and more—our team will decorate your home’s interior and exterior for a festive look.
+- **Safe Removal and Storage:** When the season ends, we’ll carefully remove and pack away your decorations, so you’re ready for next year.
+- **Commercial Holiday Displays:** Make your business stand out with eye‑catching holiday lighting and decorations that attract customers and spread cheer.
+- **Maintenance and Repairs:** We ensure your lights and decorations stay bright and beautiful all season long with prompt maintenance and repairs.
 
-  <!-- If you have a site-wide header/nav include, you can insert it here -->
-  <header class="hero">
-    <div class="wrap">
-      <p class="kicker">Holiday Decorations &amp; Lighting</p>
-      <h1>Brighten Your Home with Squeegee Samurai in Loudoun County, VA</h1>
-      <p class="lede">Transform your holidays with expert decorations and lighting—designed, installed, maintained, and safely removed by local pros.</p>
-      <div class="cta-row">
-        #quoteGet a Free Quote</a>
-        <a class="btn secondary" href="tel:+154033      <a class="btn secondary" href="mailto:james@squeegee-samuraii.com</a>
-      </div>
-    </div>
-  </header>
+## Why Choose Squeegee Samurai?
+- **Local Expertise:** As Loudoun County residents, we know the neighborhoods, weather, and community spirit—so we deliver reliable, friendly service right where you live.
+- **Safety First:** Our trained professionals use industry‑best equipment and techniques to safely install and remove holiday lights and decorations.
+- **Personalized Designs:** We work closely with you to plan a holiday display that reflects your style and enhances your property’s curb appeal.
+- **Stress‑Free Experience:** Skip the ladders and tangled lights—let Squeegee Samurai handle every detail from start to finish.
 
-  <main class="wrap" id="main-content">
-    <section aria-labelledby="services">
-      <h2 id="services">Our Holiday Services</h2>
-      <div class="two-col">
-        <div class="card">
-          <ul>
-            <li><strong>Custom Holiday Lighting Installation:</strong> From classic white lights to colorful displays, we design and install lighting that fits your architecture and style.</li>
-            <li><strong>Professional Decorations Setup:</strong> Garlands, wreaths, ornaments, and more—interior and exterior for a festive look.</li>
+## Service Area
+Squeegee Samurai proudly serves all neighborhoods in Loudoun County, VA, including **Leesburg**, **Ashburn**, **Sterling**, **Purcellville**, and surrounding communities.
+
+## How It Works
+1. **Free Consultation:** Contact us to discuss your ideas and schedule an on‑site assessment.  
+2. **Custom Proposal:** We’ll design a personalized holiday lighting and decoration plan that fits your budget.  
+3. **Installation:** Our team handles all setup, ensuring every detail is perfect and safe.  
+4. **Enjoy the Holidays:** Relax and celebrate while we take care of everything!  
+5. **Removal & Storage:** After the holiday season, we’ll return to safely take down and store your decorations.
+
+## Get a Free Quote {#quote}
+Ready to light up your holidays? Contact Squeegee Samurai today for a free quote and let us make your home or business shine this season!
+
+- Website: squeegee-samurai.com
+- Email: [james@squeegee-samurai.com](mailto:james@squeegee-samuraing: Loudoun County, VA
