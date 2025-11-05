@@ -1,12 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link, NavLink, useLocation } from "react-router-dom";
-import {
-  Menu,
-  X,
-  ChevronDown,
-  Phone,
-  Sparkles,
-} from "lucide-react";
+import { Menu, X, ChevronDown, Phone, Sparkles } from "lucide-react";
 
 const PHONE_DISPLAY = "540-335-1059";
 const PHONE_TEL = "5403351059";
@@ -46,10 +40,9 @@ export default function Header() {
   const location = useLocation();
   const servicesBtnRef = useRef<HTMLButtonElement | null>(null);
 
-  // Close mobile menu on route change
+  // Close menus on route change
   useEffect(() => {
     setMobileOpen(false);
-    // Close desktop dropdown on route change
     setServicesOpen(false);
   }, [location.pathname]);
 
@@ -62,7 +55,7 @@ export default function Header() {
     };
   }, [mobileOpen]);
 
-  // Close dropdown if clicking outside (desktop)
+  // Close services dropdown when clicking outside
   useEffect(() => {
     function onClick(e: MouseEvent) {
       if (!servicesBtnRef.current) return;
@@ -85,19 +78,15 @@ export default function Header() {
   return (
     <>
       {/* Skip to content for keyboard users */}
-      #main
-        Skip to content
-      </a>
-
-      <header className="sticky top-0 z-50 w-full backdrop-blur supports-[backdrop-filter]:bg-white/70 bg-white/90 border-b border-slate-200">
+      <a
+        href="#main"
+        className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:rounded-md focus:bg-slate-900 focus:px-3ter]:bg-white/70">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* Left: Logo */}
             <div className="flex items-center gap-2">
-              {/* If you have a logo file, replace this Link with an <img>:
-                 <Link to="/" className="flex items-center gap-2">
-                   <img src="/logo.svg" alt="Squeegee Samurai" className="h-8 w       <Link to="/" className="group flex items-center gap-2">
-                <Sparkles className="h-6 w-6 text-slate-900 group-hover:text-slate-700 transition-colors" />
+              <Link to="/" className="group flex items-center gap-2">
+                <Sparkles className="h-6 w-6 text-slate-900 transition-colors group-hover:text-slate-700" />
                 <span className="text-base font-semibold tracking-tight text-slate-900">
                   Squeegee Samurai
                 </span>
@@ -105,7 +94,7 @@ export default function Header() {
             </div>
 
             {/* Desktop nav */}
-            <nav className="hidden lg:flex items-center gap-1">
+            <nav className="hidden items-center gap-1 lg:flex">
               {/* Primary links */}
               {NAV.primary.map((item) =>
                 item.children ? (
@@ -192,7 +181,7 @@ export default function Header() {
                         linkBase,
                         isActive ? linkActive : linkIdle,
                         item.highlight &&
-                          "text-rose-700 hover:text-rose-800 font-semibold"
+                          "font-semibold text-rose-700 hover:text-rose-800"
                       )
                     }
                   >
