@@ -1,285 +1,411 @@
-import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { getCurrentUser, logout } from '../utils/auth';
-import { Menu, X, Phone, Mail, ChevronDown } from 'lucide-react';
-import wordlogo from '../assets/images/squeegee-word-logo.png'
+import React, { useEffect, useRef, useState } from "react";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import {
+  Menu,
+  X,
+  ChevronDown,
+  Phone,
+  Sparkles,
+} from "lucide-react";
 
+const PHONE_DISPLAY = "540-335-1059";
+const PHONE_TEL = "5403351059";
 
+function classNames(...classes: Array<string | false | null | undefined>) {
+  return classes.filter(Boolean).join(" ");
+}
 
-
-const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isServicesOpen, setIsServicesOpen] = useState(false);
-  const location = useLocation();
-
-  const user = getCurrentUser();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login'); //change this to a logged out page at some point
-  }
-
-
-  const isActive = (path: string) => location.pathname === path;
-
-  return (
-    <header className="bg-white shadow-lg sticky top-0 z-50">
-      {/* Top Bar */}
-      <div className="bg-gray-900 text-white py-2">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center text-sm">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center">
-                <Phone className="w-4 h-4 mr-2" />
-                <span>(540) 335-1059</span>
-              </div>
-              <div className="flex items-center">
-                <Mail className="w-4 h-4 mr-2" />
-                <span>james@squeegee-samurai.com</span>
-              </div>
-            </div>
-            <div className="hidden md:block ml-auto">
-              <span>Serving Loudoun County, Virginia</span>
-            </div>
-            <div className="hidden md:flex items-center space-x-4">
-            {user && (
-              <>
-                <span className="border-l border-white pl-4">
-                  Hello, {user.fullName}
-                </span>
-                <button
-                  onClick={handleLogout}
-                  className="text-white underline hover:text-neutral-300 text-sm"
-                >
-                  Logout
-                </button>
-              </>
-            )}
-          </div>
-
-          </div>
-        </div>
-      </div>
-
-      {/* Main Navigation */}
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
-          {/* Logo */}
-          <Link to="/" className="flex items-center relative z-10">
-            <img
-              src={wordlogo}
-              alt="Squeegee Samurai Logo"
-              className="h-20 w-auto scale-120 object-contain"
-            />
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
-            <Link
-              to="/"
-              className={`font-medium transition-colors ${
-                isActive('/') ? 'text-primary-600' : 'text-neutral-700 hover:text-primary-600'
-              }`}
-            >
-              Home
-            </Link>
-            <Link
-              to="/about"
-              className={`font-medium transition-colors ${
-                isActive('/about') ? 'text-primary-600' : 'text-neutral-700 hover:text-primary-600'
-              }`}
-            >
-              About
-            </Link>
-            
-            {/* Services Dropdown */}
-            <div className="relative">
-              <button
-                onClick={() => setIsServicesOpen(!isServicesOpen)}
-                className={`flex items-center font-medium transition-colors ${
-                  location.pathname.startsWith('/services') ? 'text-primary-600' : 'text-neutral-700 hover:text-primary-600'
-                }`}
-              >
-                Services
-                <ChevronDown className="w-4 h-4 ml-1" />
-              </button>
-              {isServicesOpen && (
-                <div
-                  className="absolute top-full left-0 mt-1 w-48 bg-white rounded-md shadow-lg border border-neutral-200 py-2"
-                >
-                  <Link
-                    to="/services"
-                    onClick={() => setIsServicesOpen(false)}
-                    className="block px-4 py-2 text-sm text-neutral-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
-                  >
-                    All Services
-                  </Link>
-                  <Link
-                    to="/services/residential"
-                    onClick={() => setIsServicesOpen(false)}
-                    className="block px-4 py-2 text-sm text-neutral-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
-                  >
-                    Residential
-                  </Link>
-                  <Link
-                    to="/services/commercial"
-                    onClick={() => setIsServicesOpen(false)}
-                    className="block px-4 py-2 text-sm text-neutral-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
-                  >
-                    Commercial
-                  </Link>
-                </div>
-              )}
-            </div>
-
-            <Link
-              to="/service-areas"
-              className={`font-medium transition-colors ${
-                isActive('/service-areas') ? 'text-primary-600' : 'text-neutral-700 hover:text-primary-600'
-              }`}
-            >
-              Service Areas
-            </Link>
-            <Link
-              to="/contact"
-              className={`font-medium transition-colors ${
-                isActive('/contact') ? 'text-primary-600' : 'text-neutral-700 hover:text-primary-600'
-              }`}
-            >
-              Contact
-            </Link>
-            <Link
-              to="/now-hiring"
-              className={`font-medium transition-colors ${
-                isActive('/now-hiring') ? 'text-primary-600' : 'text-neutral-700 hover:text-primary-600'
-              }`}
-            >
-              Careers
-            </Link>
-
-            {!user && (
-            <Link
-              to="/login"
-              className="font-medium text-neutral-700 hover:text-primary-600"
-            >
-              Login
-            </Link>
-          )}
-
-            
-            <Link
-              to="/free-estimate"
-              className="bg-accent-500 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-[#8a1a1f] transition-colors"
-              >            
-              Free Estimate
-            </Link>
-            
-            {user?.role === 'EMPLOYEE' && (
-              <Link
-              to="/jobs"
-              className="bg-accent-500 text-white px-6 py-2 rounded-full font-semibold hover:bg-accent-600 transition-colors"
-            >
-              Portal
-            </Link>
-            )}
-
-          </div>
-
-          {/* Mobile menu button */}
-          <button
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="lg:hidden p-2 rounded-md text-neutral-700 hover:text-primary-600"
-          >
-            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
-        </div>
-
-        {/* Mobile Navigation */}
-        {isMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-gray-200">
-            <div className="flex flex-col space-y-4">
-              <Link 
-                to="/" 
-                onClick={() => setIsMenuOpen(false)}
-                className="font-medium text-neutral-700 hover:text-primary-600"
-              >
-                Home
-              </Link>
-              <Link 
-                to="/about" 
-                onClick={() => setIsMenuOpen(false)}
-                className="font-medium text-neutral-700 hover:text-primary-600"
-              >
-                About
-              </Link>
-              <Link 
-                to="/services" 
-                onClick={() => setIsMenuOpen(false)}
-                className="font-medium text-neutral-700 hover:text-primary-600"
-              >
-                Services
-              </Link>
-              <Link 
-                to="/service-areas" 
-                onClick={() => setIsMenuOpen(false)}
-                className="font-medium text-neutral-700 hover:text-primary-600"
-              >
-                Service Areas
-              </Link>
-              <Link 
-                to="/contact" 
-                onClick={() => setIsMenuOpen(false)}
-                className="font-medium text-neutral-700 hover:text-primary-600"
-              >
-                Contact
-              </Link>
-              <Link 
-                to="/now-hiring" 
-                onClick={() => setIsMenuOpen(false)}
-                className="font-medium text-neutral-700 hover:text-primary-600"
-              >
-                Now Hiring
-              </Link>
-              
-              {user ? (
-  <>
-              <span className="font-medium text-neutral-700">
-                Hello, {user.fullName}
-              </span>
-              <button
-                onClick={() => {
-                  setIsMenuOpen(false);
-                  handleLogout();
-                }}
-                className="font-medium text-neutral-700 hover:text-primary-600"
-              >
-                Logout
-              </button>
-            </>
-          ) : (
-            <Link 
-              to="/login" 
-              onClick={() => setIsMenuOpen(false)}
-              className="font-medium text-neutral-700 hover:text-primary-600"
-            >
-              Login
-            </Link>
-          )}
-
-              <Link
-                to="/free-estimate"
-                onClick={() => setIsMenuOpen(false)}
-                className="bg-accent-500 text-white px-6 py-2 rounded-full font-semibold hover:bg-accent-600 transition-colors text-center"
-              >
-                Free Estimate
-              </Link>
-            </div>
-          </div>
-        )}
-      </nav>
-    </header>
-  );
+// Top-level links (some have children)
+const NAV = {
+  primary: [
+    { label: "Home", to: "/" },
+    {
+      label: "Services",
+      to: "/services",
+      children: [
+        { label: "Residential Services", to: "/services/residential" },
+        { label: "Commercial Services", to: "/services/commercial" },
+      ],
+    },
+    // Seasonal link highlighted
+    { label: "Holiday Lighting", to: "/holiday-lighting", highlight: true },
+    { label: "Service Areas", to: "/service-areas" },
+    { label: "FAQ", to: "/faq" },
+    { label: "Contact", to: "/contact" },
+  ],
+  auth: [
+    { label: "Login", to: "/login" },
+    { label: "Sign Up", to: "/signup" },
+  ],
+  cta: { label: "Free Estimate", to: "/free-estimate" },
 };
 
-export default Header;
+export default function Header() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const location = useLocation();
+  const servicesBtnRef = useRef<HTMLButtonElement | null>(null);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+    // Close desktop dropdown on route change
+    setServicesOpen(false);
+  }, [location.pathname]);
+
+  // Prevent body scroll when mobile menu open
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = mobileOpen ? "hidden" : prev || "";
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileOpen]);
+
+  // Close dropdown if clicking outside (desktop)
+  useEffect(() => {
+    function onClick(e: MouseEvent) {
+      if (!servicesBtnRef.current) return;
+      const btn = servicesBtnRef.current;
+      const menu = document.getElementById("services-menu");
+      const target = e.target as Node;
+      if (btn.contains(target)) return;
+      if (menu && menu.contains(target)) return;
+      setServicesOpen(false);
+    }
+    if (servicesOpen) document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, [servicesOpen]);
+
+  const linkBase =
+    "inline-flex items-center rounded-md px-3 py-2 text-sm font-medium transition-colors";
+  const linkActive = "text-slate-900";
+  const linkIdle = "text-slate-600 hover:text-slate-900";
+
+  return (
+    <>
+      {/* Skip to content for keyboard users */}
+      #main
+        Skip to content
+      </a>
+
+      <header className="sticky top-0 z-50 w-full backdrop-blur supports-[backdrop-filter]:bg-white/70 bg-white/90 border-b border-slate-200">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
+            {/* Left: Logo */}
+            <div className="flex items-center gap-2">
+              {/* If you have a logo file, replace this Link with an <img>:
+                 <Link to="/" className="flex items-center gap-2">
+                   <img src="/logo.svg" alt="Squeegee Samurai" className="h-8 w       <Link to="/" className="group flex items-center gap-2">
+                <Sparkles className="h-6 w-6 text-slate-900 group-hover:text-slate-700 transition-colors" />
+                <span className="text-base font-semibold tracking-tight text-slate-900">
+                  Squeegee Samurai
+                </span>
+              </Link>
+            </div>
+
+            {/* Desktop nav */}
+            <nav className="hidden lg:flex items-center gap-1">
+              {/* Primary links */}
+              {NAV.primary.map((item) =>
+                item.children ? (
+                  <div
+                    key={item.label}
+                    className="relative"
+                    onMouseEnter={() => setServicesOpen(true)}
+                    onMouseLeave={() => setServicesOpen(false)}
+                  >
+                    <button
+                      ref={servicesBtnRef}
+                      type="button"
+                      className={classNames(
+                        linkBase,
+                        location.pathname.startsWith("/services")
+                          ? linkActive
+                          : linkIdle
+                      )}
+                      aria-haspopup="menu"
+                      aria-expanded={servicesOpen}
+                      aria-controls="services-menu"
+                      onClick={() => setServicesOpen((v) => !v)}
+                    >
+                      {item.label}
+                      <ChevronDown
+                        className={classNames(
+                          "ml-1 h-4 w-4 transition-transform",
+                          servicesOpen && "rotate-180"
+                        )}
+                        aria-hidden
+                      />
+                    </button>
+
+                    {/* Dropdown panel */}
+                    <div
+                      id="services-menu"
+                      role="menu"
+                      aria-label="Services"
+                      className={classNames(
+                        "absolute left-0 mt-2 w-64 rounded-lg border border-slate-200 bg-white p-2 shadow-lg",
+                        servicesOpen ? "block" : "hidden"
+                      )}
+                    >
+                      <NavLink
+                        to="/services"
+                        className={({ isActive }) =>
+                          classNames(
+                            "block rounded-md px-3 py-2 text-sm",
+                            isActive
+                              ? "bg-slate-100 text-slate-900"
+                              : "text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+                          )
+                        }
+                        role="menuitem"
+                      >
+                        All Services
+                      </NavLink>
+                      <div className="my-2 h-px bg-slate-100" />
+                      {item.children.map((child) => (
+                        <NavLink
+                          key={child.to}
+                          to={child.to}
+                          className={({ isActive }) =>
+                            classNames(
+                              "block rounded-md px-3 py-2 text-sm",
+                              isActive
+                                ? "bg-slate-100 text-slate-900"
+                                : "text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+                            )
+                          }
+                          role="menuitem"
+                        >
+                          {child.label}
+                        </NavLink>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <NavLink
+                    key={item.label}
+                    to={item.to}
+                    className={({ isActive }) =>
+                      classNames(
+                        linkBase,
+                        isActive ? linkActive : linkIdle,
+                        item.highlight &&
+                          "text-rose-700 hover:text-rose-800 font-semibold"
+                      )
+                    }
+                  >
+                    {item.label}
+                  </NavLink>
+                )
+              )}
+
+              {/* CTA */}
+              <div className="ml-2">
+                <NavLink
+                  to={NAV.cta.to}
+                  className="inline-flex items-center rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400"
+                >
+                  {NAV.cta.label}
+                </NavLink>
+              </div>
+
+              {/* Phone */}
+              <a
+                href={`tel:${PHONE_TEL}`}
+                className="ml-2 hidden items-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-50 lg:inline-flex"
+              >
+                <Phone className="h-4 w-4" aria-hidden />
+                {PHONE_DISPLAY}
+              </a>
+            </nav>
+
+            {/* Mobile controls */}
+            <div className="flex items-center lg:hidden">
+              <a
+                href={`tel:${PHONE_TEL}`}
+                className="mr-2 inline-flex items-center gap-2 rounded-md border border-slate-200 bg-white px-3 py-2 text-sm font-medium text-slate-900 hover:bg-slate-50"
+                aria-label={`Call ${PHONE_DISPLAY}`}
+              >
+                <Phone className="h-4 w-4" aria-hidden />
+              </a>
+
+              <button
+                type="button"
+                aria-label="Open menu"
+                aria-expanded={mobileOpen}
+                aria-controls="mobile-menu"
+                onClick={() => setMobileOpen(true)}
+                className="inline-flex items-center justify-center rounded-md p-2 text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400"
+              >
+                <Menu className="h-6 w-6" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile menu overlay */}
+        <div
+          id="mobile-menu"
+          className={classNames(
+            "fixed inset-0 z-[60] bg-black/20 backdrop-blur-sm transition-opacity lg:hidden",
+            mobileOpen ? "opacity-100" : "pointer-events-none opacity-0"
+          )}
+          onClick={() => setMobileOpen(false)}
+          aria-hidden={!mobileOpen}
+        />
+
+        {/* Mobile panel */}
+        <div
+          className={classNames(
+            "fixed inset-y-0 right-0 z-[70] w-full max-w-sm transform bg-white shadow-xl transition-transform lg:hidden",
+            mobileOpen ? "translate-x-0" : "translate-x-full"
+          )}
+          role="dialog"
+          aria-modal="true"
+          aria-label="Mobile navigation"
+        >
+          <div className="flex h-16 items-center justify-between border-b border-slate-200 px-4">
+            <Link
+              to="/"
+              className="flex items-center gap-2"
+              onClick={() => setMobileOpen(false)}
+            >
+              <Sparkles className="h-6 w-6 text-slate-900" />
+              <span className="text-base font-semibold tracking-tight text-slate-900">
+                Squeegee Samurai
+              </span>
+            </Link>
+            <button
+              type="button"
+              aria-label="Close menu"
+              onClick={() => setMobileOpen(false)}
+              className="inline-flex items-center justify-center rounded-md p-2 text-slate-700 hover:bg-slate-100 focus:outline-none focus:ring-2 focus:ring-slate-400"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+
+          <nav className="overflow-y-auto p-3">
+            <ul className="space-y-1">
+              {NAV.primary.map((item) =>
+                item.children ? (
+                  <li key={item.label} className="rounded-lg border border-slate-200">
+                    <details>
+                      <summary className="flex cursor-pointer list-none items-center justify-between rounded-lg bg-white px-3 py-2 text-sm font-medium text-slate-800">
+                        <span>{item.label}</span>
+                        <ChevronDown className="h-4 w-4" />
+                      </summary>
+                      <div className="border-t border-slate-100">
+                        <MobileLink to="/services" onClick={() => setMobileOpen(false)}>
+                          All Services
+                        </MobileLink>
+                        {item.children.map((child) => (
+                          <MobileLink
+                            key={child.to}
+                            to={child.to}
+                            onClick={() => setMobileOpen(false)}
+                          >
+                            {child.label}
+                          </MobileLink>
+                        ))}
+                      </div>
+                    </details>
+                  </li>
+                ) : (
+                  <li key={item.label}>
+                    <NavLink
+                      to={item.to}
+                      onClick={() => setMobileOpen(false)}
+                      className={({ isActive }) =>
+                        classNames(
+                          "block rounded-md px-3 py-2 text-sm font-medium",
+                          item.highlight
+                            ? "text-rose-700"
+                            : isActive
+                              ? "bg-slate-100 text-slate-900"
+                              : "text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+                        )
+                      }
+                    >
+                      {item.label}
+                    </NavLink>
+                  </li>
+                )
+              )}
+            </ul>
+
+            <div className="mt-3 h-px bg-slate-100" />
+
+            <div className="mt-3 grid gap-2">
+              <NavLink
+                to={NAV.cta.to}
+                onClick={() => setMobileOpen(false)}
+                className="inline-flex items-center justify-center rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-slate-800"
+              >
+                {NAV.cta.label}
+              </NavLink>
+
+              <a
+                href={`tel:${PHONE_TEL}`}
+                className="inline-flex items-center justify-center gap-2 rounded-md border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-900 hover:bg-slate-50"
+              >
+                <Phone className="h-4 w-4" aria-hidden />
+                {PHONE_DISPLAY}
+              </a>
+            </div>
+
+            {/* Optional auth links */}
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              {NAV.auth.map((a) => (
+                <NavLink
+                  key={a.to}
+                  to={a.to}
+                  onClick={() => setMobileOpen(false)}
+                  className={({ isActive }) =>
+                    classNames(
+                      "inline-flex items-center justify-center rounded-md border px-4 py-2 text-sm font-medium",
+                      isActive
+                        ? "border-slate-300 bg-slate-50 text-slate-900"
+                        : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+                    )
+                  }
+                >
+                  {a.label}
+                </NavLink>
+              ))}
+            </div>
+          </nav>
+        </div>
+      </header>
+    </>
+  );
+}
+
+function MobileLink({
+  to,
+  onClick,
+  children,
+}: {
+  to: string;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <NavLink
+      to={to}
+      onClick={onClick}
+      className={({ isActive }) =>
+        classNames(
+          "block px-3 py-2 text-sm",
+          isActive
+            ? "bg-slate-100 text-slate-900"
+            : "text-slate-700 hover:bg-slate-50 hover:text-slate-900"
+        )
+      }
+    >
+      {children}
+    </NavLink>
+  );
+}
