@@ -1,6 +1,7 @@
 .parallax-clouds {
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden; /* Clip clouds horizontally */
+  overflow-y: auto;   /* Allow vertical scrolling */
   
   /* Light gray/blue tinted background so white card is visible */
   background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);

@@ -24,8 +24,7 @@ function validateBody(body: unknown): { ok: true; data: QuoteBody } | { ok: fals
   const firstName = typeof c.firstName === 'string' ? c.firstName.trim() : '';
   const lastName = typeof c.lastName === 'string' ? c.lastName.trim() : '';
   if (!email) return { ok: false, error: 'Contact email is required' };
-  if (!firstName) return { ok: false, error: 'Contact firstName is required' };
-  if (!lastName) return { ok: false, error: 'Contact lastName is required' };
+  // firstName/lastName are optional for streamlined commercial flow
 
   return {
     ok: true,
@@ -79,8 +78,8 @@ quoteRouter.post('/quote', async (req: Request, res: Response) => {
       ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, 'new')
       RETURNING id`,
       [
-        validated.data.contact.firstName,
-        validated.data.contact.lastName,
+        validated.data.contact.firstName || 'Commercial',
+        validated.data.contact.lastName || 'Lead',
         validated.data.contact.email,
         validated.data.contact.phone ?? null,
         validated.data.contact.address ?? null,

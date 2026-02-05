@@ -6,29 +6,41 @@ const ThankYou = () => {
 
   const location = useLocation();
   const estimatedQuote = location.state?.estimatedQuote;
+  const tier = location.state?.tier;
+  const isEstimate = location.state?.isEstimate;
 
   return (
     <div className="min-h-screen bg-neutral-50 py-12">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-white rounded-lg shadow-lg p-8 text-center">
           <CheckCircle className="w-16 h-16 text-accent-500 mx-auto mb-6" />
-          <h1 className="text-3xl font-bold text-neutral-900 mb-4">Thank You!</h1>
-          {estimatedQuote !== undefined && (
-          <div className="text-2xl font-bold text-accent-600 mt-4">
-            Your Estimated Quote: ${estimatedQuote.toFixed(2)}
-          </div>
-        )}
+          <h1 className="text-3xl font-bold text-neutral-900 mb-4">Quote Request Received!</h1>
+          
+          {isEstimate && estimatedQuote !== undefined && (
+            <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
+              <p className="text-sm text-gray-600 mb-2">Your estimated pricing:</p>
+              <div className="text-2xl font-bold text-orange-600">
+                ${estimatedQuote.toFixed(2)}
+                {tier && <span className="text-base font-normal text-gray-600 ml-2">({tier})</span>}
+              </div>
+              <p className="text-xs text-gray-500 mt-2">
+                This is an estimate. Final pricing is confirmed after review.
+              </p>
+            </div>
+          )}
+
           <p className="text-lg text-neutral-600 mb-6">
-            Your submission has been received. We'll be in touch soon to discuss your window cleaning needs.
+            Your estimated pricing has been received. We'll review your information and send a
+            detailed quote shortly.
           </p>
 
           <div className="bg-primary-50 rounded-lg p-6 mb-6">
             <h3 className="font-semibold text-primary-900 mb-2">What happens next?</h3>
             <ul className="text-left text-primary-800 space-y-2">
               <li>• We'll review your information within 24 hours</li>
+              <li>• You'll receive a detailed quote via email</li>
               <li>• A team member will contact you to discuss your needs</li>
-              <li>• We'll schedule a convenient time for your service</li>
-              <li>• You'll receive a detailed quote for your project</li>
+              <li>• Final pricing is confirmed after review</li>
             </ul>
           </div>
 

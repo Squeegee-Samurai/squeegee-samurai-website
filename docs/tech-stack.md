@@ -50,7 +50,7 @@ Aligned with [architecture.md](./architecture.md) and [dev_workflow.md](./dev_wo
 ## Hosting (target)
 | Component | Target              | Alternative        |
 |-----------|---------------------|--------------------|
-| Frontend  | Vercel (static)     | Netlify, etc.      |
+| Frontend  | Vercel (static)     | —                  |
 | API       | Vercel API Routes  | Supabase Edge Fns  |
 | Database  | Supabase Postgres  | Any Postgres      |
 

@@ -1,459 +1,462 @@
-import React, { useRef, useState } from 'react';
-import emailjs from 'emailjs-com';
+/**
+ * FreeEstimate – Commercial Storefront Quote Calculator (MVP)
+ * 
+ * Updated per mvp_update_2_4_730.md:
+ * - Guided estimator pattern (estimates on-page, quote via email)
+ * - Single tier selection in pricing table (clickable rows)
+ * - Default to Biweekly Exterior (Most Popular)
+ * - "Get Detailed Quote" CTA reveals contact form
+ * - Simplified contact fields (email required, phone/notes optional)
+ */
+
+import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
-//discounts: 1stclean = 10%, PTPSC = 15%, refer5 = 20%
+// Pricing constants per MVP (per pane)
+const PRICING = {
+  weekly: { perVisit: 4.25, monthlyMultiplier: 4.33, badge: 'Best Appearance' },
+  biweekly: { perVisit: 4.75, monthlyMultiplier: 2.1667, badge: 'Most Popular' },
+  monthly: { perVisit: 5.5, monthlyMultiplier: 1, badge: 'Lowest Cost' },
+  monthlyIO: { perVisit: 7.0, monthlyMultiplier: 1, badge: 'Interior + Exterior' },
+  quarterlyIO: { perVisit: 8.0, monthlyMultiplier: 1 / 3, badge: 'Interior + Exterior' },
+  oneTime: { perVisit: 15, monthlyMultiplier: 0, badge: 'One-Time' },
+};
+
+const FIRST_TIME_UPLIFT = 0.3; // +30%
+
+interface QuoteInputs {
+  businessName: string;
+  paneCount: number;
+  applyFirstTimeUplift: boolean;
+}
+
+interface TierQuote {
+  tier: string;
+  badge?: string;
+  perVisit: number;
+  monthlyEquivalent: number;
+  firstTimeUplift?: number;
+}
+
+function calculateQuotes(inputs: QuoteInputs): TierQuote[] {
+  const { paneCount, applyFirstTimeUplift } = inputs;
+
+  const tiers: TierQuote[] = [
+    {
+      tier: 'Weekly Exterior',
+      badge: PRICING.weekly.badge,
+      perVisit: paneCount * PRICING.weekly.perVisit,
+      monthlyEquivalent: paneCount * PRICING.weekly.perVisit * PRICING.weekly.monthlyMultiplier,
+    },
+    {
+      tier: 'Biweekly Exterior',
+      badge: PRICING.biweekly.badge,
+      perVisit: paneCount * PRICING.biweekly.perVisit,
+      monthlyEquivalent:
+        paneCount * PRICING.biweekly.perVisit * PRICING.biweekly.monthlyMultiplier,
+    },
+    {
+      tier: 'Monthly Exterior',
+      badge: PRICING.monthly.badge,
+      perVisit: paneCount * PRICING.monthly.perVisit,
+      monthlyEquivalent: paneCount * PRICING.monthly.perVisit * PRICING.monthly.monthlyMultiplier,
+    },
+    {
+      tier: 'Monthly Interior + Exterior',
+      badge: PRICING.monthlyIO.badge,
+      perVisit: paneCount * PRICING.monthlyIO.perVisit,
+      monthlyEquivalent:
+        paneCount * PRICING.monthlyIO.perVisit * PRICING.monthlyIO.monthlyMultiplier,
+    },
+    {
+      tier: 'Quarterly Interior + Exterior',
+      badge: PRICING.quarterlyIO.badge,
+      perVisit: paneCount * PRICING.quarterlyIO.perVisit,
+      monthlyEquivalent:
+        paneCount * PRICING.quarterlyIO.perVisit * PRICING.quarterlyIO.monthlyMultiplier,
+    },
+    {
+      tier: 'One-Time Clean',
+      badge: PRICING.oneTime.badge,
+      perVisit: paneCount * PRICING.oneTime.perVisit,
+      monthlyEquivalent: 0,
+    },
+  ];
+
+  // Apply first-time uplift if selected
+  if (applyFirstTimeUplift) {
+    tiers.forEach((t) => {
+      if (t.tier !== 'One-Time Clean') {
+        t.firstTimeUplift = t.perVisit * FIRST_TIME_UPLIFT;
+      }
+    });
+  }
+
+  return tiers;
+}
 
 const FreeEstimate = () => {
   const navigate = useNavigate();
-  //const [uploadedFile, setUploadedFile] = useState<File | null>(null);
-  const [files, setFiles] = useState<FileList | null>(null);
-  const [uploading, setUploading] = useState(false);
-  const [uploadedUrls, setUploadedUrls] = useState<string[]>([]);
 
-
-
-  const [formData, setFormData] = useState({
-    firstName: '', lastName: '', email: '', phone: '',
-    address: '', city: '', zipCode: '', propertyType: '',
-    serviceType: 'Interior+Exterior', windowCount: '', stories: '', screenCount: '',
-    frequency: '', additionalServices: [] as string [], specialRequests: '', 
-    preferredContact: '', bestTimeToCall: '', couponCode: '',
+  const [inputs, setInputs] = useState<QuoteInputs>({
+    businessName: '',
+    paneCount: 0,
+    applyFirstTimeUplift: false,
   });
 
-  const COMMERCIAL_PROPS = new Set([
-  "Office Building",
-  "Retail Store",
-  "Restaurant",
-  "Other Commercial",
-]);
+  const [selectedTier, setSelectedTier] = useState<string>('Biweekly Exterior'); // Default
+  const [showContactForm, setShowContactForm] = useState(false);
+  const [contactInfo, setContactInfo] = useState({
+    email: '',
+    phone: '',
+    notes: '',
+  });
+  const [submitting, setSubmitting] = useState(false);
 
-function inferSegment(propertyType?: string) {
-  if (!propertyType) return undefined;
-  return COMMERCIAL_PROPS.has(propertyType) ? "commercial" : "residential";
-}
+  const quotes = useMemo(() => calculateQuotes(inputs), [inputs]);
+  const selectedQuote = useMemo(
+    () => quotes.find((q) => q.tier === selectedTier),
+    [quotes, selectedTier]
+  );
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+  const handleInputChange = (field: keyof QuoteInputs, value: string | number | boolean) => {
+    setInputs((prev) => ({ ...prev, [field]: value }));
   };
 
-  const CLOUD_NAME = "dmsnpoex2";
-  const UPLOAD_PRESET = "unsigned_estimates";
+  const handleGetQuote = () => {
+    setShowContactForm(true);
+    // Scroll contact form into view
+    setTimeout(() => {
+      document.getElementById('contact-section')?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
 
-  async function uploadAllToCloudinary(fs: FileList): Promise<string[]> {
-    const urls: string[] = [];
-    for (const file of Array.from(fs)) {
-      const body = new FormData();
-      body.append("file", file);
-      body.append("upload_preset", UPLOAD_PRESET);
-      body.append("folder", "estimates");
+  const handleSubmit = async () => {
+    if (!contactInfo.email) {
+      alert('Please enter your email address to receive the detailed quote.');
+      return;
+    }
 
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/auto/upload`, {
-        method: "POST",
-        body
+    if (!selectedQuote) return;
+
+    setSubmitting(true);
+
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+      // Build special requests from business name + notes
+      const specialRequests = [
+        inputs.businessName ? `Business: ${inputs.businessName}` : null,
+        contactInfo.notes ? `Notes: ${contactInfo.notes}` : null,
+      ]
+        .filter(Boolean)
+        .join('\n');
+
+      const response = await fetch(`${apiUrl}/api/quote`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contact: {
+            firstName: '', // Not collected in this flow
+            lastName: '',
+            email: contactInfo.email,
+            phone: contactInfo.phone || undefined,
+          },
+          formInput: {
+            propertyType: 'Commercial',
+            serviceType: selectedTier,
+            windowCount: inputs.paneCount,
+            screenCount: 0,
+            additionalServices: inputs.applyFirstTimeUplift ? ['First-Time Uplift'] : [],
+            specialRequests: specialRequests || undefined,
+          },
+        }),
       });
 
-      if (!res.ok) {
-        const txt = await res.text();
-        throw new Error(`Cloudinary upload failed: ${txt}`);
-      }
-      const json = await res.json();
-      urls.push(json.secure_url);
-    }
-    return urls;
-  }
+      const result = await response.json();
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // keep first
-  
-    const form = e.currentTarget as HTMLFormElement;
-  
-    const windowCount = parseInt(formData.windowCount) || 0;
-    const screenCount = parseInt(formData.screenCount) || 0;
-  
-    const pricePerWindow =
-      formData.serviceType === 'interior' ? 7 :
-      formData.serviceType === 'exterior' ? 10 :
-      17;
-  
-    const estimatedQuote = (windowCount * pricePerWindow) + (screenCount * 5) + 50;
-  
-    const code = (formData.couponCode || '').trim().toLowerCase();
-    const discounts: Record<string, number> = { '1stclean': 0.10, 'ptpsc': 0.15, 'refer5': 0.20 };
-    const discount = discounts[code] ?? 0;
-    const finalQuote = Math.max(0, Math.round(estimatedQuote * (1 - discount)));
-  
-    const st = (form.querySelector('[name="serviceType"]') as HTMLSelectElement)?.value || '';
-    let echo = form.querySelector('input[name="serviceTypeEcho"]') as HTMLInputElement | null;
-    if(!echo) { echo = document.createElement('input'); echo.type = 'hidden'; echo.name = 'serviceTypeEcho'; form.appendChild(echo); }
-    echo.value = st;
-  
-    let hidden = form.querySelector('input[name="estimatedQuote"]') as HTMLInputElement | null;
-    if (!hidden) { hidden = document.createElement('input'); hidden.type = 'hidden'; hidden.name = 'estimatedQuote'; form.appendChild(hidden); }
-    hidden.value = `$${finalQuote.toFixed(2)}`;
-  
-    let couponField = form.querySelector('input[name="couponCode"]') as HTMLInputElement | null;
-    if (!couponField) { couponField = document.createElement('input'); couponField.type = 'hidden'; couponField.name = 'couponCode'; form.appendChild(couponField); }
-    couponField.value = formData.couponCode || '';
-  
-    try {
-      setUploading(true);
-      let urls: string[] = [];
-      if (files && files.length > 0) {
-        urls = await uploadAllToCloudinary(files);
+      if (result.success) {
+        navigate('/thank-you', {
+          state: {
+            estimatedQuote: result.total,
+            tier: selectedTier,
+            isEstimate: true,
+          },
+        });
+      } else {
+        alert(`Error: ${result.error || 'Failed to submit quote request'}`);
       }
-      setUploadedUrls(urls);
-  
-      let urlsField = form.querySelector('input[name="imageUrls"]') as HTMLInputElement | null;
-      if (!urlsField) {
-        urlsField = document.createElement('input');
-        urlsField.type = 'hidden';
-        urlsField.name = 'imageUrls';
-        form.appendChild(urlsField);
-      }
-      urlsField.value = urls.join(', ');
-  
-      await emailjs.sendForm(
-        'service_smyhfg9',
-        'template_vd06lvr',
-        form,
-        'tP8oeE5EOGJQXkvGp'
-      );
-  
-      try {
-        const netlifyData = new FormData(form);
-        netlifyData.append('form-name', 'free-estimate');
-        formData.additionalServices.forEach((service) => netlifyData.append('additionalServices', service));
-        for (const u of urls) netlifyData.append('imageUrls[]', u);
-  
-        await fetch('/', { method: 'POST', body: netlifyData });
-      } catch (err) {
-        console.warn('Netlify submission failed (continuing):', err);
-      }
-  
-      navigate('/thank-you', { state: { estimatedQuote: finalQuote } });
     } catch (err) {
-      console.error(err);
-      alert('Upload failed. Please try again or email us the photos directly.');
+      console.error('Quote submission failed:', err);
+      alert('Failed to submit quote request. Please try again or contact us directly.');
     } finally {
-      setUploading(false);
+      setSubmitting(false);
     }
   };
-  
 
   return (
-
     <div className="parallax-clouds min-h-screen bg-neutral-50 px-4 py-8">
-        <div className="text-center mb-6">
-    </div>
       <div className="flex justify-center">
-      <div className="w-full max-w-4xl bg-white p-8 rounded-xl shadow-2xl">
-      <h2 className="text-4xl text-center text-orange-500 font-bold mb-4">Get Your Free Estimate</h2>
-          <p className='text-center'>Tell us about your project and we'll provide a free estimated quote and a detailed quote within 24 hours.</p>
-          <form
-            name="free-estimate"
-            data-netlify="true"
-            data-netlify-honeypot="bot-field"
-            onSubmit={handleSubmit}
-            className="space-y-6"
-          >
-            <input type="hidden" name="form-name" value="free-estimate" />
-            <input type="hidden" name="estimatedQuote" />
-            <input type="hidden" name="bot-field" />
-            <input type ="hidden" name="serviceTypeEcho" />
-            <input type="hidden" name="couponCode" />
-            <input type="hidden" name="imageUrls" />
+        <div className="w-full max-w-5xl bg-white p-8 rounded-xl shadow-2xl">
+          <h2 className="text-4xl text-center text-orange-500 font-bold mb-4">
+            Commercial Storefront Pricing Estimator
+          </h2>
+          <p className="text-center text-gray-600 mb-8">
+            Get instant pricing estimates for ground-level storefront window cleaning. Takes less
+            than 2 minutes.
+          </p>
 
-
-
-            {/* Contact Info */}
-            {/* Contact Info Bubble */}
-
-              <h3 className="text-lg font-bold mb-4">Contact Information</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input
-                  name="firstName"
-                  placeholder="First Name *"
-                  required
-                  onChange={handleInputChange}
-                  className="border border-gray-300 rounded-md p-2 w-full"
-                />
-                <input
-                  name="lastName"
-                  placeholder="Last Name *"
-                  required
-                  onChange={handleInputChange}
-                  className="border border-gray-300 rounded-md p-2 w-full"
-                />
-                <input
-                  name="email"
-                  type="email"
-                  placeholder="Email Address *"
-                  required
-                  onChange={handleInputChange}
-                  className="border border-gray-300 rounded-md p-2 w-full"
-                />
-                <input
-                  name="phone"
-                  placeholder="Phone Number *"
-                  required
-                  onChange={handleInputChange}
-                  className="border border-gray-300 rounded-md p-2 w-full"
-                />
-              </div>
-
-              {/* Property Info Bubble */}
-                <h3 className="text-lg font-bold mb-4">Property Information</h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                  <input
-                    name="address"
-                    placeholder="Property Address *"
-                    required
-                    onChange={handleInputChange}
-                    className="border border-gray-300 rounded-md p-2 w-full"
-                  />
-                  <input
-                    name="city"
-                    placeholder="City *"
-                    required
-                    onChange={handleInputChange}
-                    className="border border-gray-300 rounded-md p-2 w-full"
-                  />
-                  <input
-                    name="zipCode"
-                    placeholder="ZIP Code *"
-                    required
-                    onChange={handleInputChange}
-                    className="border border-gray-300 rounded-md p-2 w-full"
-                  />
-                  <select
-                    name="propertyType"
-                    required
-                    onChange={handleInputChange}
-                    className="border border-gray-300 rounded-md p-2 w-full"
-                  >
-                    <option value="">Select property</option>
-                    <option>Single Family Home</option>
-                    <option>Townhouse</option>
-                    <option>Condominium</option>
-                    <option>Apartment</option>
-                    <option>Office Building</option>
-                    <option>Retail Store</option>
-                    <option>Restaurant</option>
-                    <option>Other Commercial</option>
-                  </select>
-                  <select
-                  name="serviceType"
-                  required
-                  value={formData.serviceType}     // <-- controlled
-                  onChange={handleInputChange}
-                  className="border border-gray-300 rounded-md p-2 w-full"
-                >
-                  <option value="Interior + Exterior">Interior + Exterior (recommended)</option>
-                  <option value="interior">Interior only</option>
-                  <option value="exterior">Exterior only</option>
-                </select>
-                </div>
-
-
-            {/* Project Details */}
-            <h3 className="text-lg font-bold mb-4">Project Details</h3>
-            <div className='mb-6 max-w-md'>
-              <label htmlFor="windowCount" className="block text-sm font-medium text-neutral-700 mb-2">
-                Number of Windows</label>
+          {/* Step 1: Input Section */}
+          <div className="space-y-6 mb-8">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Business Name (optional)
+              </label>
               <input
-                type="number"
-                name="windowCount"
-                id="windowCount"
-                min="1"
-                required
-                value={formData.windowCount}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 border border-neutral-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary-500 focus:outline-none"
-                placeholder='Enter a number (min 1)'        
+                type="text"
+                value={inputs.businessName}
+                onChange={(e) => handleInputChange('businessName', e.target.value)}
+                className="border border-gray-300 rounded-md p-3 w-full"
+                placeholder="Your business name"
               />
             </div>
-            <h3 className="text-lg font-bold mb-4">Photos (optional)</h3>
-            <input
-              type="file"
-              name="local_photos"
-              multiple
-              accept="image/*"
-              onChange={(e) => setFiles(e.target.files)}
-              className="block w-full text-sm text-neutral-700 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-neutral-100 file:font-semibold hover:file:bg-neutral-200"
-            />
-            <p className="mt-1 text-xs text-neutral-500">Add clear photos of windows or problem areas (JPG/PNG).</p>
 
-            <div className="flex flex-col">
-            <label htmlFor="stories" className="mb-1 text-sm font-medium text-neutral-700">
-              Number of Stories
-            </label>
-            <select
-              id="stories"
-              name="stories"
-              required
-              onChange={handleInputChange}
-              defaultValue=""
-              className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-neutral-800 shadow-sm outline-none transition
-                        focus:border-primary-500 focus:ring-2 focus:ring-primary-200"
-            >
-              <option value="" disabled>
-                Select stories
-              </option>
-              <option value="1">1 Story</option>
-              <option value="2">2 Stories</option>
-              <option value="3">3 Stories</option>
-              <option value="4+">4+ Stories</option>
-            </select>
-          </div>
-
-            <div className='mb-6 max-w-md'>
-              <label htmlFor="screenCount" className="block text-sm font-medium text-neutral-700 mb-2">
-                Number of Screens</label>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Number of Panes *
+              </label>
               <input
                 type="number"
-                name="screenCount"
-                id="screenCount"
-                min="1"
+                min="0"
+                value={inputs.paneCount || ''}
+                onChange={(e) => handleInputChange('paneCount', parseInt(e.target.value) || 0)}
+                className="border border-gray-300 rounded-md p-3 w-full text-lg"
+                placeholder="e.g. 12"
                 required
-                value={formData.screenCount}
-                onChange={handleInputChange}
-                className="w-full px-4 py-2 border border-neutral-300 rounded-lg shadow-sm focus:ring-2 focus:ring-primary-500 focus:outline-none"
-                placeholder='Enter a number (min 1)'        
               />
+              <p className="text-sm text-gray-500 mt-1">
+                Count individual panes (including divided lights).
+              </p>
             </div>
-            <div className="flex flex-col">
-            <label htmlFor="frequency" className="mb-1 text-sm font-medium text-neutral-700">
-              Desired Service Frequency
-            </label>
-            <select
-              id="frequency"
-              name="frequency"
-              onChange={handleInputChange}
-              defaultValue=""
-              className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-neutral-800 shadow-sm outline-none transition
-                        focus:border-primary-500 focus:ring-2 focus:ring-primary-200"
-            >
-              <option value="" disabled>
-                Select an option
-              </option>
-              <option>One-time service</option>
-              <option>Weekly</option>
-              <option>Quarterly</option>
-              <option>Monthly</option>
-            </select>
-            {/* Optional helper text */}
-            <p className="mt-1 text-xs text-neutral-500">You can change this anytime.</p>
-          </div>
 
-          
-            {/* } <h3 className="text-lg font-bold mb-4">File Upload</h3>
-             <input
-            type="file"
-            id="fileInput"
-            name="uploaded_file"             
-            multiple accept="image/*,application/pdf"
-  /> */}
-
-            {/* Additional Services */}
-            <h3 className="text-lg font-bold mb-4">Additional Services</h3>
-            <div className='flex flex-col space-y-2'>
-                    {[' Screen cleaning', ' Window sill cleaning', ' Frame cleaning', ' Pressure washing', ' Gutter cleaning', ' Solar panel cleaning'].map(service => (
-              <label key={service}>
+            <div className="flex items-center">
               <input
                 type="checkbox"
-                name="additionalServices"
-                value={service}
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  const { checked, value } = e.target;
-                  setFormData(prev => {
-                    const current = new Set(prev.additionalServices);
-                    if (checked) {
-                      current.add(value);
-                    } else {
-                      current.delete(value);
-                    }
-                    return { ...prev, additionalServices: Array.from(current) };
-                  });
-                }}
+                id="firstTimeUplift"
+                checked={inputs.applyFirstTimeUplift}
+                onChange={(e) => handleInputChange('applyFirstTimeUplift', e.target.checked)}
+                className="mr-3 h-5 w-5"
               />
-              {service}
-            </label>
-            
-            ))}
+              <label htmlFor="firstTimeUplift" className="text-sm text-gray-700">
+                Apply first-time "Restore to Standard" uplift (+30%)
+              </label>
             </div>
+          </div>
 
-
-            {/* Contact Preferences */}
-            <h3 className="text-lg font-bold mb-4">Contact Information</h3>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {/* Preferred Contact */}
-              <div className="flex flex-col">
-                <label htmlFor="preferredContact" className="mb-1 text-sm font-medium text-neutral-700">
-                  Preferred Contact
-                </label>
-                <select
-                  id="preferredContact"
-                  name="preferredContact"
-                  required
-                  onChange={handleInputChange}
-                  className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-neutral-800 shadow-sm outline-none transition
-                            focus:border-primary-500 focus:ring-2 focus:ring-primary-200"
-                  defaultValue=""
-                >
-                  <option value="" disabled>
-                    Select an option
-                  </option>
-                  <option value="phone">Phone</option>
-                  <option value="email">Email</option>
-                  <option value="text">Text Message</option>
-                </select>
-                <p className="mt-1 text-xs text-neutral-500">We’ll use this for follow-up on your quote.</p>
+          {/* Step 2: Pricing Table with Tier Selection */}
+          {inputs.paneCount > 0 && (
+            <>
+              <h3 className="text-2xl font-bold text-gray-800 mb-4">
+                Your Pricing Estimates
+              </h3>
+              <p className="text-sm text-gray-600 mb-4">
+                Select a service tier. Pricing shown is an estimate; we'll send a detailed quote
+                after review.
+              </p>
+              <div className="overflow-x-auto mb-6">
+                <table className="w-full border-collapse">
+                  <thead>
+                    <tr className="bg-gray-100">
+                      <th className="border border-gray-300 px-4 py-3 text-center w-12">Select</th>
+                      <th className="border border-gray-300 px-4 py-3 text-left">Service Tier</th>
+                      <th className="border border-gray-300 px-4 py-3 text-right">
+                        Per Visit Estimate
+                      </th>
+                      <th className="border border-gray-300 px-4 py-3 text-right">
+                        Monthly Equivalent
+                      </th>
+                      {inputs.applyFirstTimeUplift && (
+                        <th className="border border-gray-300 px-4 py-3 text-right">
+                          First-Time Uplift
+                        </th>
+                      )}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {quotes.map((quote) => (
+                      <tr
+                        key={quote.tier}
+                        onClick={() => setSelectedTier(quote.tier)}
+                        className={`cursor-pointer transition-colors ${
+                          selectedTier === quote.tier
+                            ? 'bg-orange-50 border-l-4 border-l-orange-500'
+                            : 'hover:bg-gray-50'
+                        }`}
+                      >
+                        <td className="border border-gray-300 px-4 py-3 text-center">
+                          <input
+                            type="radio"
+                            checked={selectedTier === quote.tier}
+                            onChange={() => setSelectedTier(quote.tier)}
+                            className="h-4 w-4 text-orange-500"
+                          />
+                        </td>
+                        <td className="border border-gray-300 px-4 py-3">
+                          <div className="font-medium">{quote.tier}</div>
+                          {quote.badge && (
+                            <span className="inline-block bg-orange-100 text-orange-600 text-xs px-2 py-1 rounded mt-1">
+                              {quote.badge}
+                            </span>
+                          )}
+                        </td>
+                        <td className="border border-gray-300 px-4 py-3 text-right font-semibold">
+                          ${quote.perVisit.toFixed(2)}
+                        </td>
+                        <td className="border border-gray-300 px-4 py-3 text-right font-semibold">
+                          {quote.monthlyEquivalent > 0
+                            ? `$${quote.monthlyEquivalent.toFixed(2)}`
+                            : '—'}
+                        </td>
+                        {inputs.applyFirstTimeUplift && (
+                          <td className="border border-gray-300 px-4 py-3 text-right text-orange-600">
+                            {quote.firstTimeUplift
+                              ? `+$${quote.firstTimeUplift.toFixed(2)}`
+                              : '—'}
+                          </td>
+                        )}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
 
-              {/* Best Time to Call */}
-              <div className="flex flex-col">
-                <label htmlFor="bestTimeToCall" className="mb-1 text-sm font-medium text-neutral-700">
-                  Best Time to Call
-                </label>
-                <select
-                  id="bestTimeToCall"
-                  name="bestTimeToCall"
-                  onChange={handleInputChange}
-                  className="rounded-lg border border-neutral-300 bg-white px-3 py-2 text-neutral-800 shadow-sm outline-none transition
-                            focus:border-primary-500 focus:ring-2 focus:ring-primary-200"
-                  defaultValue=""
-                >
-                  <option value="" disabled>
-                    Choose a time window
-                  </option>
-                  <option>Any time</option>
-                  <option>Morning (8 AM – 12 PM)</option>
-                  <option>Afternoon (12 PM – 5 PM)</option>
-                  <option>Evening (5 PM – 8 PM)</option>
-                  <option>Weekends only</option>
-                </select>
-              </div>
-            </div>
-            <input
-                  name="couponCode"
-                  placeholder="Coupon Code (optional)"
-                  onChange={handleInputChange}
-                  className="border border-gray-300 rounded-md p-2 w-full"
-                />
+              {!showContactForm && (
+                <div className="text-center">
+                  <button
+                    onClick={handleGetQuote}
+                    className="bg-orange-500 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-orange-600 transition-colors shadow-md"
+                  >
+                    Get Detailed Quote
+                  </button>
+                </div>
+              )}
+            </>
+          )}
 
-            {/* Submit */}
-            <button type="submit"
-            className='block w-full bg-white border-2 border-orange text-orange px-8 py-4 rounded-full text-lg font-semibold hover:bg-white hover:text-accent-600 transition-colors'>Get My Free Estimate</button>
-            <p className='text-center'>*Please note that all quotes provided are estimates and are subject to change upon on-site evaluation. 
-              Final pricing may vary based on factors such as: Window height, Window condition, Special equipment requirements, Accessibility challenges. 
-              Windows located at greater heights or in hard-to-reach areas may incur additional charges due to the increased time, labor, and safety 
-              measures required. We strive to provide accurate estimates, but reserve the right to adjust pricing to reflect the actual scope of work.</p>
-            <p className='text-center'>We'll contact you within 24 hours with your detailed quote.</p>
-          </form>
+          {/* Step 3: Contact & Delivery Section */}
+          {showContactForm && selectedQuote && (
+            <div
+              id="contact-section"
+              className="mt-8 p-6 bg-gradient-to-br from-orange-50 to-white rounded-lg border-2 border-orange-200"
+            >
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-2xl font-bold text-gray-800">
+                  Request Your Detailed Quote
+                </h3>
+                <button
+                  onClick={() => setShowContactForm(false)}
+                  className="text-sm text-orange-600 hover:text-orange-700 underline"
+                >
+                  ← Change Selection
+                </button>
+              </div>
+
+              {/* Selected Tier Summary */}
+              <div className="bg-white p-4 rounded-md border border-orange-200 mb-6">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="inline-block bg-orange-500 text-white text-sm px-3 py-1 rounded-full">
+                    Selected: {selectedQuote.tier}
+                  </span>
+                </div>
+                <div className="grid grid-cols-2 gap-4 text-sm">
+                  <div>
+                    <span className="text-gray-600">Per-Visit Estimate:</span>
+                    <span className="font-bold ml-2">${selectedQuote.perVisit.toFixed(2)}</span>
+                  </div>
+                  {selectedQuote.monthlyEquivalent > 0 && (
+                    <div>
+                      <span className="text-gray-600">Monthly Equivalent:</span>
+                      <span className="font-bold ml-2">
+                        ${selectedQuote.monthlyEquivalent.toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+                  {selectedQuote.firstTimeUplift && (
+                    <div className="col-span-2">
+                      <span className="text-gray-600">First-Time Uplift:</span>
+                      <span className="font-bold text-orange-600 ml-2">
+                        +${selectedQuote.firstTimeUplift.toFixed(2)}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Contact Form */}
+              <div className="space-y-4 mb-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Email Address *
+                  </label>
+                  <input
+                    type="email"
+                    placeholder="your@email.com"
+                    value={contactInfo.email}
+                    onChange={(e) =>
+                      setContactInfo((prev) => ({ ...prev, email: e.target.value }))
+                    }
+                    className="border border-gray-300 rounded-md p-3 w-full"
+                    required
+                  />
+                  <p className="text-xs text-gray-500 mt-1">
+                    We'll send your detailed quote to this address.
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Phone Number (optional)
+                  </label>
+                  <input
+                    type="tel"
+                    placeholder="(555) 555-5555"
+                    value={contactInfo.phone}
+                    onChange={(e) =>
+                      setContactInfo((prev) => ({ ...prev, phone: e.target.value }))
+                    }
+                    className="border border-gray-300 rounded-md p-3 w-full"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Additional Notes (optional)
+                  </label>
+                  <textarea
+                    placeholder="Any special requirements or questions..."
+                    value={contactInfo.notes}
+                    onChange={(e) =>
+                      setContactInfo((prev) => ({ ...prev, notes: e.target.value }))
+                    }
+                    className="border border-gray-300 rounded-md p-3 w-full h-24 resize-none"
+                  />
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <button
+                onClick={handleSubmit}
+                disabled={submitting || !contactInfo.email}
+                className="w-full bg-orange-500 text-white px-6 py-4 rounded-lg text-lg font-semibold hover:bg-orange-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors shadow-md"
+              >
+                {submitting ? 'Submitting...' : 'Email My Quote'}
+              </button>
+              <p className="text-xs text-center text-gray-500 mt-3">
+                Final pricing is confirmed after review. We'll be in touch within 24 hours.
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -461,4 +464,3 @@ function inferSegment(propertyType?: string) {
 };
 
 export default FreeEstimate;
-
