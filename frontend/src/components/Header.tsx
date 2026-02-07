@@ -97,9 +97,14 @@ export default function Header() {
                   alt="Squeegee Samurai" 
                   className="h-12 w-auto"
                 />
-                <span className="text-lg font-bold tracking-tight text-slate-900">
-                  Squeegee Samurai
-                </span>
+                <div className="flex flex-col">
+                  <span className="text-lg font-bold tracking-tight text-slate-900">
+                    Squeegee Samurai
+                  </span>
+                  <span className="text-xs text-slate-600 italic">
+                    Clarity through Pane
+                  </span>
+                </div>
               </Link>
             </div>
 
@@ -111,8 +116,6 @@ export default function Header() {
                   <div
                     key={item.label}
                     className="relative"
-                    onMouseEnter={() => setServicesOpen(true)}
-                    onMouseLeave={() => setServicesOpen(false)}
                   >
                     <button
                       ref={servicesBtnRef}
@@ -204,7 +207,7 @@ export default function Header() {
               <div className="ml-2">
                 <NavLink
                   to={NAV.cta.to}
-                  className="inline-flex items-center rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-400"
+                  className="inline-flex items-center rounded-md bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-400"
                 >
                   {NAV.cta.label}
                 </NavLink>
@@ -276,9 +279,14 @@ export default function Header() {
                 alt="Squeegee Samurai" 
                 className="h-10 w-auto"
               />
-              <span className="text-base font-bold tracking-tight text-slate-900">
-                Squeegee Samurai
-              </span>
+              <div className="flex flex-col">
+                <span className="text-base font-bold tracking-tight text-slate-900">
+                  Squeegee Samurai
+                </span>
+                <span className="text-[10px] text-slate-600 italic">
+                  Clarity through Pane
+                </span>
+              </div>
             </Link>
             <button
               type="button"
@@ -290,7 +298,7 @@ export default function Header() {
             </button>
           </div>
 
-          <nav className="overflow-y-auto p-3">
+          <nav className="overflow-y-auto bg-white p-3">
             <ul className="space-y-1">
               {NAV.primary.map((item) =>
                 item.children ? (
@@ -345,7 +353,7 @@ export default function Header() {
               <NavLink
                 to={NAV.cta.to}
                 onClick={() => setMobileOpen(false)}
-                className="inline-flex items-center justify-center rounded-md bg-slate-900 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-slate-800"
+                className="inline-flex items-center justify-center rounded-md bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-orange-600"
               >
                 {NAV.cta.label}
               </NavLink>

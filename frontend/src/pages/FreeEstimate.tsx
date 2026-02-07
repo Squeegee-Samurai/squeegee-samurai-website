@@ -1,17 +1,16 @@
 /**
- * FreeEstimate – Commercial Storefront Quote Calculator (MVP)
+ * FreeEstimate – Dual Quote Calculator (Residential + Commercial)
  * 
- * Updated per mvp_update_2_4_730.md:
- * - Guided estimator pattern (estimates on-page, quote via email)
- * - Single tier selection in pricing table (clickable rows)
- * - Default to Biweekly Exterior (Most Popular)
- * - "Get Detailed Quote" CTA reveals contact form
- * - Simplified contact fields (email required, phone/notes optional)
+ * - Service type selector: Residential or Commercial
+ * - Commercial: Stepped calculator with pricing table (per mvp_update_2_4_730.md)
+ * - Residential: Traditional comprehensive form
  */
 
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Home.css';
+
+type ServiceType = 'residential' | 'commercial';
 
 // Pricing constants per MVP (per pane)
 const PRICING = {
@@ -98,6 +97,8 @@ function calculateQuotes(inputs: QuoteInputs): TierQuote[] {
 
 const FreeEstimate = () => {
   const navigate = useNavigate();
+  
+  const [serviceType, setServiceType] = useState<ServiceType>('commercial');
 
   const [inputs, setInputs] = useState<QuoteInputs>({
     businessName: '',
@@ -200,12 +201,45 @@ const FreeEstimate = () => {
       <div className="flex justify-center">
         <div className="w-full max-w-5xl bg-white p-8 rounded-xl shadow-2xl">
           <h2 className="text-4xl text-center text-orange-500 font-bold mb-4">
-            Commercial Storefront Pricing Estimator
+            Get Your Free Estimate
           </h2>
-          <p className="text-center text-gray-600 mb-8">
-            Get instant pricing estimates for ground-level storefront window cleaning. Takes less
-            than 2 minutes.
+          <p className="text-center text-gray-600 mb-6">
+            Tell us about your project and we'll provide a free estimated quote and a detailed quote within 24 hours.
           </p>
+
+          {/* Service Type Selector */}
+          <div className="flex justify-center gap-4 mb-8">
+            <button
+              onClick={() => setServiceType('residential')}
+              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                serviceType === 'residential'
+                  ? 'bg-orange-500 text-white shadow-lg'
+                  : 'bg-primary-500 text-white hover:bg-primary-600'
+              }`}
+            >
+              Residential
+            </button>
+            <button
+              onClick={() => setServiceType('commercial')}
+              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+                serviceType === 'commercial'
+                  ? 'bg-orange-500 text-white shadow-lg'
+                  : 'bg-primary-500 text-white hover:bg-primary-600'
+              }`}
+            >
+              Commercial
+            </button>
+          </div>
+
+          {serviceType === 'commercial' ? (
+            <>
+              <h3 className="text-2xl text-center text-gray-800 font-semibold mb-2">
+                Commercial Storefront Pricing Estimator
+              </h3>
+              <p className="text-center text-gray-600 mb-8">
+                Get instant pricing estimates for ground-level storefront window cleaning. Takes less
+                than 2 minutes.
+              </p>
 
           {/* Step 1: Input Section */}
           <div className="space-y-6 mb-8">
@@ -457,9 +491,396 @@ const FreeEstimate = () => {
               </p>
             </div>
           )}
+            </>
+          ) : (
+            <ResidentialForm />
+          )}
         </div>
       </div>
     </div>
+  );
+};
+
+// Residential Form Component
+const ResidentialForm = () => {
+  const navigate = useNavigate();
+  const [submitting, setSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    propertyAddress: '',
+    city: '',
+    zipCode: '',
+    propertyType: '',
+    interiorExterior: '',
+    windowCount: '',
+    photos: null as File[] | null,
+    stories: '',
+    screens: '',
+    serviceFrequency: '',
+    additionalServices: [] as string[],
+    preferredContact: '',
+    bestTimeToCall: '',
+    couponCode: '',
+  });
+
+  const handleInputChange = (field: string, value: any) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleCheckboxChange = (service: string, checked: boolean) => {
+    setFormData((prev) => ({
+      ...prev,
+      additionalServices: checked
+        ? [...prev.additionalServices, service]
+        : prev.additionalServices.filter((s) => s !== service),
+    }));
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFormData((prev) => ({ ...prev, photos: Array.from(e.target.files!) }));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.email || !formData.windowCount) {
+      alert('Please fill in all required fields (email and number of windows).');
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+      const specialRequests = [
+        formData.couponCode ? `Coupon: ${formData.couponCode}` : null,
+        formData.preferredContact ? `Preferred Contact: ${formData.preferredContact}` : null,
+        formData.bestTimeToCall ? `Best Time: ${formData.bestTimeToCall}` : null,
+      ]
+        .filter(Boolean)
+        .join('\n');
+
+      const response = await fetch(`${apiUrl}/api/quote`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contact: {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email,
+            phone: formData.phone || undefined,
+          },
+          formInput: {
+            propertyType: 'Residential',
+            serviceType: formData.serviceFrequency,
+            windowCount: parseInt(formData.windowCount) || 0,
+            screenCount: parseInt(formData.screens) || 0,
+            additionalServices: formData.additionalServices,
+            specialRequests: specialRequests || undefined,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit');
+      }
+
+      const data = await response.json();
+      console.log('Quote submitted:', data);
+
+      navigate('/thank-you');
+    } catch (err) {
+      console.error('Quote submission failed:', err);
+      alert('Failed to submit quote request. Please try again or contact us directly.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Contact Information */}
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input
+            type="text"
+            placeholder="First Name *"
+            value={formData.firstName}
+            onChange={(e) => handleInputChange('firstName', e.target.value)}
+            className="border border-gray-300 rounded-md p-3 w-full"
+            required
+          />
+          <input
+            type="text"
+            placeholder="Last Name *"
+            value={formData.lastName}
+            onChange={(e) => handleInputChange('lastName', e.target.value)}
+            className="border border-gray-300 rounded-md p-3 w-full"
+            required
+          />
+          <input
+            type="email"
+            placeholder="Email Address *"
+            value={formData.email}
+            onChange={(e) => handleInputChange('email', e.target.value)}
+            className="border border-gray-300 rounded-md p-3 w-full"
+            required
+          />
+          <input
+            type="tel"
+            placeholder="Phone Number *"
+            value={formData.phone}
+            onChange={(e) => handleInputChange('phone', e.target.value)}
+            className="border border-gray-300 rounded-md p-3 w-full"
+            required
+          />
+        </div>
+      </div>
+
+      {/* Property Information */}
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Property Information</h3>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <input
+            type="text"
+            placeholder="Property Address *"
+            value={formData.propertyAddress}
+            onChange={(e) => handleInputChange('propertyAddress', e.target.value)}
+            className="border border-gray-300 rounded-md p-3 w-full"
+            required
+          />
+          <input
+            type="text"
+            placeholder="City *"
+            value={formData.city}
+            onChange={(e) => handleInputChange('city', e.target.value)}
+            className="border border-gray-300 rounded-md p-3 w-full"
+            required
+          />
+          <input
+            type="text"
+            placeholder="ZIP Code *"
+            value={formData.zipCode}
+            onChange={(e) => handleInputChange('zipCode', e.target.value)}
+            className="border border-gray-300 rounded-md p-3 w-full"
+            required
+          />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <select
+            value={formData.propertyType}
+            onChange={(e) => handleInputChange('propertyType', e.target.value)}
+            className="border border-gray-300 rounded-md p-3 w-full"
+            required
+          >
+            <option value="">Select property</option>
+            <option value="Single Family Home">Single Family Home</option>
+            <option value="Townhouse">Townhouse</option>
+            <option value="Condo">Condo</option>
+            <option value="Apartment">Apartment</option>
+            <option value="Other">Other</option>
+          </select>
+          <select
+            value={formData.interiorExterior}
+            onChange={(e) => handleInputChange('interiorExterior', e.target.value)}
+            className="border border-gray-300 rounded-md p-3 w-full"
+            required
+          >
+            <option value="">Interior + Exterior</option>
+            <option value="Exterior Only">Exterior Only</option>
+            <option value="Interior + Exterior">Interior + Exterior</option>
+          </select>
+        </div>
+      </div>
+
+      {/* Project Details */}
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Project Details</h3>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Number of Windows
+            </label>
+            <input
+              type="number"
+              placeholder="Enter a number (min 1)"
+              min="1"
+              value={formData.windowCount}
+              onChange={(e) => handleInputChange('windowCount', e.target.value)}
+              className="border border-gray-300 rounded-md p-3 w-full"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Photos (optional)
+            </label>
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleFileChange}
+              className="border border-gray-300 rounded-md p-3 w-full"
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              Add clear photos of windows or problem areas (JPG/PNG)
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Number of Stories
+              </label>
+              <select
+                value={formData.stories}
+                onChange={(e) => handleInputChange('stories', e.target.value)}
+                className="border border-gray-300 rounded-md p-3 w-full"
+              >
+                <option value="">Select stories</option>
+                <option value="1">1 Story</option>
+                <option value="2">2 Stories</option>
+                <option value="3">3 Stories</option>
+                <option value="4+">4+ Stories</option>
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Number of Screens
+              </label>
+              <input
+                type="number"
+                placeholder="Enter a number (min 1)"
+                min="0"
+                value={formData.screens}
+                onChange={(e) => handleInputChange('screens', e.target.value)}
+                className="border border-gray-300 rounded-md p-3 w-full"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Desired Service Frequency
+            </label>
+            <select
+              value={formData.serviceFrequency}
+              onChange={(e) => handleInputChange('serviceFrequency', e.target.value)}
+              className="border border-gray-300 rounded-md p-3 w-full"
+            >
+              <option value="">Select an option</option>
+              <option value="One-Time">One-Time</option>
+              <option value="Monthly">Monthly</option>
+              <option value="Quarterly">Quarterly</option>
+              <option value="Bi-Annually">Bi-Annually</option>
+              <option value="Annually">Annually</option>
+            </select>
+            <p className="text-xs text-gray-500 mt-1">You can change this anytime.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Additional Services */}
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Additional Services</h3>
+        <div className="space-y-2">
+          {[
+            'Screen cleaning',
+            'Window sill cleaning',
+            'Frame cleaning',
+            'Pressure washing',
+            'Gutter cleaning',
+            'Solar panel cleaning',
+          ].map((service) => (
+            <label key={service} className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={formData.additionalServices.includes(service)}
+                onChange={(e) => handleCheckboxChange(service, e.target.checked)}
+                className="w-4 h-4 text-orange-500 border-gray-300 rounded focus:ring-orange-500"
+              />
+              <span className="text-sm text-gray-700">{service}</span>
+            </label>
+          ))}
+        </div>
+      </div>
+
+      {/* Contact Preferences */}
+      <div>
+        <h3 className="text-lg font-semibold text-gray-900 mb-4">Contact Information</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Preferred Contact
+            </label>
+            <select
+              value={formData.preferredContact}
+              onChange={(e) => handleInputChange('preferredContact', e.target.value)}
+              className="border border-gray-300 rounded-md p-3 w-full"
+            >
+              <option value="">Select an option</option>
+              <option value="Email">Email</option>
+              <option value="Phone">Phone</option>
+              <option value="Text">Text</option>
+            </select>
+            <p className="text-xs text-gray-500 mt-1">We'll use this for follow-up on your quote.</p>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Best Time to Call
+            </label>
+            <select
+              value={formData.bestTimeToCall}
+              onChange={(e) => handleInputChange('bestTimeToCall', e.target.value)}
+              className="border border-gray-300 rounded-md p-3 w-full"
+            >
+              <option value="">Choose a time window</option>
+              <option value="Morning (8am-12pm)">Morning (8am-12pm)</option>
+              <option value="Afternoon (12pm-5pm)">Afternoon (12pm-5pm)</option>
+              <option value="Evening (5pm-8pm)">Evening (5pm-8pm)</option>
+            </select>
+          </div>
+        </div>
+        <div className="mt-4">
+          <input
+            type="text"
+            placeholder="Coupon Code (optional)"
+            value={formData.couponCode}
+            onChange={(e) => handleInputChange('couponCode', e.target.value)}
+            className="border border-gray-300 rounded-md p-3 w-full"
+          />
+        </div>
+      </div>
+
+      {/* Submit Button */}
+      <button
+        type="submit"
+        disabled={submitting}
+        className="w-full bg-orange-500 text-white px-6 py-4 rounded-lg text-lg font-semibold hover:bg-orange-600 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors shadow-md"
+      >
+        {submitting ? 'Submitting...' : 'Get My Free Estimate'}
+      </button>
+
+      <p className="text-xs text-center text-gray-500">
+        *Please note that all quotes provided are estimates and are subject to change upon on-site
+        evaluation. Final pricing may vary based on factors such as: Window height, Window condition,
+        Special equipment requirements, Accessibility challenges, Windows located on third-floor or
+        higher, Additional charges due to the increased time, labor, and safety measures required. We
+        strive to provide accurate estimates, but reserve the right to adjust pricing to reflect the
+        actual scope of work.
+      </p>
+      <p className="text-center text-gray-600 mt-2">
+        We'll contact you within 24 hours with your detailed quote.
+      </p>
+    </form>
   );
 };
 
