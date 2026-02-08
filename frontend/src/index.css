@@ -41,15 +41,15 @@
   }
 
   .btn-primary {
+    @apply inline-flex items-center justify-center rounded-sm bg-aka-600 px-6 py-3 text-sm font-medium tracking-wide text-white transition-colors hover:bg-aka-700;
+  }
+
+  .btn-dark {
     @apply inline-flex items-center justify-center rounded-sm bg-sumi-800 px-6 py-3 text-sm font-medium tracking-wide text-washi-50 transition-colors hover:bg-sumi-900;
   }
 
   .btn-outline {
-    @apply inline-flex items-center justify-center rounded-sm border border-sumi-800 bg-transparent px-6 py-3 text-sm font-medium tracking-wide text-sumi-800 transition-colors hover:bg-sumi-800 hover:text-washi-50;
-  }
-
-  .btn-accent {
-    @apply inline-flex items-center justify-center rounded-sm bg-aka-600 px-6 py-3 text-sm font-medium tracking-wide text-white transition-colors hover:bg-aka-700;
+    @apply inline-flex items-center justify-center rounded-sm border border-sumi-300 bg-transparent px-6 py-3 text-sm font-medium tracking-wide text-sumi-800 transition-colors hover:bg-sumi-800 hover:text-washi-50 hover:border-sumi-800;
   }
 
   /* Subtle geometric line divider inspired by Japanese design */

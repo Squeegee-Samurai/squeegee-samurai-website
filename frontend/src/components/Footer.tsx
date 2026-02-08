@@ -29,12 +29,11 @@ export default function Footer() {
         <div className="flex flex-col gap-12 lg:flex-row lg:gap-16">
           {/* Brand column */}
           <div className="lg:max-w-xs">
-            <h3 className="font-display text-xl font-bold text-washi-50">
-              Squeegee Samurai
-            </h3>
-            <p className="mt-1 text-[10px] font-medium uppercase tracking-[0.15em] text-sumi-400">
-              Clarity through Pane
-            </p>
+            <img
+              src="/images/squeegee-samurai-logo.png"
+              alt="Squeegee Samurai"
+              className="h-16 w-auto brightness-0 invert"
+            />
             <p className="mt-5 text-sm leading-relaxed text-sumi-300">
               Professional window cleaning with the precision and dedication of the samurai.
               Serving homes and businesses throughout Loudoun County, Virginia.

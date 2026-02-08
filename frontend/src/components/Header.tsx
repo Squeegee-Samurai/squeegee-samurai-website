@@ -89,17 +89,14 @@ export default function Header() {
         )}
       >
         <div className="section-container">
-          <div className="flex h-16 items-center justify-between lg:h-[72px]">
+          <div className="flex h-20 items-center justify-between lg:h-24">
             {/* Logo */}
-            <Link to="/" className="flex items-center gap-3 group">
-              <div className="flex flex-col">
-                <span className="font-display text-lg font-bold tracking-tight text-sumi-900 leading-none">
-                  Squeegee Samurai
-                </span>
-                <span className="text-[10px] font-medium uppercase tracking-[0.15em] text-sumi-400">
-                  Clarity through Pane
-                </span>
-              </div>
+            <Link to="/" className="flex items-center gap-3 group shrink-0">
+              <img
+                src="/images/squeegee-samurai-logo.png"
+                alt="Squeegee Samurai logo"
+                className="h-14 w-auto lg:h-[72px]"
+              />
             </Link>
 
             {/* Desktop nav */}
@@ -252,18 +249,17 @@ export default function Header() {
           aria-modal="true"
           aria-label="Mobile navigation"
         >
-          <div className="flex h-16 items-center justify-between border-b border-sumi-100 px-5">
+          <div className="flex h-20 items-center justify-between border-b border-sumi-100 px-5">
             <Link
               to="/"
-              className="flex flex-col"
+              className="flex items-center"
               onClick={() => setMobileOpen(false)}
             >
-              <span className="font-display text-base font-bold tracking-tight text-sumi-900 leading-none">
-                Squeegee Samurai
-              </span>
-              <span className="text-[9px] font-medium uppercase tracking-[0.15em] text-sumi-400">
-                Clarity through Pane
-              </span>
+              <img
+                src="/images/squeegee-samurai-logo.png"
+                alt="Squeegee Samurai logo"
+                className="h-12 w-auto"
+              />
             </Link>
             <button
               type="button"
