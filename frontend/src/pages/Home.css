@@ -7,55 +7,46 @@
   background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
 }
 
-/* Cloud layer base styles */
+/* Cloud layer base styles - parallax effect */
 .parallax-clouds::before,
 .parallax-clouds::after {
   content: '';
-  position: absolute;
-  inset: -50%;
-  width: 200%;
-  height: 200%;
+  position: fixed; /* Fixed creates parallax effect when scrolling */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   pointer-events: none;
-  will-change: transform;
-  z-index: 0;
+  z-index: -10; /* Far behind content */
 }
 
-/* Layer 1: Sparse large clouds (back) */
+/* Layer 1: Cloud pattern (back layer) - stays fixed */
 .parallax-clouds::before {
-  background-image: url("/images/akatsuki-cloud-orng.png");
-  background-size: 500px auto;
-  background-position: 0 0;
+  background-image: url("/images/cloud-pattern.png");
+  background-size: 600px auto; /* Tile the seamless pattern */
+  background-position: center top;
   background-repeat: repeat;
-  opacity: 0.25;
-  animation: cloud-drift-1 80s linear infinite;
+  background-attachment: fixed; /* Parallax: stays fixed relative to viewport */
+  opacity: 0.3;
+  transform: translateZ(0); /* Hardware acceleration */
 }
 
-/* Layer 2: Sparse smaller clouds (front) */
+/* Layer 2: Cloud pattern (front layer) - moves with scroll */
 .parallax-clouds::after {
-  background-image: url("/images/akatsuki-cloud-orng.png");
-  background-size: 320px auto;
-  background-position: 200px 150px;
+  background-image: url("/images/cloud-pattern.png");
+  background-size: 400px auto; /* Smaller tile size for variety */
+  background-position: 200px 150px; /* Offset for depth */
   background-repeat: repeat;
-  opacity: 0.4;
-  animation: cloud-drift-2 55s linear infinite;
-  animation-delay: -25s;
-}
-
-/* Diagonal movement (45 degrees) */
-@keyframes cloud-drift-1 {
-  from { transform: translate(0, 0); }
-  to   { transform: translate(-500px, -500px); }
-}
-
-@keyframes cloud-drift-2 {
-  from { transform: translate(0, 0); }
-  to   { transform: translate(-320px, -320px); }
+  background-attachment: scroll; /* Moves with scroll for depth effect */
+  opacity: 0.2;
+  transform: translateZ(0); /* Hardware acceleration */
 }
 
 /* Content container needs to be above clouds */
 .parallax-clouds > * {
   position: relative;
-  z-index: 1;
+  z-index: 10; /* Well above clouds (z-index: -10) */
+  background: transparent; /* Ensure content doesn't inherit background */
 }
 
 /* Reduced motion preference */

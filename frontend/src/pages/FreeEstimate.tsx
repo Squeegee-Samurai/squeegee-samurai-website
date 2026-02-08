@@ -8,7 +8,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Home.css';
+import { Home, Building } from 'lucide-react';
 
 type ServiceType = 'residential' | 'commercial';
 
@@ -197,7 +197,7 @@ const FreeEstimate = () => {
   };
 
   return (
-    <div className="parallax-clouds min-h-screen bg-neutral-50 px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-neutral-50 to-neutral-100 px-4 py-8">
       <div className="flex justify-center">
         <div className="w-full max-w-5xl bg-white p-8 rounded-xl shadow-2xl">
           <h2 className="text-4xl text-center text-orange-500 font-bold mb-4">
@@ -211,22 +211,24 @@ const FreeEstimate = () => {
           <div className="flex justify-center gap-4 mb-8">
             <button
               onClick={() => setServiceType('residential')}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+              className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
                 serviceType === 'residential'
                   ? 'bg-orange-500 text-white shadow-lg'
                   : 'bg-primary-500 text-white hover:bg-primary-600'
               }`}
             >
+              <Home className="w-5 h-5" />
               Residential
             </button>
             <button
               onClick={() => setServiceType('commercial')}
-              className={`px-6 py-3 rounded-lg font-semibold transition-all ${
+              className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
                 serviceType === 'commercial'
                   ? 'bg-orange-500 text-white shadow-lg'
                   : 'bg-primary-500 text-white hover:bg-primary-600'
               }`}
             >
+              <Building className="w-5 h-5" />
               Commercial
             </button>
           </div>
