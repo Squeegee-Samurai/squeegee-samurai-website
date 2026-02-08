@@ -65,7 +65,7 @@ export default function Header() {
   }, [servicesOpen]);
 
   const linkBase =
-    "relative px-1 py-2 text-[13px] font-medium uppercase tracking-[0.08em] transition-colors";
+    "relative px-1 py-2 text-[13px] font-semibold uppercase tracking-[0.08em] transition-colors";
   const linkActive = "text-sumi-900";
   const linkIdle = "text-sumi-400 hover:text-sumi-700";
   const underline =
@@ -82,9 +82,9 @@ export default function Header() {
 
       <header
         className={cx(
-          "sticky top-0 z-50 w-full transition-all duration-300",
+          "sticky top-0 z-50 w-full shadow-md transition-all duration-300",
           scrolled
-            ? "border-b border-sumi-100 bg-washi-50/95 backdrop-blur-md shadow-[0_1px_3px_rgba(0,0,0,0.04)]"
+            ? "border-b border-sumi-100 bg-washi-50/95 backdrop-blur-md shadow-lg"
             : "bg-washi-50"
         )}
       >
@@ -93,7 +93,7 @@ export default function Header() {
             {/* Logo */}
             <Link to="/" className="flex items-center gap-3 group shrink-0">
               <img
-                src="/images/squeegee-samurai-logo.png"
+                src="/images/squeegee-samurai-logo.svg"
                 alt="Squeegee Samurai logo"
                 className="h-14 w-auto lg:h-[72px]"
               />
@@ -256,7 +256,7 @@ export default function Header() {
               onClick={() => setMobileOpen(false)}
             >
               <img
-                src="/images/squeegee-samurai-logo.png"
+                src="/images/squeegee-samurai-logo.svg"
                 alt="Squeegee Samurai logo"
                 className="h-12 w-auto"
               />

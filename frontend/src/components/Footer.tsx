@@ -30,7 +30,7 @@ export default function Footer() {
           {/* Brand column */}
           <div className="lg:max-w-xs">
             <img
-              src="/images/squeegee-samurai-logo.png"
+              src="/images/squeegee-samurai-logo.svg"
               alt="Squeegee Samurai"
               className="h-16 w-auto brightness-0 invert"
             />
