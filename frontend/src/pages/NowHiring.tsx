@@ -1,21 +1,13 @@
 import React, { useState } from 'react';
 import emailjs from 'emailjs-com';
-import { Briefcase, MapPin, Clock, DollarSign, CheckCircle, Send, Users, Building } from 'lucide-react';
+import { Briefcase, MapPin, Clock, DollarSign, ChevronDown, Send, Users, Building } from 'lucide-react';
 
 const NowHiring = () => {
-  const [selectedJob, setSelectedJob] = useState(null);
+  const [selectedJob, setSelectedJob] = useState<number | null>(null);
   const [applicationData, setApplicationData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    position: '',
-    experience: '',
-    availability: '',
-    message: ''
+    name: '', email: '', phone: '', position: '', experience: '', availability: '', message: '',
   });
-
-    const [isSubmitted, setIsSubmitted] = useState(false);
-  
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const jobs = [
     {
@@ -24,7 +16,7 @@ const NowHiring = () => {
       type: 'Full-time / Part-time',
       location: 'Loudoun County, VA',
       salary: '$18-25/hour',
-      icon: <Users className="w-8 h-8 text-primary-600" />,
+      icon: <Users className="h-6 w-6" />,
       description: 'Join our team of professional window cleaning technicians serving residential and commercial properties throughout Loudoun County.',
       responsibilities: [
         'Perform high-quality window cleaning for residential and commercial properties',
@@ -32,27 +24,24 @@ const NowHiring = () => {
         'Maintain excellent customer service standards',
         'Follow safety protocols and procedures',
         'Work independently and as part of a team',
-        'Complete daily route assignments on schedule'
+        'Complete daily route assignments on schedule',
       ],
       requirements: [
-        'Previous window cleaning or related experience preferred but not required',
+        'Previous window cleaning experience preferred but not required',
         'Ability to work at heights and on ladders safely',
         'Physical fitness and ability to lift up to 50 lbs',
-        'Valid driver\'s license with clean driving record',
+        "Valid driver's license with clean driving record",
         'Reliable transportation',
         'Professional appearance and demeanor',
-        'Ability to work in various weather conditions',
-        'Strong attention to detail'
       ],
       benefits: [
-        'Competitive hourly wage ($18-25/hour based on experience)',
+        'Competitive hourly wage ($18-25/hr based on experience)',
         'Performance bonuses and tips',
         'Flexible scheduling options',
         'Professional training provided',
         'Opportunity for advancement',
         'Uniform and equipment provided',
-        'Paid time off for full-time employees'
-      ]
+      ],
     },
     {
       id: 2,
@@ -60,27 +49,23 @@ const NowHiring = () => {
       type: 'Full-time',
       location: 'Loudoun County, VA',
       salary: '$45,000-55,000/year',
-      icon: <Building className="w-8 h-8 text-primary-600" />,
-      description: 'We\'re seeking an organized and detail-oriented Office Manager to oversee daily operations and support our growing window cleaning business.',
+      icon: <Building className="h-6 w-6" />,
+      description: "We're seeking an organized and detail-oriented Office Manager to oversee daily operations and support our growing window cleaning business.",
       responsibilities: [
         'Manage customer inquiries and schedule appointments',
         'Coordinate daily routes and technician assignments',
         'Handle billing, invoicing, and payment processing',
         'Maintain customer database and service records',
         'Assist with marketing and social media efforts',
-        'Manage office supplies and equipment inventory',
         'Support hiring and training of new employees',
-        'Prepare reports and analyze business metrics'
       ],
       requirements: [
         '2+ years of office management or administrative experience',
         'Excellent communication and customer service skills',
-        'Proficiency in Microsoft Office Suite and basic computer skills',
+        'Proficiency in Microsoft Office Suite',
         'Strong organizational and multitasking abilities',
         'Experience with scheduling software preferred',
-        'Knowledge of QuickBooks or similar accounting software a plus',
-        'High school diploma required, college degree preferred',
-        'Ability to work independently and make decisions'
+        'Knowledge of QuickBooks or similar a plus',
       ],
       benefits: [
         'Competitive annual salary ($45,000-55,000)',
@@ -89,54 +74,29 @@ const NowHiring = () => {
         'Professional development opportunities',
         'Flexible work arrangements',
         'Performance-based bonuses',
-        'Retirement plan contribution matching'
-      ]
-    }
+      ],
+    },
   ];
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setApplicationData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setApplicationData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Here you would typically send the application data to your backend
-
     const templateParams = {
       fullName: applicationData.name,
       emailAdd: applicationData.email,
       phoneNum: applicationData.phone,
       subject: `Job Inquiry: ${applicationData.position}`,
-      message: `
-        Experience: ${applicationData.experience}
-        Availability: ${applicationData.availability}
-        Message: ${applicationData.message}
-      `
+      message: `Experience: ${applicationData.experience}\nAvailability: ${applicationData.availability}\nMessage: ${applicationData.message}`,
     };
-
-    emailjs.send(
-        'service_smyhfg9',      
-        'template_tiv6cho',     
-        templateParams,
-        'tP8oeE5EOGJQXkvGp'      
-      )
+    emailjs
+      .send('service_smyhfg9', 'template_tiv6cho', templateParams, 'tP8oeE5EOGJQXkvGp')
       .then(() => {
-        setIsSubmitted(true);   
-        console.log('Application submitted:', applicationData);
-        alert('Thank you for your application! We\'ll be in touch soon.');
-        setApplicationData({
-          name: '',
-          email: '',
-          phone: '',
-          position: '',
-          experience: '',
-          availability: '',
-          message: ''
-    });
+        setIsSubmitted(true);
+        setApplicationData({ name: '', email: '', phone: '', position: '', experience: '', availability: '', message: '' });
       })
       .catch((error) => {
         alert('Failed to send message: ' + error.text);
@@ -144,144 +104,96 @@ const NowHiring = () => {
       });
   };
 
+  const inputClass =
+    'w-full border border-sumi-200 bg-white px-4 py-3 text-sumi-800 placeholder:text-sumi-300 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 transition-colors';
+  const labelClass = 'block text-sm font-medium text-sumi-600 mb-1.5';
+
   return (
-    <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gray-900 text-white py-20">
-      <div
-          className="absolute inset-0 pointer-events-none opacity-30 z-0"
-          style={{
-            backgroundImage:
-              'repeating-conic-gradient(from 0deg at 50% 50%, rgba(255,255,255,.9) 0deg 1.2deg, transparent 1.2deg 5deg)',
-            WebkitMaskImage:
-              'radial-gradient(circle at center, transparent 0 32%, black 45%)',
-            maskImage:
-              'radial-gradient(circle at center, transparent 0 32%, black 45%)'
-          }}
-        />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <Briefcase className="w-16 h-16 mx-auto mb-6 text-primary-200" />
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">Now Hiring</h1>
-            <p className="text-xl text-primary-100 max-w-3xl mx-auto">
-              Join the Squeegee Samurai team and help us deliver exceptional window cleaning services throughout Loudoun County
-            </p>
-          </div>
+    <div className="bg-washi-50">
+      {/* Hero */}
+      <section className="bg-sumi-800 py-20 text-center text-washi-50">
+        <div className="section-container">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-sumi-300 mb-3">Careers</p>
+          <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl text-balance">Now Hiring</h1>
+          <div className="mx-auto mt-4 h-px w-12 bg-aka-600" />
+          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-sumi-300">
+            Join the Squeegee Samurai team and help deliver exceptional window cleaning services throughout Loudoun County.
+          </p>
         </div>
       </section>
 
       {/* Why Work With Us */}
-      <section className="py-16 bg-neutral-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-neutral-900 mb-4">Why Work With Squeegee Samurai?</h2>
-            <p className="text-lg text-neutral-600">
-              Join a growing company that values professionalism, quality, and employee development
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-6 bg-white rounded-lg shadow-md">
-              <CheckCircle className="w-12 h-12 text-accent-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-3">Growth Opportunities</h3>
-              <p className="text-neutral-600">Advance your career with training, certifications, and leadership opportunities.</p>
-            </div>
-            
-            <div className="text-center p-6 bg-white rounded-lg shadow-md">
-              <DollarSign className="w-12 h-12 text-accent-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-3">Competitive Pay</h3>
-              <p className="text-neutral-600">Earn competitive wages with performance bonuses and opportunities for tips.</p>
-            </div>
-            
-            <div className="text-center p-6 bg-white rounded-lg shadow-md">
-              <Clock className="w-12 h-12 text-accent-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold mb-3">Flexible Schedule</h3>
-              <p className="text-neutral-600">Enjoy flexible scheduling options that work with your lifestyle.</p>
-            </div>
+      <section className="py-16 border-b border-sumi-100">
+        <div className="section-container">
+          <h2 className="font-display text-2xl font-bold text-sumi-800 text-center mb-10">Why Squeegee Samurai?</h2>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {[
+              { title: 'Growth', desc: 'Advance your career with training, certifications, and leadership opportunities.' },
+              { title: 'Competitive Pay', desc: 'Earn competitive wages with performance bonuses and tips.' },
+              { title: 'Flexible Schedule', desc: 'Flexible scheduling options that work with your lifestyle.' },
+            ].map((item) => (
+              <div key={item.title} className="bg-white border border-sumi-100 p-6 text-center">
+                <h3 className="font-display text-lg font-semibold text-sumi-800 mb-2">{item.title}</h3>
+                <p className="text-sm text-sumi-500 leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
       {/* Job Listings */}
-      <section className="py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-neutral-900 mb-4">Open Positions</h2>
-            <p className="text-lg text-neutral-600">
-              Explore our current job openings and find your next career opportunity
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <section className="py-16 border-b border-sumi-100">
+        <div className="section-container">
+          <h2 className="font-display text-2xl font-bold text-sumi-800 text-center mb-10">Open Positions</h2>
+          <div className="mx-auto max-w-3xl space-y-4">
             {jobs.map((job) => (
-              <div key={job.id} className="bg-white rounded-lg shadow-lg border border-neutral-200 overflow-hidden">
+              <div key={job.id} className="bg-white border border-sumi-100 overflow-hidden">
                 <div className="p-6">
-                  <div className="flex items-center mb-4">
-                    {job.icon}
-                    <div className="ml-4">
-                      <h3 className="text-2xl font-semibold text-neutral-900">{job.title}</h3>
-                      <div className="flex items-center text-neutral-600 mt-1">
-                        <Clock className="w-4 h-4 mr-1" />
-                        <span className="text-sm mr-4">{job.type}</span>
-                        <MapPin className="w-4 h-4 mr-1" />
-                        <span className="text-sm mr-4">{job.location}</span>
-                        <DollarSign className="w-4 h-4 mr-1" />
-                        <span className="text-sm font-semibold">{job.salary}</span>
+                  <div className="flex items-start gap-4">
+                    <div className="flex h-10 w-10 items-center justify-center bg-indigo-50 text-indigo-600 flex-shrink-0">{job.icon}</div>
+                    <div className="flex-1">
+                      <h3 className="font-display text-lg font-semibold text-sumi-800">{job.title}</h3>
+                      <div className="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-sumi-400">
+                        <span className="flex items-center gap-1"><Clock className="h-3.5 w-3.5" />{job.type}</span>
+                        <span className="flex items-center gap-1"><MapPin className="h-3.5 w-3.5" />{job.location}</span>
+                        <span className="flex items-center gap-1"><DollarSign className="h-3.5 w-3.5" />{job.salary}</span>
                       </div>
+                      <p className="mt-3 text-sm text-sumi-500">{job.description}</p>
                     </div>
                   </div>
-                  
-                  <p className="text-neutral-600 mb-6">{job.description}</p>
-                  
+
                   <button
                     onClick={() => setSelectedJob(selectedJob === job.id ? null : job.id)}
-                    className="bg-primary-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-primary-700 transition-colors mb-4"
+                    className="mt-4 flex items-center gap-1 text-sm font-medium text-indigo-600 hover:text-indigo-700"
                   >
                     {selectedJob === job.id ? 'Hide Details' : 'View Details'}
+                    <ChevronDown className={`h-4 w-4 transition-transform ${selectedJob === job.id ? 'rotate-180' : ''}`} />
                   </button>
-                  
-                  {selectedJob === job.id && (
-                    <div className="border-t border-neutral-200 pt-6 mt-6">
-                      <div className="space-y-6">
-                        <div>
-                          <h4 className="text-lg font-semibold mb-3">Responsibilities</h4>
-                          <ul className="space-y-2">
-                            {job.responsibilities.map((item, index) => (
-                              <li key={index} className="flex items-start">
-                                <CheckCircle className="w-4 h-4 text-accent-500 mr-2 mt-1 flex-shrink-0" />
-                                <span className="text-neutral-600 text-sm">{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        
-                        <div>
-                          <h4 className="text-lg font-semibold mb-3">Requirements</h4>
-                          <ul className="space-y-2">
-                            {job.requirements.map((item, index) => (
-                              <li key={index} className="flex items-start">
-                                <CheckCircle className="w-4 h-4 text-primary-500 mr-2 mt-1 flex-shrink-0" />
-                                <span className="text-neutral-600 text-sm">{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        
-                        <div>
-                          <h4 className="text-lg font-semibold mb-3">Benefits</h4>
-                          <ul className="space-y-2">
-                            {job.benefits.map((item, index) => (
-                              <li key={index} className="flex items-start">
-                                <CheckCircle className="w-4 h-4 text-gold-500 mr-2 mt-1 flex-shrink-0" />
-                                <span className="text-neutral-600 text-sm">{item}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-                    </div>
-                  )}
                 </div>
+
+                {selectedJob === job.id && (
+                  <div className="border-t border-sumi-100 bg-sumi-50 p-6">
+                    <div className="space-y-6 text-sm">
+                      {[
+                        { heading: 'Responsibilities', items: job.responsibilities },
+                        { heading: 'Requirements', items: job.requirements },
+                        { heading: 'Benefits', items: job.benefits },
+                      ].map((section) => (
+                        <div key={section.heading}>
+                          <h4 className="font-display font-semibold text-sumi-700 mb-2">{section.heading}</h4>
+                          <ul className="space-y-1.5">
+                            {section.items.map((item, i) => (
+                              <li key={i} className="flex items-start gap-2 text-sumi-500">
+                                <span className="mt-1.5 h-1 w-1 rounded-full bg-indigo-400 flex-shrink-0" />
+                                {item}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             ))}
           </div>
@@ -289,154 +201,55 @@ const NowHiring = () => {
       </section>
 
       {/* Application Form */}
-      <section className="parallax-clouds py-16 bg-neutral-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-neutral-900 mb-4">Apply Now</h2>
-            <p className="text-lg text-neutral-600">
-              Ready to join our team? Submit your application below
-            </p>
-          </div>
-          
-          <div className="bg-white rounded-lg shadow-lg p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">
-                    Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    name="name"
-                    required
-                    value={applicationData.name}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  />
+      <section className="py-16">
+        <div className="section-container">
+          <div className="mx-auto max-w-2xl">
+            <h2 className="font-display text-2xl font-bold text-sumi-800 text-center mb-2">Apply Now</h2>
+            <p className="text-center text-sumi-500 mb-10">Ready to join our team? Submit your application below.</p>
+
+            {isSubmitted ? (
+              <div className="bg-white border border-sumi-100 p-10 text-center">
+                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center bg-indigo-50">
+                  <Send className="h-5 w-5 text-indigo-600" />
                 </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">
-                    Email Address *
-                  </label>
-                  <input
-                    type="email"
-                    name="email"
-                    required
-                    value={applicationData.email}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  />
+                <h3 className="font-display text-xl font-semibold text-sumi-800 mb-2">Application Submitted</h3>
+                <p className="text-sumi-500">{"Thank you for your interest. We'll be in touch soon."}</p>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="bg-white border border-sumi-100 p-8 space-y-5">
+                <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                  <div><label className={labelClass}>Full Name *</label><input type="text" name="name" required value={applicationData.name} onChange={handleInputChange} className={inputClass} /></div>
+                  <div><label className={labelClass}>Email *</label><input type="email" name="email" required value={applicationData.email} onChange={handleInputChange} className={inputClass} /></div>
+                  <div><label className={labelClass}>Phone *</label><input type="tel" name="phone" required value={applicationData.phone} onChange={handleInputChange} className={inputClass} /></div>
+                  <div>
+                    <label className={labelClass}>Position *</label>
+                    <select name="position" required value={applicationData.position} onChange={handleInputChange} className={inputClass}>
+                      <option value="">Select</option>
+                      <option value="window-washing">Window Washing Professional</option>
+                      <option value="office-manager">Office Manager</option>
+                    </select>
+                  </div>
                 </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">
-                    Phone Number *
-                  </label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    required
-                    value={applicationData.phone}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-neutral-700 mb-2">
-                    Position Applying For *
-                  </label>
-                  <select
-                    name="position"
-                    required
-                    value={applicationData.position}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  >
-                    <option value="">Select Position</option>
-                    <option value="window-washing">Window Washing Professional</option>
-                    <option value="office-manager">Office Manager</option>
-                  </select>
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Relevant Experience
-                </label>
-                <textarea
-                  name="experience"
-                  value={applicationData.experience}
-                  onChange={handleInputChange}
-                  rows={4}
-                  className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="Tell us about your relevant work experience..."
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Availability
-                </label>
-                <input
-                  type="text"
-                  name="availability"
-                  value={applicationData.availability}
-                  onChange={handleInputChange}
-                  className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="e.g., Full-time, Part-time, Weekends only"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-neutral-700 mb-2">
-                  Additional Message
-                </label>
-                <textarea
-                  name="message"
-                  value={applicationData.message}
-                  onChange={handleInputChange}
-                  rows={4}
-                  className="w-full px-4 py-2 border border-neutral-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                  placeholder="Tell us why you'd like to work with Squeegee Samurai..."
-                />
-              </div>
-              
-              <div className="text-center">
-                <button
-                  type="submit"
-                  className="bg-accent-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-accent-700 transition-colors flex items-center justify-center mx-auto"
-                >
-                  <Send className="w-5 h-5 mr-2" />
-                  Submit Application
+                <div><label className={labelClass}>Relevant Experience</label><textarea name="experience" rows={3} value={applicationData.experience} onChange={handleInputChange} className={inputClass + ' resize-none'} placeholder="Tell us about your relevant work experience..." /></div>
+                <div><label className={labelClass}>Availability</label><input type="text" name="availability" value={applicationData.availability} onChange={handleInputChange} className={inputClass} placeholder="e.g. Full-time, Part-time, Weekends only" /></div>
+                <div><label className={labelClass}>Additional Message</label><textarea name="message" rows={3} value={applicationData.message} onChange={handleInputChange} className={inputClass + ' resize-none'} placeholder="Tell us why you'd like to work with Squeegee Samurai..." /></div>
+                <button type="submit" className="w-full btn-primary py-3 gap-2">
+                  <Send className="h-4 w-4" /> Submit Application
                 </button>
-              </div>
-            </form>
+              </form>
+            )}
           </div>
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section className="py-16 bg-primary-600 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">Questions About These Positions?</h2>
-          <p className="text-xl mb-8">
-            Contact us directly to learn more about career opportunities at Squeegee Samurai
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a
-              href="tel:5403351059"
-              className="bg-white text-primary-600 px-8 py-4 rounded-full text-lg font-semibold hover:bg-neutral-100 transition-colors"
-            >
-              Call (540) 335-1059
-            </a>
-            <a
-              href="mailto:james@squeegee-samurai.com"
-              className="bg-transparent border-2 border-white text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white hover:text-primary-600 transition-colors"
-            >
-              Email Us
-            </a>
+      {/* CTA */}
+      <section className="border-t border-sumi-100 bg-sumi-800 py-16 text-center text-washi-50">
+        <div className="section-container">
+          <h2 className="font-display text-2xl font-bold mb-3">Questions About These Positions?</h2>
+          <p className="text-sumi-300 mb-8">Contact us directly to learn more about career opportunities.</p>
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
+            <a href="tel:5403351059" className="btn-primary bg-washi-50 text-sumi-800 hover:bg-white">Call (540) 335-1059</a>
+            <a href="mailto:james@squeegee-samurai.com" className="inline-flex items-center justify-center rounded-sm border border-sumi-400 px-6 py-3 text-sm font-medium tracking-wide text-washi-50 transition-colors hover:bg-sumi-700">Email Us</a>
           </div>
         </div>
       </section>

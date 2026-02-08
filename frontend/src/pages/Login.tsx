@@ -1,13 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogIn, Eye, EyeOff, User, Lock } from 'lucide-react';
+import { Eye, EyeOff, User, Lock } from 'lucide-react';
 import { setCurrentUser } from '../utils/auth';
-import { Jobs } from './Jobs.tsx';
 
-// If using Vite, set VITE_API_BASE in .env (e.g., VITE_API_BASE=http://localhost:8080)
 const API_BASE = import.meta.env.VITE_API_BASE ?? 'http://localhost:8080';
-
-fetch(`${API_BASE}/api/auth/signup`)
 
 type FormErrors = {
   email?: string;
@@ -58,7 +54,6 @@ const Login = () => {
       const res = await fetch(`${API_BASE}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        // If you later use cookies/session, also add: credentials: 'include'
         body: JSON.stringify({
           email: credentials.email,
           password: credentials.password,
@@ -71,11 +66,9 @@ const Login = () => {
         return;
       }
 
-      // Backend returns: { id, email, fullName, role, phone }
       const user = await res.json();
-      setCurrentUser(user); // your existing storage helper
+      setCurrentUser(user);
 
-      //  ADMIN | EMPLOYEE | CUSTOMER
       switch (user.role) {
         case 'ADMIN':
           navigate('/dashboard');
@@ -94,65 +87,67 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <LogIn className="mx-auto h-12 w-12 text-primary-600" />
-          <h2 className="mt-6 text-3xl font-bold text-neutral-900">
+    <div className="min-h-screen bg-washi-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full">
+        <div className="text-center mb-8">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center bg-sumi-800">
+            <Lock className="h-5 w-5 text-washi-50" />
+          </div>
+          <h2 className="font-display text-2xl font-bold text-sumi-800">
             Sign in to your account
           </h2>
-          <p className="mt-2 text-sm text-neutral-600">
+          <p className="mt-2 text-sm text-sumi-500">
             Access the Squeegee Samurai portal
           </p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-8">
+        <div className="bg-white border border-sumi-100 p-8">
           {errors.general && (
-            <div className="mb-4 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
+            <div className="mb-4 border border-aka-200 bg-aka-50 text-aka-700 px-4 py-3 text-sm">
               {errors.general}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
+              <label className="block text-sm font-medium text-sumi-700 mb-1.5">
                 Email Address
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-neutral-400" />
+                  <User className="h-4 w-4 text-sumi-400" />
                 </div>
                 <input
                   type="email"
                   name="email"
                   value={credentials.email}
                   onChange={handleInputChange}
-                  className={`block w-full pl-10 pr-3 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
-                    errors.email ? 'border-red-300' : 'border-neutral-300'
+                  className={`block w-full pl-10 pr-3 py-2.5 border text-sm focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition-colors ${
+                    errors.email ? 'border-aka-400' : 'border-sumi-200'
                   }`}
                   placeholder="Enter your email"
                 />
               </div>
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                <p className="mt-1 text-xs text-aka-600">{errors.email}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-neutral-700 mb-2">
+              <label className="block text-sm font-medium text-sumi-700 mb-1.5">
                 Password
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-neutral-400" />
+                  <Lock className="h-4 w-4 text-sumi-400" />
                 </div>
                 <input
                   type={showPassword ? 'text' : 'password'}
                   name="password"
                   value={credentials.password}
                   onChange={handleInputChange}
-                  className={`block w-full pl-10 pr-10 py-2 border rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent ${
-                    errors.password ? 'border-red-300' : 'border-neutral-300'
+                  className={`block w-full pl-10 pr-10 py-2.5 border text-sm focus:ring-1 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition-colors ${
+                    errors.password ? 'border-aka-400' : 'border-sumi-200'
                   }`}
                   placeholder="Enter your password"
                 />
@@ -162,30 +157,30 @@ const Login = () => {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-neutral-400" />
+                    <EyeOff className="h-4 w-4 text-sumi-400" />
                   ) : (
-                    <Eye className="h-5 w-5 text-neutral-400" />
+                    <Eye className="h-4 w-4 text-sumi-400" />
                   )}
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+                <p className="mt-1 text-xs text-aka-600">{errors.password}</p>
               )}
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-primary-600 text-white py-2 px-4 rounded-lg font-semibold hover:bg-primary-700 focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full bg-sumi-800 text-washi-50 py-2.5 px-4 text-sm font-medium tracking-wide hover:bg-sumi-700 focus:ring-2 focus:ring-indigo-400 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isLoading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 
           <div className="mt-6 text-center">
-            <p className="text-sm text-neutral-600">
-              Don't have an account?{' '}
-              <Link to="/signup" className="text-primary-600 hover:text-primary-800 font-medium">
+            <p className="text-sm text-sumi-500">
+              {"Don't have an account? "}
+              <Link to="/signup" className="font-medium text-indigo-600 hover:text-indigo-700">
                 Sign up here
               </Link>
             </p>
