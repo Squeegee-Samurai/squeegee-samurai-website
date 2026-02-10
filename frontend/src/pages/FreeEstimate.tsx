@@ -199,6 +199,7 @@ const FreeEstimate = () => {
       const specialRequests = [
         inputs.businessName ? `Business: ${inputs.businessName}` : null,
         contactInfo.notes ? `Notes: ${contactInfo.notes}` : null,
+        inputs.requestAdvancedCleaning ? 'Requested: High Traffic with Kutaritsu Clean (more info needed)' : null,
       ]
         .filter(Boolean)
         .join('\n');
@@ -245,7 +246,7 @@ const FreeEstimate = () => {
           </h1>
           <div className="mx-auto mt-4 h-px w-12 bg-aka-600" />
           <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-sumi-300">
-            Tell us about your project and receive an instant pricing estimate. Detailed quotes delivered within 24 hours.
+            Tell us about your project and receive a fast, detailed pricing estimate.
           </p>
         </div>
       </section>
@@ -402,6 +403,26 @@ const FreeEstimate = () => {
                     </table>
                   </div>
 
+                  {/* Advanced Cleaning Option */}
+                  <div className="mt-6 mb-6 p-4 bg-gradient-to-br from-indigo-50 to-washi-50 border border-indigo-100 rounded-lg">
+                    <label className="flex items-start gap-3 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={inputs.requestAdvancedCleaning || false}
+                        onChange={(e) => setInputs((prev) => ({ ...prev, requestAdvancedCleaning: e.target.checked }))}
+                        className="mt-1 h-4 w-4 border-sumi-300 text-indigo-600 focus:ring-indigo-500"
+                      />
+                      <div>
+                        <span className="text-sm font-medium text-sumi-800">
+                          Add High Traffic with Kutaritsu Clean
+                        </span>
+                        <p className="text-xs text-sumi-600 mt-1">
+                          More information will be included in your final estimate
+                        </p>
+                      </div>
+                    </label>
+                  </div>
+
                   {!showContactForm && (
                     <div className="text-center">
                       <button onClick={handleGetQuote} className="btn-primary gap-2">
@@ -539,6 +560,7 @@ const ResidentialForm = () => {
     preferredContact: '',
     bestTimeToCall: '',
     couponCode: '',
+    requestAdvancedCleaning: false,
   });
 
   // Calculate live pricing
@@ -583,6 +605,7 @@ const ResidentialForm = () => {
         contactData.couponCode ? `Coupon: ${contactData.couponCode}` : null,
         contactData.preferredContact ? `Preferred Contact: ${contactData.preferredContact}` : null,
         contactData.bestTimeToCall ? `Best Time: ${contactData.bestTimeToCall}` : null,
+        contactData.requestAdvancedCleaning ? 'Requested: High Traffic with Kutaritsu Clean (more info needed)' : null,
         `Estimated Price: $${quote.baseTotal.toFixed(2)}`,
       ]
         .filter(Boolean)
@@ -746,6 +769,26 @@ const ResidentialForm = () => {
           <p className="text-xs text-sumi-500 italic">
             *Prices shown are base estimates. Final pricing confirmed after on-site evaluation.
           </p>
+
+          {/* Advanced Cleaning Option */}
+          <div className="mt-4 mb-4 p-4 bg-white/50 border border-indigo-200 rounded">
+            <label className="flex items-start gap-3 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={contactData.requestAdvancedCleaning}
+                onChange={(e) => setContactData((prev) => ({ ...prev, requestAdvancedCleaning: e.target.checked }))}
+                className="mt-1 h-4 w-4 border-sumi-300 text-indigo-600 focus:ring-indigo-500"
+              />
+              <div>
+                <span className="text-sm font-medium text-sumi-800">
+                  Add High Traffic with Kutaritsu Clean
+                </span>
+                <p className="text-xs text-sumi-600 mt-1">
+                  More information will be included in your final estimate
+                </p>
+              </div>
+            </label>
+          </div>
 
           {!showContactForm && (
             <button

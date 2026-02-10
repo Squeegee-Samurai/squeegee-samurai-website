@@ -222,10 +222,62 @@ flowchart TD
 - Form submission includes all data
 - Backend receives and stores estimate
 
+## Advanced Cleaning Option
+
+### Kutaritsu Clean for High Traffic Areas
+
+Both residential and commercial calculators include an optional checkbox for requesting information about advanced cleaning services:
+
+- **Label**: "Add High Traffic with Kutaritsu Clean"
+- **Description**: "More information will be included in your final estimate"
+- **Location**: Displayed in the pricing table section, before the "Get Detailed Quote" button
+- **Behavior**: 
+  - No price calculation at form stage
+  - Simply flags the request in the API submission
+  - Added to `specialRequests` field as: "Requested: High Traffic with Kutaritsu Clean (more info needed)"
+  - Sales team provides pricing details in follow-up communication
+
+### Implementation
+
+```typescript
+// Residential: Add to contactData state
+const [contactData, setContactData] = useState({
+  // ... other fields
+  requestAdvancedCleaning: false,
+});
+
+// Commercial: Add to inputs state
+const [inputs, setInputs] = useState({
+  // ... other fields
+  requestAdvancedCleaning: false,
+});
+
+// UI Component (both calculators)
+<div className="mt-4 p-4 bg-gradient-to-br from-indigo-50 to-washi-50 border border-indigo-100 rounded-lg">
+  <label className="flex items-start gap-3 cursor-pointer">
+    <input
+      type="checkbox"
+      checked={state.requestAdvancedCleaning}
+      onChange={(e) => setState((prev) => ({ ...prev, requestAdvancedCleaning: e.target.checked }))}
+      className="mt-1 h-4 w-4 border-sumi-300 text-indigo-600 focus:ring-indigo-500"
+    />
+    <div>
+      <span className="text-sm font-medium text-sumi-800">
+        Add High Traffic with Kutaritsu Clean
+      </span>
+      <p className="text-xs text-sumi-600 mt-1">
+        More information will be included in your final estimate
+      </p>
+    </div>
+  </label>
+</div>
+```
+
 ## Notes
 
 - Keep the current commercial calculator unchanged
 - Maintain the same visual design language (Japanese minimalist aesthetic)
 - Ensure mobile responsiveness for all steps
 - Pricing is an estimate - disclaimer text remains important
+- Advanced cleaning option requires no price calculation - information only
 
