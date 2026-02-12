@@ -31,7 +31,7 @@ Aligned with [architecture.md](./architecture.md) and [dev_workflow.md](./dev_wo
 
 - Local dev: Express server in `api/` (`npm run dev`)
 - Production: Vercel serverless routes in `api-serverless/`
-- API surface: `POST /api/quote`, `GET /api/health`, `GET /api/test-pdf`
+- API surface: `POST /api/quote`, `POST /api/contact`, `POST /api/career`, `GET /api/health`
 - No auth, sessions, or user/role models for MVP.
 
 ---
@@ -56,6 +56,7 @@ Aligned with [architecture.md](./architecture.md) and [dev_workflow.md](./dev_wo
 - Server-side only. API key driven.
 - Customer receives branded email with signed PDF link.
 - Owner receives lead notification with quote details + PDF link.
+- Owner receives generic contact inquiries and job applications.
 
 ---
 

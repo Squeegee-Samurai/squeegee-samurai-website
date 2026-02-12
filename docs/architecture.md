@@ -10,7 +10,8 @@ Primary capabilities:
 - Store leads in database
 - Email customer with PDF quote + notify business owner
 
-Authentication, user accounts, and dashboards are intentionally **out of scope for MVP**.
+Authentication, user accounts, and dashboards are **out of scope for MVP**.
+> Note: Frontend UI components (Login, Dashboard) exist as placeholders but are currently non-functional. Future implementation will leverage **Supabase Auth**.
 
 ---
 
@@ -59,6 +60,8 @@ Frontend (Static SPA)
 
 ### API Surface
 - `POST /api/quote` — Submit quote request
+- `POST /api/contact` — Generic contact form submission
+- `POST /api/career` — Job application submission
 - `GET /api/health` — Liveness check
 - `GET /api/test-pdf` — Dev-only: render sample PDF
 
@@ -127,7 +130,8 @@ See [schema.md](./schema.md) for full column definitions.
 - **Provider**: Resend (API key driven)
 - **Customer email**: Branded HTML with signed PDF download link
 - **Owner email**: Lead notification with quote details + PDF link
-- Server-side only; triggered after successful quote save
+- **General/Career**: Contact forms and job applications sent to owner
+- Server-side only; triggered after successful quote/form submission
 
 ---
 

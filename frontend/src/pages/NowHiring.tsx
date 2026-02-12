@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import emailjs from 'emailjs-com';
-import { Briefcase, MapPin, Clock, DollarSign, ChevronDown, Send, Users, Building } from 'lucide-react';
+
+import { MapPin, Clock, DollarSign, ChevronDown, Send, Users, Building } from 'lucide-react';
 
 const NowHiring = () => {
   const [selectedJob, setSelectedJob] = useState<number | null>(null);
@@ -83,25 +83,36 @@ const NowHiring = () => {
     setApplicationData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const templateParams = {
-      fullName: applicationData.name,
-      emailAdd: applicationData.email,
-      phoneNum: applicationData.phone,
-      subject: `Job Inquiry: ${applicationData.position}`,
-      message: `Experience: ${applicationData.experience}\nAvailability: ${applicationData.availability}\nMessage: ${applicationData.message}`,
-    };
-    emailjs
-      .send('service_smyhfg9', 'template_tiv6cho', templateParams, 'tP8oeE5EOGJQXkvGp')
-      .then(() => {
-        setIsSubmitted(true);
-        setApplicationData({ name: '', email: '', phone: '', position: '', experience: '', availability: '', message: '' });
-      })
-      .catch((error) => {
-        alert('Failed to send message: ' + error.text);
-        console.error('EmailJS error:', error);
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+    try {
+      const response = await fetch(`${apiUrl}/api/career`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(applicationData),
       });
+
+      const result = await response.json();
+      if (result.success) {
+        setIsSubmitted(true);
+        setApplicationData({
+          name: '',
+          email: '',
+          phone: '',
+          position: '',
+          experience: '',
+          availability: '',
+          message: '',
+        });
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      alert('Failed to submit application. Please try again.');
+      console.error('Application error:', error);
+    }
   };
 
   const inputClass =

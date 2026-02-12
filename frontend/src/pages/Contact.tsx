@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import emailjs from "emailjs-com";
+
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -20,23 +20,33 @@ const Contact = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const templateParams = {
-      fullName: formData.name,
-      emailAdd: formData.email,
-      phoneNum: formData.phone,
-      subject: formData.subject,
-      message: formData.message,
-      formType: "Contact Form",
-    };
-    emailjs
-      .send("service_smyhfg9", "template_tiv6cho", templateParams, "tP8oeE5EOGJQXkvGp")
-      .then(() => setIsSubmitted(true))
-      .catch((error) => {
-        alert("Failed to send message: " + error.text);
-        console.error("EmailJS error:", error);
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+
+    try {
+      const response = await fetch(`${apiUrl}/api/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          subject: formData.subject,
+          message: formData.message,
+        }),
       });
+
+      const result = await response.json();
+      if (result.success) {
+        setIsSubmitted(true);
+      } else {
+        throw new Error(result.error);
+      }
+    } catch (error) {
+      alert('Failed to send message. Please try again.');
+      console.error('Contact error:', error);
+    }
   };
 
   if (isSubmitted) {

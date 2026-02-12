@@ -162,3 +162,137 @@ export async function sendOwnerNotification(
     throw error;
   }
 }
+
+export async function sendContactEmail(data: {
+  name: string;
+  email: string;
+  phone?: string;
+  subject: string;
+  message: string;
+}): Promise<void> {
+  const to = process.env.NOTIFY_EMAIL;
+
+  if (!to) {
+    console.log('[email] NOTIFY_EMAIL not set; skipping contact notification');
+    return;
+  }
+
+  if (!resend) {
+    console.log('[email] Resend not configured; would send contact notification');
+    console.log(JSON.stringify(data, null, 2));
+    return;
+  }
+
+  try {
+    await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || 'contact@squeegee-samurai.com',
+      to,
+      subject: `New Contact: ${data.subject} - ${data.name}`,
+      replyTo: data.email,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h3 style="color: #1a202c;">New Contact Message</h3>
+          <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+             <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 10px; color: #4a5568; font-weight: bold;">Name:</td>
+              <td style="padding: 10px; color: #1a202c;">${data.name}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 10px; color: #4a5568; font-weight: bold;">Email:</td>
+              <td style="padding: 10px; color: #1a202c;">${data.email}</td>
+            </tr>
+            ${data.phone ? `
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 10px; color: #4a5568; font-weight: bold;">Phone:</td>
+              <td style="padding: 10px; color: #1a202c;">${data.phone}</td>
+            </tr>
+            ` : ''}
+             <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 10px; color: #4a5568; font-weight: bold;">Subject:</td>
+              <td style="padding: 10px; color: #1a202c;">${data.subject}</td>
+            </tr>
+          </table>
+          <div style="margin: 20px 0; padding: 15px; background: #f7fafc; border-left: 4px solid #4299e1;">
+            <strong style="color: #2d3748;">Message:</strong><br/>
+            <span style="color: #4a5568; white-space: pre-wrap;">${data.message}</span>
+          </div>
+        </div>
+      `,
+    });
+    console.log('[email] Contact notification sent successfully');
+  } catch (error) {
+    console.error('[email] Failed to send contact notification:', error);
+    throw error;
+  }
+}
+
+export async function sendApplicationEmail(data: {
+  name: string;
+  email: string;
+  phone: string;
+  position: string;
+  experience?: string;
+  availability?: string;
+  message?: string;
+}): Promise<void> {
+  const to = process.env.NOTIFY_EMAIL;
+
+  if (!to) {
+    console.log('[email] NOTIFY_EMAIL not set; skipping application notification');
+    return;
+  }
+
+  if (!resend) {
+    console.log('[email] Resend not configured; would send application notification');
+    console.log(JSON.stringify(data, null, 2));
+    return;
+  }
+
+  try {
+    await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || 'careers@squeegee-samurai.com',
+      to,
+      subject: `New Job Application: ${data.position} - ${data.name}`,
+      replyTo: data.email,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h3 style="color: #1a202c;">New Job Application</h3>
+          <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+             <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 10px; color: #4a5568; font-weight: bold;">Position:</td>
+              <td style="padding: 10px; color: #1a202c;">${data.position}</td>
+            </tr>
+             <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 10px; color: #4a5568; font-weight: bold;">Name:</td>
+              <td style="padding: 10px; color: #1a202c;">${data.name}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 10px; color: #4a5568; font-weight: bold;">Email:</td>
+              <td style="padding: 10px; color: #1a202c;">${data.email}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 10px; color: #4a5568; font-weight: bold;">Phone:</td>
+              <td style="padding: 10px; color: #1a202c;">${data.phone}</td>
+            </tr>
+             <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 10px; color: #4a5568; font-weight: bold;">Availability:</td>
+              <td style="padding: 10px; color: #1a202c;">${data.availability || 'N/A'}</td>
+            </tr>
+          </table>
+          <div style="margin: 20px 0; padding: 15px; background: #f7fafc; border-left: 4px solid #48bb78;">
+            <strong style="color: #2d3748;">Experience:</strong><br/>
+            <span style="color: #4a5568; white-space: pre-wrap;">${data.experience || 'N/A'}</span>
+          </div>
+          <div style="margin: 20px 0; padding: 15px; background: #f7fafc; border-left: 4px solid #4299e1;">
+            <strong style="color: #2d3748;">Message:</strong><br/>
+            <span style="color: #4a5568; white-space: pre-wrap;">${data.message || 'N/A'}</span>
+          </div>
+        </div>
+      `,
+    });
+    console.log('[email] Application notification sent successfully');
+  } catch (error) {
+    console.error('[email] Failed to send application notification:', error);
+    throw error;
+  }
+}
