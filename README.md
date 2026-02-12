@@ -56,3 +56,4 @@ See [`docs/`](./docs/) for full documentation:
 - [Database Schema](./docs/schema.md)
 - [Development Workflow](./docs/dev_workflow.md)
 - [PDF Implementation](./docs/pdf-implimentation/pdf-implementation-complete.md)
+# squeegee-samurai-website
