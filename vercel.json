@@ -4,6 +4,10 @@
   "outputDirectory": "dist",
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "/api-serverless/$1"
+    },
+    {
       "src": "/api-serverless/(.*)",
       "dest": "/api-serverless/$1"
     },
