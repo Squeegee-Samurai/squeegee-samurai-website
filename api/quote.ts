@@ -5,10 +5,10 @@
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { PoolClient } from 'pg';
-import { pool } from './src/db.js';
-import { computeQuote, type QuoteBody, type QuoteResult } from './src/quoteLogic.js';
-import { generateAndUploadPDF } from './src/services/pdfService.js';
-import { sendQuoteEmail, sendOwnerNotification } from './src/email.js';
+import { pool } from '../lib/db.js';
+import { computeQuote, type QuoteBody, type QuoteResult } from '../lib/quoteLogic.js';
+import { generateAndUploadPDF } from '../lib/services/pdfService.js';
+import { sendQuoteEmail, sendOwnerNotification } from '../lib/email.js';
 
 // Vercel function configuration (Node.js runtime, extended timeout for PDF generation)
 export const config = {

@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { sendApplicationEmail } from './src/email.js';
+import { sendApplicationEmail } from '../lib/email.js';
 
 export const config = {
   maxDuration: 10,
