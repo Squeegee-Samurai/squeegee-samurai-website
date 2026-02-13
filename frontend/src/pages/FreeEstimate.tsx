@@ -157,6 +157,9 @@ const selectClass = inputClass;
 const labelClass = 'block text-sm font-medium text-sumi-600 mb-1.5';
 
 /* ── MAIN COMPONENT ───────────────────────────────── */
+const FreeEstimate = () => {
+  const navigate = useNavigate();
+  
   /* Safe API URL Handling: handles '/' from Vercel env */
   const getApiUrl = () => {
     let url = import.meta.env.VITE_API_URL;
