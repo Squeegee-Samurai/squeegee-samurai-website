@@ -7,7 +7,7 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { PoolClient } from 'pg';
 import { pool } from '../lib/db.js';
 import { computeQuote, type QuoteBody, type QuoteResult } from '../lib/quoteLogic.js';
-import { generateAndUploadPDF } from '../lib/services/pdfService.js';
+// pdfService is dynamically imported below (its .tsx dependency can fail in some bundlers)
 import { sendQuoteEmail, sendOwnerNotification } from '../lib/email.js';
 
 // Vercel function configuration (Node.js runtime, extended timeout for PDF generation)
@@ -134,7 +134,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   let pdfExpiresAt: Date | null = null;
 
   try {
-    // Generate PDF and upload to Supabase Storage
+    // Generate PDF and upload to Supabase Storage (dynamic import to avoid startup crash)
+    const { generateAndUploadPDF } = await import('../lib/services/pdfService.js');
     const pdfResult = await generateAndUploadPDF(quoteId, validated.data, result);
     pdfPath = pdfResult.path;
     pdfExpiresAt = pdfResult.expiresAt;
