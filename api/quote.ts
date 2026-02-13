@@ -1,14 +1,14 @@
 /**
- * Vercel Serverless Function: POST /api-serverless/quote
+ * Vercel Serverless Function: POST /api/quote
  * Handles quote submissions with PDF generation and email delivery
  */
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { PoolClient } from 'pg';
-import { pool } from '../api/src/db.js';
-import { computeQuote, type QuoteBody, type QuoteResult } from '../api/src/quoteLogic.js';
-import { generateAndUploadPDF } from '../api/src/services/pdfService.js';
-import { sendQuoteEmail, sendOwnerNotification } from '../api/src/email.js';
+import { pool } from './src/db.js';
+import { computeQuote, type QuoteBody, type QuoteResult } from './src/quoteLogic.js';
+import { generateAndUploadPDF } from './src/services/pdfService.js';
+import { sendQuoteEmail, sendOwnerNotification } from './src/email.js';
 
 // Vercel function configuration (Node.js runtime, extended timeout for PDF generation)
 export const config = {
