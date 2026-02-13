@@ -33,6 +33,7 @@ interface QuoteInputs {
   businessName: string;
   paneCount: number;
   applyFirstTimeUplift: boolean;
+  requestAdvancedCleaning?: boolean;
 }
 
 interface TierQuote {
@@ -206,13 +207,7 @@ const FreeEstimate = () => {
 
     try {
 
-      const specialRequests = [
-        inputs.businessName ? `Business: ${inputs.businessName}` : null,
-        contactInfo.notes ? `Notes: ${contactInfo.notes}` : null,
-        inputs.requestAdvancedCleaning ? 'Requested: High Traffic with Kutaritsu Clean (more info needed)' : null,
-      ]
-        .filter(Boolean)
-        .join('\n');
+
 
       const response = await fetch(`${apiUrl}/api/quote`, {
         method: 'POST',
@@ -224,8 +219,12 @@ const FreeEstimate = () => {
             serviceType: selectedTier,
             windowCount: inputs.paneCount,
             screenCount: 0,
-            additionalServices: inputs.applyFirstTimeUplift ? ['First-Time Uplift'] : [],
-            specialRequests: specialRequests || undefined,
+            businessName: inputs.businessName,
+            additionalServices: [
+              ...(inputs.applyFirstTimeUplift ? ['First-Time Uplift'] : []),
+              ...(inputs.requestAdvancedCleaning ? ['High Traffic Kutaritsu'] : []),
+            ],
+            specialRequests: contactInfo.notes ? `Notes: ${contactInfo.notes}` : undefined,
           },
         }),
       });
@@ -643,10 +642,16 @@ const ResidentialForm = () => {
           },
           formInput: {
             propertyType: 'Residential',
-            serviceType: residentialInputs.serviceFrequency,
+            // Map 'Exterior Only' -> 'exterior', 'Interior + Exterior' -> 'both' or just pass raw string and handle in backend
+            serviceType: residentialInputs.interiorExterior, 
+            frequency: residentialInputs.serviceFrequency,
             windowCount: residentialInputs.windowCount,
             screenCount: residentialInputs.screenCount,
-            additionalServices: contactData.additionalServices,
+            stories: residentialInputs.stories,
+            additionalServices: [
+              ...contactData.additionalServices,
+              ...(contactData.requestAdvancedCleaning ? ['High Traffic Kutaritsu'] : [])
+            ],
             specialRequests: specialRequests || undefined,
           },
         }),

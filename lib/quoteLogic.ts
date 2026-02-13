@@ -14,7 +14,7 @@ export interface QuoteBody {
     zipCode?: string;
   };
   formInput: {
-    propertyType?: string;
+    propertyType?: 'Residential' | 'Commercial'; 
     serviceType?: string;
     windowCount?: number;
     screenCount?: number;
@@ -22,8 +22,10 @@ export interface QuoteBody {
     frequency?: string;
     additionalServices?: string[];
     specialRequests?: string;
-    preferredContact?: string;
+    businessName?: string;
+    // Legacy fields possibly sent but ignored
     bestTimeToCall?: string;
+    preferredContact?: string;
     couponCode?: string;
     imageUrls?: string[];
   };
@@ -36,32 +38,115 @@ export interface QuoteResult {
   lineItems: Array<{ description: string; amount: number }>;
 }
 
-const COMMERCIAL_PROPS = new Set([
-  'Office Building',
-  'Retail Store',
-  'Restaurant',
-  'Other Commercial',
-]);
+const COMMERCIAL_RATES: Record<string, number> = {
+  'Weekly Exterior': 4.25,
+  'Biweekly Exterior': 4.75,
+  'Monthly Exterior': 5.50,
+  'Monthly Interior + Exterior': 7.00,
+  'Quarterly Interior + Exterior': 8.00,
+  'One-Time Clean': 15.00,
+};
 
-function inferSegment(propertyType?: string): 'residential' | 'commercial' | undefined {
-  if (!propertyType) return undefined;
-  return COMMERCIAL_PROPS.has(propertyType) ? 'commercial' : 'residential';
-}
+const RESIDENTIAL_RATES = {
+  exteriorWindow: 10,
+  interiorWindow: 7,
+  screen: 5,
+  secondStoryUpcharge: 2,
+  thirdStoryUpcharge: 5,
+};
 
 export function computeQuote(body: QuoteBody): QuoteResult {
   const f = body.formInput;
+  const isCommercial = f.propertyType === 'Commercial';
+  const segment = isCommercial ? 'commercial' : 'residential';
+
+  let totalCents = 0;
+  let subtotalCents = 0;
+  let discountCents = 0;
+  let lineItems: Array<{ description: string; amount: number } | null> = [];
+
   const windowCount = Math.max(0, Number(f.windowCount) || 0);
-  const screenCount = Math.max(0, Number(f.screenCount) || 0);
 
-  const pricePerWindow =
-    f.serviceType === 'interior' ? 7 : f.serviceType === 'exterior' ? 10 : 17;
-  
-  const windowTotal = windowCount * pricePerWindow;
-  const screenTotal = screenCount * 5;
-  const baseFee = 50;
+  if (isCommercial) {
+    // === COMMERCIAL LOGIC ===
+    const serviceType = f.serviceType || 'One-Time Clean';
+    const baseRate = COMMERCIAL_RATES[serviceType] || 15.00; 
+    const baseCost = windowCount * baseRate;
 
-  const subtotalCents = (windowTotal + screenTotal + baseFee) * 100;
+    lineItems.push({
+      description: `${serviceType} (${windowCount} panes @ $${baseRate.toFixed(2)})`,
+      amount: baseCost
+    });
 
+    let upliftCost = 0;
+    const hasUplift = f.additionalServices?.includes('First-Time Uplift');
+    if (hasUplift) {
+      upliftCost = baseCost * 0.30;
+      lineItems.push({
+        description: 'First-Time Restore to Standard Uplift (+30%)',
+        amount: upliftCost
+      });
+    }
+
+    subtotalCents = (baseCost + upliftCost) * 100;
+
+  } else {
+    // === RESIDENTIAL LOGIC ===
+    const screenCount = Math.max(0, Number(f.screenCount) || 0);
+    const serviceType = f.serviceType || 'Exterior Only';
+    
+    // Determine Base Rate per Window
+    let perWindowRate = 0;
+    if (serviceType === 'Interior + Exterior' || serviceType === 'both') {
+      perWindowRate = RESIDENTIAL_RATES.exteriorWindow + RESIDENTIAL_RATES.interiorWindow; // 17
+    } else {
+      perWindowRate = RESIDENTIAL_RATES.exteriorWindow; // 10
+    }
+
+    // Story Upcharge
+    let storyUpcharge = 0;
+    const stories = f.stories || '1';
+    if (stories === '2') {
+      storyUpcharge = RESIDENTIAL_RATES.secondStoryUpcharge;
+    } else if (['3', '4+', '3+'].includes(stories)) {
+      storyUpcharge = RESIDENTIAL_RATES.thirdStoryUpcharge;
+    }
+    
+    const finalRate = perWindowRate + storyUpcharge;
+    const windowTotal = windowCount * finalRate;
+    const screenTotal = screenCount * RESIDENTIAL_RATES.screen;
+
+    // Line Items
+    // 1. Window Cleaning
+    let windowDesc = `${serviceType} Window Cleaning`;
+    if (storyUpcharge > 0) windowDesc += ` (${stories} Stories)`;
+    
+    lineItems.push({
+      description: `${windowDesc} (${windowCount} windows @ $${finalRate.toFixed(2)})`,
+      amount: windowTotal
+    });
+    
+    // 2. Screen Cleaning
+    if (screenCount > 0) {
+      lineItems.push({ 
+        description: `Screen Cleaning (${screenCount} screens @ $${RESIDENTIAL_RATES.screen.toFixed(2)})`, 
+        amount: screenTotal 
+      });
+    }
+
+    subtotalCents = (windowTotal + screenTotal) * 100;
+  }
+
+  // === HIGH TRAFFIC / KUTARITSU NOTE (Both Segments) ===
+  const hasKutaritsu = f.additionalServices?.some(s => s.includes('Kutaritsu') || s.includes('High Traffic'));
+  if (hasKutaritsu) {
+    lineItems.push({
+      description: 'High Traffic / Kutaritsu Clean (Pricing to be confirmed upon review)',
+      amount: 0
+    });
+  }
+
+  // === DISCOUNTS ===
   const code = (f.couponCode ?? '').trim().toLowerCase();
   const discountRates: Record<string, number> = {
     '1stclean': 0.1,
@@ -69,21 +154,8 @@ export function computeQuote(body: QuoteBody): QuoteResult {
     refer5: 0.2,
   };
   const rate = discountRates[code] ?? 0;
-  const discountCents = Math.round(subtotalCents * rate);
-  const totalCents = Math.max(0, subtotalCents - discountCents);
-
-  const rawLineItems = [
-    { 
-      description: `${f.serviceType ? f.serviceType.charAt(0).toUpperCase() + f.serviceType.slice(1) : 'Window'} Cleaning (${windowCount} windows @ $${pricePerWindow})`, 
-      amount: windowTotal 
-    },
-    screenCount > 0 
-      ? { description: `Screen Cleaning (${screenCount} screens @ $5)`, amount: screenTotal } 
-      : null,
-    { description: 'Service Call / Setup Fee', amount: baseFee },
-  ];
-
-  const lineItems = rawLineItems.filter((item): item is { description: string; amount: number } => item !== null);
+  discountCents = Math.round(subtotalCents * rate);
+  totalCents = Math.max(0, subtotalCents - discountCents);
 
   return {
     totalCents,
@@ -92,7 +164,7 @@ export function computeQuote(body: QuoteBody): QuoteResult {
       discount: Math.round(discountCents / 100),
       total: Math.round(totalCents / 100),
     },
-    segment: inferSegment(f.propertyType),
-    lineItems,
+    segment,
+    lineItems: lineItems.filter((item): item is { description: string; amount: number } => item !== null),
   };
 }

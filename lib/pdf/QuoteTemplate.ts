@@ -164,8 +164,8 @@ export function QuoteTemplate({ quote, contact, breakdown, businessName, lineIte
       e(View, { style: styles.header },
         e(Image, { src: LOGO_PATH, style: styles.logo }),
         e(View, { style: styles.headerText },
-          e(Text, { style: styles.companyName }, "Squeegee Samurai Free Estimate"),
-          e(Text, { style: styles.tagline }, "Clarity through Pane")
+          e(Text, { style: styles.companyName }, `Squeegee Samurai Free ${quote.segment ? quote.segment.charAt(0).toUpperCase() + quote.segment.slice(1) : ''} Estimate`),
+          e(Text, { style: styles.tagline }, "Clarity Through Pane")
         )
       ),
 
