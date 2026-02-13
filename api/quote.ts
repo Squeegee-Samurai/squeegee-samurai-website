@@ -53,23 +53,19 @@ function validateBody(body: unknown): { ok: true; data: QuoteBody } | { ok: fals
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Only accept POST requests
-  if (req.method !== 'POST') {
-    return res.status(405).json({ success: false, error: 'Method not allowed' });
-  }
-
-  // CORS headers
-  const allowedOrigins = (process.env.FRONTEND_ORIGIN || 'http://localhost:5173').split(',');
-  const origin = req.headers.origin || '';
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
+  // CORS headers (must be set before any response)
+  res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   // Handle OPTIONS preflight
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
+  }
+
+  // Only accept POST requests
+  if (req.method !== 'POST') {
+    return res.status(405).json({ success: false, error: 'Method not allowed' });
   }
 
   // Validate request body
