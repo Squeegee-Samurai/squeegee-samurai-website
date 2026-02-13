@@ -157,9 +157,15 @@ const selectClass = inputClass;
 const labelClass = 'block text-sm font-medium text-sumi-600 mb-1.5';
 
 /* ── MAIN COMPONENT ───────────────────────────────── */
-const FreeEstimate = () => {
-  const navigate = useNavigate();
-  console.log('Vercel Sync Test: [Active]');
+  /* Safe API URL Handling: handles '/' from Vercel env */
+  const getApiUrl = () => {
+    let url = import.meta.env.VITE_API_URL;
+    if (url === '/') return ''; // Fix common Vercel config setting
+    if (url) return url;
+    return import.meta.env.PROD ? '' : 'http://localhost:3000';
+  };
+  const apiUrl = getApiUrl();
+  console.log('Vercel Sync Test: [Active] | API Target:', apiUrl || '(relative)');
   const [serviceType, setServiceType] = useState<ServiceType>('commercial');
 
   /* Commercial state */
