@@ -195,7 +195,8 @@ const FreeEstimate = () => {
     setSubmitting(true);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const prod = import.meta.env.PROD;
+      const apiUrl = import.meta.env.VITE_API_URL || (prod ? '' : 'http://localhost:3000');
       const specialRequests = [
         inputs.businessName ? `Business: ${inputs.businessName}` : null,
         contactInfo.notes ? `Notes: ${contactInfo.notes}` : null,
@@ -599,7 +600,8 @@ const ResidentialForm = () => {
     setSubmitting(true);
 
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+      const prod = import.meta.env.PROD;
+      const apiUrl = import.meta.env.VITE_API_URL || (prod ? '' : 'http://localhost:3000');
 
       const specialRequests = [
         contactData.couponCode ? `Coupon: ${contactData.couponCode}` : null,

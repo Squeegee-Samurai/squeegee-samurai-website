@@ -22,7 +22,8 @@ const Contact = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+    const prod = import.meta.env.PROD;
+    const apiUrl = import.meta.env.VITE_API_URL || (prod ? '' : 'http://localhost:3000');
 
     try {
       const response = await fetch(`${apiUrl}/api/contact`, {
