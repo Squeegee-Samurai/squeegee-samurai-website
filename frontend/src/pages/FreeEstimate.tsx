@@ -205,8 +205,7 @@ const FreeEstimate = () => {
     setSubmitting(true);
 
     try {
-      const prod = import.meta.env.PROD;
-      const apiUrl = import.meta.env.VITE_API_URL || (prod ? '' : 'http://localhost:3000');
+
       const specialRequests = [
         inputs.businessName ? `Business: ${inputs.businessName}` : null,
         contactInfo.notes ? `Notes: ${contactInfo.notes}` : null,
@@ -548,6 +547,16 @@ const ResidentialForm = () => {
   const [showContactForm, setShowContactForm] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   
+  /* Safe API URL Handling: handles '/' from Vercel env */
+  const getApiUrl = () => {
+    let url = import.meta.env.VITE_API_URL;
+    if (url === '/') return ''; // Fix common Vercel config setting
+    if (url) return url;
+    return import.meta.env.PROD ? '' : 'http://localhost:3000';
+  };
+  const apiUrl = getApiUrl();
+  console.log('Residential Form API Target:', apiUrl || '(relative)');
+
   // Step 1: Basic pricing inputs
   const [residentialInputs, setResidentialInputs] = useState<ResidentialInputs>({
     windowCount: 0,
@@ -610,8 +619,7 @@ const ResidentialForm = () => {
     setSubmitting(true);
 
     try {
-      const prod = import.meta.env.PROD;
-      const apiUrl = import.meta.env.VITE_API_URL || (prod ? '' : 'http://localhost:3000');
+
 
       const specialRequests = [
         contactData.couponCode ? `Coupon: ${contactData.couponCode}` : null,
