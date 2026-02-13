@@ -1,0 +1,8 @@
+export default function handler(req, res) {
+  res.status(200).json({ 
+    ok: true, 
+    method: req.method,
+    timestamp: new Date().toISOString(),
+    message: 'Serverless function is working!'
+  });
+}
