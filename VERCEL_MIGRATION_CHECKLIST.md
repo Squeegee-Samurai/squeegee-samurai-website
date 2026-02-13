@@ -9,12 +9,14 @@ Go to **Vercel Project Settings** → **Environment Variables** and ensure these
 | Variable | Value Notes | Required For |
 | :--- | :--- | :--- |
 | `VITE_API_URL` | Set to `/` (or leave empty if using rewrites) | Frontend API calls |
+| `DATABASE_URL` | From Supabase Project Settings → Database → Connection String (Use "Transaction" mode port 6543) | Quote Persistence |
 | `SUPABASE_URL` | From Supabase Project Settings → API | DB Connection |
 | `SUPABASE_SERVICE_ROLE_KEY` | From Supabase Project Settings → API (Secret!) | Storage Uploads |
 | `SUPABASE_STORAGE_BUCKET` | `quotes` | PDF Storage |
 | `RESEND_API_KEY` | From Resend Dashboard | Email Delivery |
 | `RESEND_FROM_EMAIL` | e.g. `quotes@squeegee-samurai.com` | Email Sender |
 | `NOTIFY_EMAIL` | The owner's email address | Lead Notifications |
+| `PDF_URL_EXPIRY_SECONDS` | Optional (default: `259200` = 72h) | How long quote links last |
 
 > ⚠️ **Action:** After adding these, you **MUST** go to **Deployments** and click **Redeploy** on the latest commit for them to take effect.
 
