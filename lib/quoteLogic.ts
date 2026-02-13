@@ -33,6 +33,7 @@ export interface QuoteResult {
   totalCents: number;
   breakdown: { subtotal: number; discount: number; total: number };
   segment?: 'residential' | 'commercial';
+  lineItems: Array<{ description: string; amount: number }>;
 }
 
 const COMMERCIAL_PROPS = new Set([
@@ -54,8 +55,12 @@ export function computeQuote(body: QuoteBody): QuoteResult {
 
   const pricePerWindow =
     f.serviceType === 'interior' ? 7 : f.serviceType === 'exterior' ? 10 : 17;
-  const subtotalCents =
-    (windowCount * pricePerWindow + screenCount * 5 + 50) * 100;
+  
+  const windowTotal = windowCount * pricePerWindow;
+  const screenTotal = screenCount * 5;
+  const baseFee = 50;
+
+  const subtotalCents = (windowTotal + screenTotal + baseFee) * 100;
 
   const code = (f.couponCode ?? '').trim().toLowerCase();
   const discountRates: Record<string, number> = {
@@ -67,6 +72,19 @@ export function computeQuote(body: QuoteBody): QuoteResult {
   const discountCents = Math.round(subtotalCents * rate);
   const totalCents = Math.max(0, subtotalCents - discountCents);
 
+  const rawLineItems = [
+    { 
+      description: `${f.serviceType ? f.serviceType.charAt(0).toUpperCase() + f.serviceType.slice(1) : 'Window'} Cleaning (${windowCount} windows @ $${pricePerWindow})`, 
+      amount: windowTotal 
+    },
+    screenCount > 0 
+      ? { description: `Screen Cleaning (${screenCount} screens @ $5)`, amount: screenTotal } 
+      : null,
+    { description: 'Service Call / Setup Fee', amount: baseFee },
+  ];
+
+  const lineItems = rawLineItems.filter((item): item is { description: string; amount: number } => item !== null);
+
   return {
     totalCents,
     breakdown: {
@@ -75,5 +93,6 @@ export function computeQuote(body: QuoteBody): QuoteResult {
       total: Math.round(totalCents / 100),
     },
     segment: inferSegment(f.propertyType),
+    lineItems,
   };
 }

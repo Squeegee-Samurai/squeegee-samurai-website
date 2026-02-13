@@ -139,9 +139,10 @@ export interface QuoteTemplateProps {
   };
   breakdown: Record<string, any>;
   businessName?: string;
+  lineItems?: Array<{ description: string; amount: number }>;
 }
 
-export function QuoteTemplate({ quote, contact, breakdown, businessName }: QuoteTemplateProps) {
+export function QuoteTemplate({ quote, contact, breakdown, businessName, lineItems }: QuoteTemplateProps) {
   const preparedFor = businessName 
     ? businessName 
     : contact.firstName && contact.lastName
@@ -197,14 +198,37 @@ export function QuoteTemplate({ quote, contact, breakdown, businessName }: Quote
       e(View, { style: styles.section },
         e(Text, { style: styles.sectionTitle }, "Pricing"),
         e(View, { style: styles.pricingTable },
-          breakdown && Object.entries(breakdown).map(([key, value]) => 
+          
+          // Line Items (Detailed Breakdown)
+          lineItems && lineItems.map((item, i) => 
+            e(View, { key: `item-${i}`, style: styles.pricingRow },
+              e(Text, { style: styles.pricingLabel }, item.description),
+              e(Text, { style: styles.pricingValue }, `$${item.amount.toFixed(2)}`)
+            )
+          ),
+
+          // Divider if line items exist
+          lineItems && lineItems.length > 0 && e(View, { 
+            style: { 
+              height: 1, 
+              backgroundColor: '#e2e8f0', 
+              marginVertical: 8 
+            } 
+          }),
+
+          // Summary Breakdown (Subtotal, Discount, etc)
+          // Filter out 'total' to avoid duplication with the bold Total row below
+          breakdown && Object.entries(breakdown)
+            .filter(([key]) => key !== 'total')
+            .map(([key, value]) => 
             e(View, { key, style: styles.pricingRow },
-              e(Text, { style: styles.pricingLabel }, key),
+              e(Text, { style: styles.pricingLabel }, key.charAt(0).toUpperCase() + key.slice(1)),
               e(Text, { style: styles.pricingValue }, 
                 typeof value === 'number' ? `$${value.toFixed(2)}` : value
               )
             )
           ),
+
           e(View, { style: styles.totalRow },
             e(Text, { style: styles.totalLabel }, "Total Estimate"),
             e(Text, { style: styles.totalValue }, `$${totalDollars}`)

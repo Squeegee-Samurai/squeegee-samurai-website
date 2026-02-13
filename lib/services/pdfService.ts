@@ -30,6 +30,7 @@ export async function generateAndUploadPDF(
     },
     contact: quoteData.contact,
     breakdown: result.breakdown,
+    lineItems: result.lineItems,
     businessName: (quoteData.formInput as any).businessName,
   });
 
