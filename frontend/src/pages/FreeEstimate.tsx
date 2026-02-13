@@ -159,6 +159,7 @@ const labelClass = 'block text-sm font-medium text-sumi-600 mb-1.5';
 /* ── MAIN COMPONENT ───────────────────────────────── */
 const FreeEstimate = () => {
   const navigate = useNavigate();
+  console.log('Vercel Sync Test: [Active]');
   const [serviceType, setServiceType] = useState<ServiceType>('commercial');
 
   /* Commercial state */
