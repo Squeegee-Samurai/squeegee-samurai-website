@@ -12,6 +12,7 @@ import {
   ArrowRight,
   Droplets,
   Home as HomeIcon,
+  ExternalLink,
 } from "lucide-react";
 
 function useParallax(speed = 0.4) {
@@ -211,6 +212,72 @@ const Home = () => {
                 </Link>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Client Testimonials ── */}
+      <section className="bg-washi-100 py-20 lg:py-24">
+        <div className="section-container">
+          <div className="mx-auto max-w-2xl text-center">
+            <div className="mb-4 flex justify-center gap-1">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star key={star} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
+              ))}
+            </div>
+            <h2 className="font-display text-3xl font-bold text-sumi-900 sm:text-4xl">
+              Trusted by Loudoun County
+            </h2>
+            <p className="mt-4 text-base text-sumi-500">
+              See what our clients are saying about their crystal clear windows.
+            </p>
+          </div>
+
+          <div className="mt-12 grid grid-cols-1 gap-8 md:grid-cols-3">
+            {[
+              {
+                text: "James was fantastic! He arrived on time, was extremely professional, and my windows look brand new. Highly recommend Squeegee Samurai.",
+                author: "Sarah M.",
+                location: "Ashburn, VA",
+              },
+              {
+                text: "The best window cleaning service we've used in years. Detailed, careful, and eco-friendly products are a huge plus for us.",
+                author: "Michael R.",
+                location: "Leesburg, VA",
+              },
+              {
+                text: "Efficient and thorough. The team did a great job on our difficult-to-reach second story windows. Will definitely call again.",
+                author: "Jennifer K.",
+                location: "Sterling, VA",
+              },
+            ].map((review, i) => (
+              <div key={i} className="flex flex-col rounded border border-sumi-200 bg-washi-50 p-8 shadow-sm transition-shadow hover:shadow-md">
+                <div className="mb-6 flex gap-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star key={star} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
+                  ))}
+                </div>
+                <blockquote className="flex-1 text-base italic leading-relaxed text-sumi-700">
+                  "{review.text}"
+                </blockquote>
+                <div className="mt-6 border-t border-sumi-100 pt-4">
+                  <div className="font-semibold text-sumi-900">{review.author}</div>
+                  <div className="text-xs text-sumi-400">{review.location}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-12 text-center">
+            <a
+              href="https://share.google/ySPckHECYViVo3nWN"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-sm border border-sumi-200 bg-white px-6 py-3 text-sm font-medium text-sumi-700 transition-colors hover:border-aka-200 hover:text-aka-700"
+            >
+              Read More Reviews on Google
+              <ExternalLink className="h-4 w-4" />
+            </a>
           </div>
         </div>
       </section>
