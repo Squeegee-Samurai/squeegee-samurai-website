@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Instagram } from "lucide-react";
 
@@ -24,16 +24,18 @@ const footerLinks = {
 
 export default function Footer() {
   return (
-    <footer className="border-t border-sumi-100 bg-sumi-900" role="contentinfo">
+    <footer className="bg-sumi-900" role="contentinfo">
       <div className="section-container py-16">
         <div className="flex flex-col gap-12 lg:flex-row lg:gap-16">
           {/* Brand column */}
           <div className="lg:max-w-xs">
-            <img
-              src="/images/SSamurai_Logo.png"
-              alt="Squeegee Samurai"
-              className="h-16 w-auto"
-            />
+            <div className="inline-block rounded-xl bg-white p-2">
+              <img
+                src="/images/SSamurai_Logo.png"
+                alt="Squeegee Samurai"
+                className="h-24 w-auto"
+              />
+            </div>
             <p className="mt-5 text-sm leading-relaxed text-sumi-300">
               Professional window cleaning with the precision and dedication of the samurai.
               Serving homes and businesses throughout Loudoun County, Virginia.

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { ChevronDown, Phone, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -136,7 +136,7 @@ const FAQ = () => {
       </section>
 
       {/* Still Have Questions */}
-      <section className="bg-sumi-900 py-16">
+      <section className="bg-[#2c4a6e] py-16">
         <div className="section-container text-center">
           <h2 className="font-display text-2xl font-bold text-washi-50 sm:text-3xl">
             Still have questions?
@@ -145,17 +145,14 @@ const FAQ = () => {
             {"Can't find the answer you're looking for? We're here to help."}
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
-            <a href="tel:5403351059" className="inline-flex items-center justify-center gap-2 rounded-sm bg-washi-50 px-7 py-3 text-sm font-medium tracking-wide text-sumi-900 transition-colors hover:bg-washi-200">
+            <Link to="/free-estimate" className="inline-flex items-center justify-center gap-2 rounded-sm bg-white px-7 py-3 text-sm font-medium tracking-wide text-sumi-900 transition-colors hover:bg-washi-100">
+              Get Free Estimate
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+            </Link>
+            <a href="tel:5403351059" className="inline-flex items-center justify-center gap-2 rounded-sm border border-white px-7 py-3 text-sm font-medium tracking-wide text-white transition-colors hover:bg-white/10" style={{ borderColor: '#ffffff', color: '#ffffff' }}>
               <Phone className="h-3.5 w-3.5" aria-hidden />
               (540) 335-1059
             </a>
-            <Link to="/contact" className="inline-flex items-center justify-center gap-2 rounded-sm border border-sumi-600 px-7 py-3 text-sm font-medium tracking-wide text-washi-200 transition-colors hover:border-sumi-400 hover:text-washi-50">
-              Contact Us
-            </Link>
-            <Link to="/free-estimate" className="inline-flex items-center justify-center gap-2 rounded-sm border border-sumi-600 px-7 py-3 text-sm font-medium tracking-wide text-washi-200 transition-colors hover:border-sumi-400 hover:text-washi-50">
-              Free Estimate
-              <ArrowRight className="h-3.5 w-3.5" aria-hidden />
-            </Link>
           </div>
         </div>
       </section>

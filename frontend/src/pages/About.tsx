@@ -1,5 +1,5 @@
-import React from "react";
-import { Shield, Award, Users, Leaf, ArrowRight } from "lucide-react";
+
+import { Shield, Award, Users, Leaf, ArrowRight, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const VALUES = [
@@ -185,19 +185,20 @@ const About = () => {
       </section>
 
       {/* CTA */}
-      <section className="border-t border-sumi-100 bg-sumi-900 py-16">
+      <section className="bg-[#2c4a6e] py-16">
         <div className="section-container text-center">
           <h2 className="font-display text-2xl font-bold text-washi-50 sm:text-3xl">
             Ready to experience the Samurai difference?
           </h2>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
-            <Link to="/free-estimate" className="inline-flex items-center justify-center gap-2 rounded-sm bg-washi-50 px-7 py-3 text-sm font-medium tracking-wide text-sumi-900 transition-colors hover:bg-washi-200">
+            <Link to="/free-estimate" className="inline-flex items-center justify-center gap-2 rounded-sm bg-white px-7 py-3 text-sm font-medium tracking-wide text-sumi-900 transition-colors hover:bg-washi-100">
               Get Free Estimate
               <ArrowRight className="h-3.5 w-3.5" aria-hidden />
             </Link>
-            <Link to="/contact" className="inline-flex items-center justify-center gap-2 rounded-sm border border-sumi-600 px-7 py-3 text-sm font-medium tracking-wide text-washi-200 transition-colors hover:border-sumi-400 hover:text-washi-50">
-              Contact Us
-            </Link>
+            <a href="tel:5403351059" className="inline-flex items-center justify-center gap-2 rounded-sm border border-white px-7 py-3 text-sm font-medium tracking-wide text-white transition-colors hover:bg-white/10" style={{ borderColor: '#ffffff', color: '#ffffff' }}>
+              <Phone className="h-3.5 w-3.5" aria-hidden />
+              (540) 335-1059
+            </a>
           </div>
         </div>
       </section>

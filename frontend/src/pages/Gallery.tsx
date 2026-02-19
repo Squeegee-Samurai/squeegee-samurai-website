@@ -1,5 +1,5 @@
-import React from 'react';
-import { Camera, CheckCircle, Phone } from 'lucide-react';
+
+import { Camera, CheckCircle, Phone, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Gallery = () => {
@@ -111,14 +111,22 @@ const Gallery = () => {
       </section>
 
       {/* CTA */}
-      <section className="bg-sumi-800 py-16 text-center text-washi-50">
-        <div className="section-container">
-          <h2 className="font-display text-2xl font-bold mb-3">Ready to See These Results at Your Property?</h2>
-          <p className="text-sumi-300 mb-8">Contact us today for a free estimate and join our gallery of satisfied customers.</p>
-          <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <Link to="/free-estimate" className="btn-primary bg-washi-50 text-sumi-800 hover:bg-white">Get Free Estimate</Link>
-            <a href="tel:5403351059" className="inline-flex items-center justify-center rounded-sm border border-sumi-400 px-6 py-3 text-sm font-medium tracking-wide text-washi-50 transition-colors hover:bg-sumi-700 gap-2">
-              <Phone className="h-4 w-4" /> (540) 335-1059
+      <section className="bg-[#2c4a6e] py-16">
+        <div className="section-container text-center">
+          <h2 className="font-display text-2xl font-bold text-washi-50 sm:text-3xl">
+            Ready to See These Results at Your Property?
+          </h2>
+          <p className="mx-auto mt-4 max-w-md text-base text-sumi-300">
+            Contact us today for a free estimate and join our gallery of satisfied customers.
+          </p>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+            <Link to="/free-estimate" className="inline-flex items-center justify-center gap-2 rounded-sm bg-white px-7 py-3 text-sm font-medium tracking-wide text-sumi-900 transition-colors hover:bg-washi-100">
+              Get Free Estimate
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+            </Link>
+            <a href="tel:5403351059" className="inline-flex items-center justify-center gap-2 rounded-sm border border-white px-7 py-3 text-sm font-medium tracking-wide text-white transition-colors hover:bg-white/10" style={{ borderColor: '#ffffff', color: '#ffffff' }}>
+              <Phone className="h-3.5 w-3.5" aria-hidden />
+              (540) 335-1059
             </a>
           </div>
         </div>

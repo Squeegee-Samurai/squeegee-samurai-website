@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { MapPin, Clock, DollarSign, ChevronDown, Send, Users, Building } from 'lucide-react';
+import { MapPin, Clock, DollarSign, ChevronDown, Send, Users, Building, Phone } from 'lucide-react';
 
 const NowHiring = () => {
   const [selectedJob, setSelectedJob] = useState<number | null>(null);
@@ -255,13 +255,17 @@ const NowHiring = () => {
       </section>
 
       {/* CTA */}
-      <section className="border-t border-sumi-100 bg-sumi-800 py-16 text-center text-washi-50">
+      <section className="border-t border-sumi-100 bg-[#2c4a6e] py-16 text-center text-washi-50">
         <div className="section-container">
           <h2 className="font-display text-2xl font-bold mb-3">Questions About These Positions?</h2>
           <p className="text-sumi-300 mb-8">Contact us directly to learn more about career opportunities.</p>
           <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <a href="tel:5403351059" className="btn-primary bg-washi-50 text-sumi-800 hover:bg-white">Call (540) 335-1059</a>
-            <a href="mailto:james@squeegee-samurai.com" className="inline-flex items-center justify-center rounded-sm border border-sumi-400 px-6 py-3 text-sm font-medium tracking-wide text-washi-50 transition-colors hover:bg-sumi-700">Email Us</a>
+            <a href="tel:5403351059" className="inline-flex items-center justify-center gap-2 rounded-sm bg-white px-7 py-3 text-sm font-medium tracking-wide text-sumi-900 transition-colors hover:bg-washi-100">
+              <Phone className="h-3.5 w-3.5" /> Call (540) 335-1059
+            </a>
+            <a href="mailto:james@squeegee-samurai.com" className="inline-flex items-center justify-center rounded-sm border border-white px-7 py-3 text-sm font-medium tracking-wide text-white transition-colors hover:bg-white/10" style={{ borderColor: '#ffffff', color: '#ffffff' }}>
+              Email Us
+            </a>
           </div>
         </div>
       </section>

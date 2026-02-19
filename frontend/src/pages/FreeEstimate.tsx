@@ -3,7 +3,7 @@
  * Redesigned with Japanese minimalist aesthetic
  */
 
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, Building, ChevronRight, ArrowLeft, Clock } from 'lucide-react';
 
@@ -333,6 +333,7 @@ const FreeEstimate = () => {
                     min="0"
                     value={inputs.paneCount || ''}
                     onChange={(e) => handleInputChange('paneCount', parseInt(e.target.value) || 0)}
+                    onWheel={(e) => e.currentTarget.blur()}
                     className={inputClass + ' text-lg'}
                     placeholder="e.g. 12"
                     required
@@ -718,6 +719,7 @@ const ResidentialForm = () => {
             min="1"
             value={residentialInputs.windowCount || ''}
             onChange={(e) => handleResidentialInputChange('windowCount', parseInt(e.target.value) || 0)}
+            onWheel={(e) => e.currentTarget.blur()}
             className={inputClass}
             placeholder="e.g. 20"
           />
@@ -736,31 +738,32 @@ const ResidentialForm = () => {
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div>
-            <label className={labelClass}>Number of Stories *</label>
-            <select
-              value={residentialInputs.stories}
-              onChange={(e) => handleResidentialInputChange('stories', e.target.value)}
-              className={selectClass}
-            >
-              <option value="1">1 Story</option>
-              <option value="2">2 Stories</option>
-              <option value="3">3 Stories</option>
-              <option value="4+">4+ Stories</option>
-            </select>
+            <div>
+              <label className={labelClass}>Number of Stories *</label>
+              <select
+                value={residentialInputs.stories}
+                onChange={(e) => handleResidentialInputChange('stories', e.target.value as any)}
+                className={selectClass}
+              >
+                <option value="1">1 Story</option>
+                <option value="2">2 Stories</option>
+                <option value="3">3 Stories</option>
+                <option value="4+">4+ Stories</option>
+              </select>
+            </div>
+            <div>
+              <label className={labelClass}>Number of Screens</label>
+              <input
+                type="number"
+                min="0"
+                value={residentialInputs.screenCount || ''}
+                onChange={(e) => handleResidentialInputChange('screenCount', parseInt(e.target.value) || 0)}
+                onWheel={(e) => e.currentTarget.blur()}
+                className={inputClass}
+                placeholder="0"
+              />
+            </div>
           </div>
-          <div>
-            <label className={labelClass}>Number of Screens</label>
-            <input
-              type="number"
-              min="0"
-              value={residentialInputs.screenCount || ''}
-              onChange={(e) => handleResidentialInputChange('screenCount', parseInt(e.target.value) || 0)}
-              className={inputClass}
-              placeholder="0"
-            />
-          </div>
-        </div>
 
         <div>
           <label className={labelClass}>Service Frequency</label>

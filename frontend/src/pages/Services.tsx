@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Link } from "react-router-dom";
 import {
   Users,
@@ -171,7 +171,7 @@ const Services = () => {
               {/* Graphic - Top Right Corner */}
               <div className="absolute top-0 right-0 w-32 h-32 opacity-80 pointer-events-none mix-blend-multiply">
                  <img 
-                    src="/src/assets/kiritsu-graphic.png" 
+                    src="/images/kiritsu-graphic.png" 
                     alt="Kiritsu Graphic" 
                     className="w-full h-full object-cover rounded-bl-3xl"
                  />
@@ -280,7 +280,7 @@ const Services = () => {
       </section>
 
       {/* CTA */}
-      <section className="bg-sumi-900 py-16">
+      <section className="bg-[#2c4a6e] py-16">
         <div className="section-container text-center">
           <h2 className="font-display text-2xl font-bold text-washi-50 sm:text-3xl">
             Ready to get started?
@@ -289,13 +289,14 @@ const Services = () => {
             Contact us today for a free estimate on any of our professional services.
           </p>
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
-            <Link to="/free-estimate" className="inline-flex items-center justify-center gap-2 rounded-sm bg-washi-50 px-7 py-3 text-sm font-medium tracking-wide text-sumi-900 transition-colors hover:bg-washi-200">
+            <Link to="/free-estimate" className="inline-flex items-center justify-center gap-2 rounded-sm bg-white px-7 py-3 text-sm font-medium tracking-wide text-sumi-900 transition-colors hover:bg-washi-100">
               Get Free Estimate
               <ArrowRight className="h-3.5 w-3.5" aria-hidden />
             </Link>
             <a
               href="tel:5403351059"
-              className="inline-flex items-center justify-center gap-2 rounded-sm border border-sumi-600 px-7 py-3 text-sm font-medium tracking-wide text-washi-200 transition-colors hover:border-sumi-400 hover:text-washi-50"
+              className="inline-flex items-center justify-center gap-2 rounded-sm border border-white px-7 py-3 text-sm font-medium tracking-wide text-white transition-colors hover:bg-white/10"
+              style={{ borderColor: '#ffffff', color: '#ffffff' }}
             >
               <Phone className="h-3.5 w-3.5" aria-hidden />
               (540) 335-1059

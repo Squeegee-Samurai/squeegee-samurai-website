@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Home.css";
 import {
@@ -7,7 +7,6 @@ import {
   Star,
   Phone,
   CheckCircle,
-  Users,
   Building,
   ArrowRight,
   Droplets,
@@ -371,7 +370,7 @@ const Home = () => {
       </section>
 
       {/* ── CTA ── */}
-      <section className="bg-sumi-900 py-20 lg:py-24">
+      <section className="bg-[#2c4a6e] py-20 lg:py-24">
         <div className="section-container text-center">
           <h2 className="font-display text-3xl font-bold text-washi-50 sm:text-4xl">
             Ready for crystal clear windows?
@@ -382,15 +381,15 @@ const Home = () => {
           <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
             <Link
               to="/free-estimate"
-              className="btn-primary gap-2 px-8 py-4 text-sm"
+              className="inline-flex items-center justify-center gap-2 rounded-sm bg-white px-8 py-4 text-sm font-medium tracking-wide text-sumi-900 transition-colors hover:bg-washi-100"
             >
               Get Free Estimate
               <ArrowRight className="h-4 w-4" aria-hidden />
             </Link>
             <a
               href="tel:5403351059"
-              className="inline-flex items-center justify-center gap-2 rounded-sm bg-transparent px-7 py-3.5 text-sm font-medium tracking-wide text-sumi-200 transition-all hover:bg-sumi-800 hover:text-washi-50"
-              style={{ border: '2px solid rgb(113, 129, 150)' }}
+              className="inline-flex items-center justify-center gap-2 rounded-sm border border-white bg-transparent px-7 py-3.5 text-sm font-medium tracking-wide text-white transition-all hover:bg-white/10"
+              style={{ borderColor: '#ffffff', color: '#ffffff' }}
             >
               <Phone className="h-4 w-4" aria-hidden />
               (540) 335-1059

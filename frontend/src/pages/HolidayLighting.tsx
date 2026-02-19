@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
-import { Lightbulb, Sparkles, PackageOpen, Building2, Wrench, CheckCircle, Phone, Mail } from 'lucide-react';
+import { Lightbulb, Sparkles, PackageOpen, Building2, Wrench, CheckCircle, Phone, ArrowRight } from 'lucide-react';
 import { useMemo } from 'react';
+import { Link } from 'react-router-dom';
 
 const PHONE_DISPLAY = '540-335-1059';
 const PHONE_TEL = '5403351059';
@@ -142,19 +143,23 @@ export default function HolidayLighting() {
       </section>
 
       {/* CTA */}
-      <section id="quote" className="py-16 bg-sumi-800 text-washi-50 text-center">
-        <div className="section-container">
-          <h2 className="font-display text-2xl font-bold mb-3">Ready to Shine?</h2>
-          <p className="text-sumi-300 mb-6">Contact Squeegee Samurai today for a free quote.</p>
-          <div className="space-y-2 text-sm">
-            <p>
-              <span className="text-sumi-400">Email:</span>{' '}
-              <a href={`mailto:${EMAIL}`} className="text-washi-100 underline underline-offset-4 decoration-sumi-500 hover:decoration-washi-200">{EMAIL}</a>
-            </p>
-            <p>
-              <span className="text-sumi-400">Phone:</span>{' '}
-              <a href={`tel:${PHONE_TEL}`} className="text-washi-100 underline underline-offset-4 decoration-sumi-500 hover:decoration-washi-200">{PHONE_DISPLAY}</a>
-            </p>
+      <section className="bg-[#2c4a6e] py-16">
+        <div className="section-container text-center">
+          <h2 className="font-display text-2xl font-bold text-washi-50 sm:text-3xl">
+            Ready to Shine?
+          </h2>
+          <p className="mx-auto mt-4 max-w-md text-base text-sumi-300">
+            Contact Squeegee Samurai today for a free quote.
+          </p>
+          <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
+            <Link to="/free-estimate" className="inline-flex items-center justify-center gap-2 rounded-sm bg-white px-7 py-3 text-sm font-medium tracking-wide text-sumi-900 transition-colors hover:bg-washi-100">
+              Get Free Estimate
+              <ArrowRight className="h-3.5 w-3.5" aria-hidden />
+            </Link>
+            <a href={`tel:${PHONE_TEL}`} className="inline-flex items-center justify-center gap-2 rounded-sm border border-white px-7 py-3 text-sm font-medium tracking-wide text-white transition-colors hover:bg-white/10" style={{ borderColor: '#ffffff', color: '#ffffff' }}>
+              <Phone className="h-3.5 w-3.5" aria-hidden />
+              {PHONE_DISPLAY}
+            </a>
           </div>
         </div>
       </section>
