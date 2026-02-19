@@ -139,6 +139,80 @@ const Services = () => {
         </div>
       </section>
 
+      {/* Kiritsu Clean Section */}
+      <section id="kiritsu" className="bg-washi-100 py-20 lg:py-24 border-y border-sumi-200">
+        <div className="section-container">
+          <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-start">
+            {/* Left Content */}
+            <div className="flex flex-col h-full justify-center">
+              <div className="inline-flex items-center rounded-full border border-aka-200 bg-aka-50 px-3 py-1 text-xs font-medium text-aka-700 mb-6 shadow-sm w-fit">
+                <span className="mr-1.5 h-1.5 w-1.5 rounded-full bg-aka-500"></span>
+                Save on Routine Cleaning
+              </div>
+              <h2 className="font-display text-3xl font-bold text-sumi-900 leading-tight sm:text-4xl">
+                Leesburg Kiritsu* Clean offers savings on routine window cleaning services.
+              </h2>
+              <p className="mt-6 text-lg text-sumi-600 leading-relaxed">
+                High-traffic areas receive regular cleaning. All interior and exterior windows are cleaned as necessary, subject to an annual contract.
+              </p>
+              <div className="mt-8">
+                <Link
+                  to="/free-estimate"
+                  className="inline-flex items-center gap-2 text-aka-600 font-bold hover:text-aka-700 transition-colors border-b-2 border-aka-200 hover:border-aka-400 pb-0.5"
+                >
+                  Get a Kiritsu Quote
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+
+            {/* Right Content - Definition Card */}
+            <div className="bg-washi-50 rounded-lg shadow-xl shadow-sumi-900/5 border border-sumi-200 p-8 sm:p-10 relative overflow-hidden">
+              {/* Graphic - Top Right Corner */}
+              <div className="absolute top-0 right-0 w-32 h-32 opacity-80 pointer-events-none mix-blend-multiply">
+                 <img 
+                    src="/src/assets/kiritsu-graphic.png" 
+                    alt="Kiritsu Graphic" 
+                    className="w-full h-full object-cover rounded-bl-3xl"
+                 />
+              </div>
+
+              <div className="relative z-10 pt-2 pr-24">
+                <h3 className="font-display text-2xl font-bold text-sumi-900 mb-8 border-b-2 border-aka-500 pb-4 inline-block">
+                  Understanding "Kiritsu"
+                </h3>
+              </div>
+              
+              <div className="space-y-8 relative z-10">
+                <div>
+                  <h4 className="font-display font-bold text-aka-700 text-sm uppercase tracking-wider mb-2">Definition and Usage</h4>
+                  <p className="text-sumi-600 leading-relaxed text-lg">
+                    <span className="font-bold text-sumi-900 text-xl font-display mr-1">規律</span> (Romaji: kiritsu; Kana: きりつ) is a noun that commonly appears in Japanese language studies, notably at the JLPT N2 level.
+                  </p>
+                </div>
+                
+                <div>
+                  <h4 className="font-display font-bold text-aka-700 text-sm uppercase tracking-wider mb-2">Translation and Meaning</h4>
+                  <p className="text-sumi-600 leading-relaxed">
+                    The English translation for "kiritsu" is "order," "rules," or "law." The term refers to a rule or order about how things happen.
+                  </p>
+                </div>
+
+                <div className="bg-sumi-800 rounded px-6 py-5 border-l-4 border-aka-500 shadow-sm relative overflow-hidden">
+                   <div className="absolute top-0 right-0 p-4 opacity-10">
+                      <span className="text-6xl text-washi-50 font-serif">K</span>
+                   </div>
+                  <h4 className="font-display font-bold text-washi-200 text-xs uppercase tracking-wider mb-2 relative z-10">Summary</h4>
+                  <p className="text-washi-100 italic leading-relaxed relative z-10 font-medium">
+                    "Kiritsu" encapsulates the concepts of order, rules, and law, describing a principle or guideline that dictates the manner in which activities or processes are organized.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Additional Services */}
       <section className="border-t border-sumi-100 bg-washi-100 py-20 lg:py-24">
         <div className="section-container">

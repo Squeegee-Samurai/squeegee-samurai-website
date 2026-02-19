@@ -35,7 +35,7 @@ export interface QuoteResult {
   totalCents: number;
   breakdown: { subtotal: number; discount: number; total: number };
   segment?: 'residential' | 'commercial';
-  lineItems: Array<{ description: string; amount: number }>;
+  lineItems: Array<{ description: string; amount: number | string }>;
 }
 
 const COMMERCIAL_RATES: Record<string, number> = {
@@ -63,7 +63,7 @@ export function computeQuote(body: QuoteBody): QuoteResult {
   let totalCents = 0;
   let subtotalCents = 0;
   let discountCents = 0;
-  let lineItems: Array<{ description: string; amount: number } | null> = [];
+  let lineItems: Array<{ description: string; amount: number | string } | null> = [];
 
   const windowCount = Math.max(0, Number(f.windowCount) || 0);
 
@@ -137,12 +137,12 @@ export function computeQuote(body: QuoteBody): QuoteResult {
     subtotalCents = (windowTotal + screenTotal) * 100;
   }
 
-  // === HIGH TRAFFIC / KUTARITSU NOTE (Both Segments) ===
-  const hasKutaritsu = f.additionalServices?.some(s => s.includes('Kutaritsu') || s.includes('High Traffic'));
-  if (hasKutaritsu) {
+  // === HIGH TRAFFIC / KIRITSU NOTE (Both Segments) ===
+  const hasKiritsu = f.additionalServices?.some(s => s.includes('Kutaritsu') || s.includes('Kiritsu') || s.includes('High Traffic'));
+  if (hasKiritsu) {
     lineItems.push({
-      description: 'High Traffic / Kutaritsu Clean (Pricing to be confirmed upon review)',
-      amount: 0
+      description: 'High Traffic / Kiritsu Clean (Pricing to be confirmed upon review)',
+      amount: 'TBD'
     });
   }
 
@@ -165,6 +165,6 @@ export function computeQuote(body: QuoteBody): QuoteResult {
       total: Math.round(totalCents / 100),
     },
     segment,
-    lineItems: lineItems.filter((item): item is { description: string; amount: number } => item !== null),
+    lineItems: lineItems.filter((item): item is { description: string; amount: number | string } => item !== null),
   };
 }

@@ -42,6 +42,7 @@ interface TierQuote {
   perVisit: number;
   monthlyEquivalent: number;
   firstTimeUplift?: number;
+  ratePerPane: number;
 }
 
 function calculateQuotes(inputs: QuoteInputs): TierQuote[] {
@@ -52,36 +53,42 @@ function calculateQuotes(inputs: QuoteInputs): TierQuote[] {
       badge: PRICING.weekly.badge,
       perVisit: paneCount * PRICING.weekly.perVisit,
       monthlyEquivalent: paneCount * PRICING.weekly.perVisit * PRICING.weekly.monthlyMultiplier,
+      ratePerPane: PRICING.weekly.perVisit,
     },
     {
       tier: 'Biweekly Exterior',
       badge: PRICING.biweekly.badge,
       perVisit: paneCount * PRICING.biweekly.perVisit,
       monthlyEquivalent: paneCount * PRICING.biweekly.perVisit * PRICING.biweekly.monthlyMultiplier,
+      ratePerPane: PRICING.biweekly.perVisit,
     },
     {
       tier: 'Monthly Exterior',
       badge: PRICING.monthly.badge,
       perVisit: paneCount * PRICING.monthly.perVisit,
       monthlyEquivalent: paneCount * PRICING.monthly.perVisit * PRICING.monthly.monthlyMultiplier,
+      ratePerPane: PRICING.monthly.perVisit,
     },
     {
       tier: 'Monthly Interior + Exterior',
       badge: PRICING.monthlyIO.badge,
       perVisit: paneCount * PRICING.monthlyIO.perVisit,
       monthlyEquivalent: paneCount * PRICING.monthlyIO.perVisit * PRICING.monthlyIO.monthlyMultiplier,
+      ratePerPane: PRICING.monthlyIO.perVisit,
     },
     {
       tier: 'Quarterly Interior + Exterior',
       badge: PRICING.quarterlyIO.badge,
       perVisit: paneCount * PRICING.quarterlyIO.perVisit,
       monthlyEquivalent: paneCount * PRICING.quarterlyIO.perVisit * PRICING.quarterlyIO.monthlyMultiplier,
+      ratePerPane: PRICING.quarterlyIO.perVisit,
     },
     {
       tier: 'One-Time Clean',
       badge: PRICING.oneTime.badge,
       perVisit: paneCount * PRICING.oneTime.perVisit,
       monthlyEquivalent: 0,
+      ratePerPane: PRICING.oneTime.perVisit,
     },
   ];
 
@@ -222,7 +229,7 @@ const FreeEstimate = () => {
             businessName: inputs.businessName,
             additionalServices: [
               ...(inputs.applyFirstTimeUplift ? ['First-Time Uplift'] : []),
-              ...(inputs.requestAdvancedCleaning ? ['High Traffic Kutaritsu'] : []),
+              ...(inputs.requestAdvancedCleaning ? ['High Traffic Kiritsu'] : []),
             ],
             specialRequests: contactInfo.notes ? `Notes: ${contactInfo.notes}` : undefined,
           },
@@ -332,16 +339,21 @@ const FreeEstimate = () => {
                   />
                   <p className="mt-1 text-xs text-sumi-400">Count individual panes (including divided lights).</p>
                 </div>
-                <label className="flex items-center gap-3 cursor-pointer">
+                <label className="flex items-start gap-3 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={inputs.applyFirstTimeUplift}
                     onChange={(e) => handleInputChange('applyFirstTimeUplift', e.target.checked)}
-                    className="h-4 w-4 border-sumi-300 text-indigo-600 focus:ring-indigo-500"
+                    className="mt-0.5 h-4 w-4 border-sumi-300 text-indigo-600 focus:ring-indigo-500 shrink-0"
                   />
-                  <span className="text-sm text-sumi-600">
-                    {'Apply first-time "Restore to Standard" uplift (+30%)'}
-                  </span>
+                  <div>
+                    <span className="text-sm font-medium text-sumi-800">
+                      {'Apply first-time "Restore to Standard" uplift (+30%)'}
+                    </span>
+                    <p className="text-xs text-sumi-500 mt-1 leading-relaxed">
+                      Some windows may need extra cleaning, which takes more time and materials. We'll assess this when we arrive.
+                    </p>
+                  </div>
                 </label>
               </div>
 
@@ -413,19 +425,19 @@ const FreeEstimate = () => {
                   </div>
 
                   {/* Advanced Cleaning Option */}
-                  <div className="mt-6 mb-6 p-4 bg-gradient-to-br from-indigo-50 to-washi-50 border border-indigo-100 rounded-lg">
+                  <div className="mt-6 mb-6 p-5 bg-gradient-to-br from-indigo-50 to-washi-50 border border-indigo-100 rounded-lg">
                     <label className="flex items-start gap-3 cursor-pointer">
                       <input
                         type="checkbox"
                         checked={inputs.requestAdvancedCleaning || false}
                         onChange={(e) => setInputs((prev) => ({ ...prev, requestAdvancedCleaning: e.target.checked }))}
-                        className="mt-1 h-4 w-4 border-sumi-300 text-indigo-600 focus:ring-indigo-500"
+                        className="mt-1 h-4 w-4 border-sumi-300 text-indigo-600 focus:ring-indigo-500 bg-white"
                       />
                       <div>
                         <span className="text-sm font-medium text-sumi-800">
-                          Add High Traffic with Kutaritsu Clean
+                          Add High Traffic with <a href="/services#kiritsu" target="_blank" className="text-indigo-600 hover:text-indigo-800 underline">Kiritsu Clean</a>
                         </span>
-                        <p className="text-xs text-sumi-600 mt-1">
+                        <p className="text-xs text-sumi-600 mt-0.5">
                           More information will be included in your final estimate
                         </p>
                       </div>
@@ -458,29 +470,48 @@ const FreeEstimate = () => {
                   </div>
 
                   {/* Summary */}
-                  <div className="mb-8 bg-sumi-50 p-5 border border-sumi-100">
-                    <div className="flex items-center gap-2 mb-3">
-                      <span className="bg-sumi-800 text-washi-50 text-xs px-3 py-1">
-                        {selectedQuote.tier}
-                      </span>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4 text-sm">
-                      <div>
-                        <span className="text-sumi-500">Per-Visit:</span>
-                        <span className="ml-2 font-semibold text-sumi-800">${selectedQuote.perVisit.toFixed(2)}</span>
-                      </div>
-                      {selectedQuote.monthlyEquivalent > 0 && (
-                        <div>
-                          <span className="text-sumi-500">Monthly:</span>
-                          <span className="ml-2 font-semibold text-sumi-800">${selectedQuote.monthlyEquivalent.toFixed(2)}</span>
-                        </div>
-                      )}
+                  <div className="mb-8 bg-sumi-50 p-6 border border-sumi-100 rounded-sm">
+                    <ul className="space-y-3 text-sm">
+                      {/* Base Tier */}
+                      <li className="flex justify-between items-start sm:items-center text-sumi-800 flex-col sm:flex-row gap-1 sm:gap-0">
+                        <span>
+                          <span className="font-semibold">{selectedQuote.tier}</span>
+                          <span className="text-sumi-500 ml-1">
+                            ({inputs.paneCount} panes @ ${selectedQuote.ratePerPane.toFixed(2)})
+                          </span>
+                        </span>
+                        <span className="font-medium text-sumi-900">${selectedQuote.perVisit.toFixed(2)}</span>
+                      </li>
+
+                      {/* First-Time Uplift */}
                       {selectedQuote.firstTimeUplift && (
-                        <div className="col-span-2">
-                          <span className="text-sumi-500">First-Time Uplift:</span>
-                          <span className="ml-2 font-semibold text-aka-600">+${selectedQuote.firstTimeUplift.toFixed(2)}</span>
-                        </div>
+                        <li className="flex justify-between items-center text-sumi-800 w-full">
+                          <span>First-Time Restore to Standard Uplift (+30%)</span>
+                          <span className="font-medium text-aka-600">+${selectedQuote.firstTimeUplift.toFixed(2)}</span>
+                        </li>
                       )}
+
+                      {/* Kutaritsu Clean */}
+                      {inputs.requestAdvancedCleaning && (
+                        <li className="flex justify-between items-center text-sumi-800 w-full">
+                          <span>High Traffic / Kiritsu Clean</span>
+                          <span className="font-medium text-sumi-500 italic text-xs sm:text-sm">(Pricing to be confirmed upon review)</span>
+                        </li>
+                      )}
+                    </ul>
+
+                    <div className="mt-5 pt-4 border-t border-sumi-200 flex justify-between items-center">
+                      <span className="font-display font-bold text-sumi-900">Estimated Total (First Visit)</span>
+                      <div className="text-right">
+                        <span className="font-display text-xl font-bold text-sumi-900">
+                          ${(selectedQuote.perVisit + (selectedQuote.firstTimeUplift || 0)).toFixed(2)}
+                        </span>
+                        {selectedQuote.monthlyEquivalent > 0 && (
+                          <div className="text-xs text-sumi-500 font-medium">
+                            ${selectedQuote.monthlyEquivalent.toFixed(2)} / month equivalent
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -624,7 +655,7 @@ const ResidentialForm = () => {
         contactData.couponCode ? `Coupon: ${contactData.couponCode}` : null,
         contactData.preferredContact ? `Preferred Contact: ${contactData.preferredContact}` : null,
         contactData.bestTimeToCall ? `Best Time: ${contactData.bestTimeToCall}` : null,
-        contactData.requestAdvancedCleaning ? 'Requested: High Traffic with Kutaritsu Clean (more info needed)' : null,
+        contactData.requestAdvancedCleaning ? 'Requested: High Traffic with Kiritsu Clean (more info needed)' : null,
         `Estimated Price: $${quote.baseTotal.toFixed(2)}`,
       ]
         .filter(Boolean)
@@ -650,7 +681,7 @@ const ResidentialForm = () => {
             stories: residentialInputs.stories,
             additionalServices: [
               ...contactData.additionalServices,
-              ...(contactData.requestAdvancedCleaning ? ['High Traffic Kutaritsu'] : [])
+              ...(contactData.requestAdvancedCleaning ? ['High Traffic Kiritsu'] : [])
             ],
             specialRequests: specialRequests || undefined,
           },
@@ -796,7 +827,7 @@ const ResidentialForm = () => {
           </p>
 
           {/* Advanced Cleaning Option */}
-          <div className="mt-4 mb-4 p-4 bg-white/50 border border-indigo-200 rounded">
+          <div className="mt-4 mb-4 p-5 bg-white/50 border border-indigo-200 rounded">
             <label className="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
@@ -806,9 +837,9 @@ const ResidentialForm = () => {
               />
               <div>
                 <span className="text-sm font-medium text-sumi-800">
-                  Add High Traffic with Kutaritsu Clean
+                  Add High Traffic with <a href="/services#kiritsu" target="_blank" className="text-indigo-600 hover:text-indigo-800 underline">Kiritsu Clean</a>
                 </span>
-                <p className="text-xs text-sumi-600 mt-1">
+                <p className="text-xs text-sumi-600 mt-0.5">
                   More information will be included in your final estimate
                 </p>
               </div>

@@ -139,7 +139,7 @@ export interface QuoteTemplateProps {
   };
   breakdown: Record<string, any>;
   businessName?: string;
-  lineItems?: Array<{ description: string; amount: number }>;
+  lineItems?: Array<{ description: string; amount: number | string }>;
 }
 
 export function QuoteTemplate({ quote, contact, breakdown, businessName, lineItems }: QuoteTemplateProps) {
@@ -203,7 +203,9 @@ export function QuoteTemplate({ quote, contact, breakdown, businessName, lineIte
           lineItems && lineItems.map((item, i) => 
             e(View, { key: `item-${i}`, style: styles.pricingRow },
               e(Text, { style: styles.pricingLabel }, item.description),
-              e(Text, { style: styles.pricingValue }, `$${item.amount.toFixed(2)}`)
+              e(Text, { style: styles.pricingValue }, 
+                typeof item.amount === 'number' ? `$${item.amount.toFixed(2)}` : item.amount
+              )
             )
           ),
 

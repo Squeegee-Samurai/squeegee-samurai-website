@@ -5,7 +5,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
-        display: ['"DM Sans"', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['"Nunito"', 'Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
         washi: {
