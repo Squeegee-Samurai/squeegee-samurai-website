@@ -132,6 +132,12 @@ export async function sendOwnerNotification(
               <td style="padding: 10px; color: #4a5568; font-weight: bold;">Service Type:</td>
               <td style="padding: 10px; color: #1a202c;">${quoteData.formInput.serviceType || 'N/A'}</td>
             </tr>
+            ${quoteData.formInput.additionalServices && quoteData.formInput.additionalServices.length > 0 ? `
+            <tr style="border-bottom: 1px solid #e2e8f0;">
+              <td style="padding: 10px; color: #4a5568; font-weight: bold;">Additional Services:</td>
+              <td style="padding: 10px; color: #1a202c;">${quoteData.formInput.additionalServices.join(', ')}</td>
+            </tr>
+            ` : ''}
             <tr style="border-bottom: 1px solid #e2e8f0;">
               <td style="padding: 10px; color: #4a5568; font-weight: bold;">Total:</td>
               <td style="padding: 10px; color: #e53e3e; font-weight: bold; font-size: 18px;">
