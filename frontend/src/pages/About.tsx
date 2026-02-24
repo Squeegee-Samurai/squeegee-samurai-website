@@ -1,6 +1,7 @@
 
 import { Shield, Award, Users, Leaf, ArrowRight, Phone } from "lucide-react";
 import { Link } from "react-router-dom";
+import PageHeader from "../components/PageHeader";
 
 const VALUES = [
   {
@@ -56,20 +57,12 @@ const About = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-sumi-900 py-20 lg:py-24">
-        <div className="section-container text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-sumi-400">
-            Our Story
-          </p>
-          <h1 className="mt-4 font-display text-4xl font-bold text-washi-50 sm:text-5xl">
-            About Squeegee Samurai
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-sumi-300">
-            Bringing the precision and dedication of the samurai to window cleaning
-            in Loudoun County, Virginia.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        subtitle="Our Story"
+        title="About Squeegee Samurai"
+        description="Bringing the precision and dedication of the samurai to window cleaning in Loudoun County, Virginia."
+        backgroundImage="/images/headers/about-header.jpg"
+      />
 
       {/* Story + Mission */}
       <section className="bg-washi-50 py-20 lg:py-24">

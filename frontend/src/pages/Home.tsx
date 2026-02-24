@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Home.css";
 import {
@@ -13,27 +12,7 @@ import {
   Home as HomeIcon,
   ExternalLink,
 } from "lucide-react";
-
-function useParallax(speed = 0.4) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [offset, setOffset] = useState(0);
-
-  useEffect(() => {
-    function onScroll() {
-      if (!ref.current) return;
-      const rect = ref.current.getBoundingClientRect();
-      const visible = rect.bottom > 0 && rect.top < window.innerHeight;
-      if (visible) {
-        setOffset(window.scrollY * speed);
-      }
-    }
-    window.addEventListener("scroll", onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener("scroll", onScroll);
-  }, [speed]);
-
-  return { ref, offset };
-}
+import { useParallax } from "../hooks/useParallax";
 
 const SERVICES = [
   {

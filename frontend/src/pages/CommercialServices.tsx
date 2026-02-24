@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { CheckCircle, Calendar, Shield, Clock, Users, Star, Phone, ArrowRight } from "lucide-react";
+import PageHeader from "../components/PageHeader";
 
 const INCLUDED = [
   { title: "Scheduled Maintenance Programs", text: "Regular cleaning schedules to keep your business looking professional year-round." },
@@ -46,20 +47,12 @@ const CommercialServices = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-sumi-900 py-20 lg:py-24">
-        <div className="section-container text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-sumi-400">
-            For Businesses
-          </p>
-          <h1 className="mt-4 font-display text-4xl font-bold text-washi-50 sm:text-5xl">
-            Commercial Window Cleaning
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-sumi-300">
-            Professional window cleaning services for offices, retail stores, and
-            commercial buildings in Loudoun County.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        subtitle="For Businesses"
+        title="Commercial Window Cleaning"
+        description="Professional window cleaning services for offices, retail stores, and commercial buildings in Loudoun County."
+        backgroundImage="/images/headers/commercial-header.jpg"
+      />
 
       {/* Services + Property Types */}
       <section className="bg-washi-50 py-20 lg:py-24">

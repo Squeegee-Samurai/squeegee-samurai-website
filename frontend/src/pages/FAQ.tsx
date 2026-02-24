@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronDown, Phone, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import PageHeader from "../components/PageHeader";
 
 const FAQS = [
   {
@@ -76,19 +77,12 @@ const FAQ = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-sumi-900 py-20 lg:py-24">
-        <div className="section-container text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-sumi-400">
-            Support
-          </p>
-          <h1 className="mt-4 font-display text-4xl font-bold text-washi-50 sm:text-5xl">
-            Frequently Asked Questions
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-sumi-300">
-            Find answers to common questions about our window cleaning services.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        subtitle="Support"
+        title="Frequently Asked Questions"
+        description="Find answers to common questions about our window cleaning services."
+        backgroundImage="/images/headers/faq-header.jpg"
+      />
 
       {/* FAQ Content */}
       <section className="bg-washi-50 py-20 lg:py-24">

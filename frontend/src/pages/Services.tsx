@@ -9,6 +9,7 @@ import {
   Phone,
 } from "lucide-react";
 import "./Home.css";
+import PageHeader from "../components/PageHeader";
 
 const CORE_SERVICES = [
   {
@@ -75,19 +76,12 @@ const Services = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-sumi-900 py-20 lg:py-24">
-        <div className="section-container text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-sumi-400">
-            What We Offer
-          </p>
-          <h1 className="mt-4 font-display text-4xl font-bold text-washi-50 sm:text-5xl">
-            Our Services
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-sumi-300">
-            Professional window cleaning solutions for every need in Loudoun County, Virginia.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        subtitle="What We Offer"
+        title="Our Services"
+        description="Professional window cleaning solutions for every need in Loudoun County, Virginia."
+        backgroundImage="/images/headers/services-header.jpg"
+      />
 
       {/* Core Services */}
       <section className="jp-cloud-parallax bg-washi-50 py-20 lg:py-24">

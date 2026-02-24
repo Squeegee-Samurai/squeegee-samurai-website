@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { Phone, Mail, MapPin, Clock, Send, CheckCircle, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import PageHeader from "../components/PageHeader";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -82,19 +83,12 @@ const Contact = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-sumi-900 py-20 lg:py-24">
-        <div className="section-container text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-sumi-400">
-            Get in Touch
-          </p>
-          <h1 className="mt-4 font-display text-4xl font-bold text-washi-50 sm:text-5xl">
-            Contact Us
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-sumi-300">
-            Ready for crystal clear windows? Reach out to Squeegee Samurai today.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        subtitle="Get in Touch"
+        title="Contact Us"
+        description="Ready for crystal clear windows? Reach out to Squeegee Samurai today."
+        backgroundImage="/images/headers/contact-header.jpg"
+      />
 
       {/* Contact Content */}
       <section className="bg-washi-50 py-20 lg:py-24">

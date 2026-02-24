@@ -1,6 +1,7 @@
 
 import { MapPin, CheckCircle, Phone, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import PageHeader from "../components/PageHeader";
 
 const CITIES = [
   { name: "Ashburn", description: "Serving all of Ashburn including Broadlands, Brambleton, and surrounding neighborhoods", zips: ["20147", "20148", "20149"] },
@@ -17,19 +18,12 @@ const ServiceAreas = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-sumi-900 py-20 lg:py-24">
-        <div className="section-container text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-sumi-400">
-            Coverage
-          </p>
-          <h1 className="mt-4 font-display text-4xl font-bold text-washi-50 sm:text-5xl">
-            Service Areas
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-sumi-300">
-            Professional window cleaning services throughout Loudoun County, Virginia.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        subtitle="Coverage"
+        title="Service Areas"
+        description="Professional window cleaning services throughout Loudoun County, Virginia."
+        backgroundImage="/images/headers/service-areas-header.jpg"
+      />
 
       {/* Cities */}
       <section className="bg-washi-50 py-20 lg:py-24">

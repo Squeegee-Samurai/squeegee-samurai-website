@@ -1,6 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { CheckCircle, Clock, Shield, Star, Phone, ArrowRight } from "lucide-react";
+import PageHeader from "../components/PageHeader";
 
 const INCLUDED = [
   { title: "Interior & Exterior Cleaning", text: "Complete cleaning of both sides of your windows for maximum clarity and brightness." },
@@ -42,19 +43,12 @@ const ResidentialServices = () => {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-sumi-900 py-20 lg:py-24">
-        <div className="section-container text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-sumi-400">
-            For Homeowners
-          </p>
-          <h1 className="mt-4 font-display text-4xl font-bold text-washi-50 sm:text-5xl">
-            Residential Window Cleaning
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-sumi-300">
-            Professional window cleaning services for homes throughout Loudoun County, Virginia.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        subtitle="For Homeowners"
+        title="Residential Window Cleaning"
+        description="Professional window cleaning services for homes throughout Loudoun County, Virginia."
+        backgroundImage="/images/headers/residential-header.jpg"
+      />
 
       {/* What's Included + Packages */}
       <section className="bg-washi-50 py-20 lg:py-24">
