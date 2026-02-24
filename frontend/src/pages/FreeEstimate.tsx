@@ -6,6 +6,7 @@
 import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Home, Building, ChevronRight, ArrowLeft, Clock } from 'lucide-react';
+import PageHeader from '../components/PageHeader';
 
 type ServiceType = 'residential' | 'commercial';
 
@@ -253,19 +254,18 @@ const FreeEstimate = () => {
   return (
     <div className="bg-washi-50">
       {/* Header */}
-      <section className="border-b border-sumi-100 bg-sumi-800 py-20 text-center text-washi-50">
-        <div className="section-container">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-sumi-300 mb-3">Instant Pricing</p>
-          <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl text-balance flex items-center justify-center gap-3">
+      <PageHeader
+        subtitle="Instant Pricing"
+        title={
+          <span className="flex items-center justify-center gap-3">
             <Clock className="h-10 w-10 sm:h-12 sm:w-12" />
             Get Your Free Estimate in 2 Minutes!
-          </h1>
-          <div className="mx-auto mt-4 h-px w-12 bg-aka-600" />
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-sumi-300">
-            Tell us about your project and receive a fast, detailed pricing estimate.
-          </p>
-        </div>
-      </section>
+          </span>
+        }
+        description="Tell us about your project and receive a fast, detailed pricing estimate."
+        backgroundImage="/images/headers/free-estimate-header.jpg"
+        showAccentLine
+      />
 
       <div className="section-container py-12 lg:py-16">
         <div className="mx-auto max-w-4xl">

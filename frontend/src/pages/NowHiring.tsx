@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import { MapPin, Clock, DollarSign, ChevronDown, Send, Users, Building, Phone } from 'lucide-react';
+import PageHeader from '../components/PageHeader';
 
 const NowHiring = () => {
   const [selectedJob, setSelectedJob] = useState<number | null>(null);
@@ -123,16 +124,13 @@ const NowHiring = () => {
   return (
     <div className="bg-washi-50">
       {/* Hero */}
-      <section className="bg-sumi-800 py-20 text-center text-washi-50">
-        <div className="section-container">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-sumi-300 mb-3">Careers</p>
-          <h1 className="font-display text-4xl font-bold tracking-tight sm:text-5xl text-balance">Now Hiring</h1>
-          <div className="mx-auto mt-4 h-px w-12 bg-aka-600" />
-          <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-sumi-300">
-            Join the Squeegee Samurai team and help deliver exceptional window cleaning services throughout Loudoun County.
-          </p>
-        </div>
-      </section>
+      <PageHeader
+        subtitle="Careers"
+        title="Now Hiring"
+        description="Join the Squeegee Samurai team and help deliver exceptional window cleaning services throughout Loudoun County."
+        backgroundImage="/images/headers/now-hiring-header.jpg"
+        showAccentLine
+      />
 
       {/* Why Work With Us */}
       <section className="py-16 border-b border-sumi-100">
