@@ -88,7 +88,7 @@ export function computeQuote(body: QuoteBody): QuoteResult {
       });
     }
 
-    subtotalCents = (baseCost + upliftCost) * 100;
+    subtotalCents = Math.round((baseCost + upliftCost) * 100);
 
   } else {
     // === RESIDENTIAL LOGIC ===
@@ -134,7 +134,7 @@ export function computeQuote(body: QuoteBody): QuoteResult {
       });
     }
 
-    subtotalCents = (windowTotal + screenTotal) * 100;
+    subtotalCents = Math.round((windowTotal + screenTotal) * 100);
   }
 
   // === HIGH TRAFFIC / KIRITSU NOTE (Both Segments) ===
