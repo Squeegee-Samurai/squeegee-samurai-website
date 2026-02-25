@@ -84,7 +84,7 @@ const Services = () => {
       />
 
       {/* Core Services */}
-      <section className="jp-cloud-parallax bg-washi-50 py-20 lg:py-24">
+      <section className="bg-washi-50 py-20 lg:py-24">
         <div className="section-container">
           <div className="max-w-xl">
             <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-sumi-400">
@@ -134,7 +134,7 @@ const Services = () => {
       </section>
 
       {/* Kiritsu Clean Section */}
-      <section id="kiritsu" className="bg-washi-100 py-20 lg:py-24 border-y border-sumi-200">
+      <section id="kiritsu" className="jp-cloud-parallax bg-washi-100 py-20 lg:py-24 border-y border-sumi-200">
         <div className="section-container">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:items-start">
             {/* Left Content */}
