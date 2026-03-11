@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { sendOwnerEstimateEmail, sendCustomerConfirmationEmail } from '../lib/email.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // CORS wrappers
@@ -35,8 +36,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   }
 
   try {
-    const { sendOwnerEstimateEmail, sendCustomerConfirmationEmail } = await import('../lib/email.js');
-    
     // Owner email is authoritative
     await sendOwnerEstimateEmail(body);
 

@@ -252,7 +252,11 @@ const FreeEstimate = () => {
         }),
       });
 
-      const result = await response.json();
+      const result = await response.json().catch(async () => {
+        const errorText = await response.text();
+        console.error('Commercial response parsing failed:', errorText);
+        return { ok: false, error: errorText };
+      });
       if (result.ok) {
         navigate('/thank-you', { state: { estimatedQuote: selectedQuote.perVisit + (selectedQuote.firstTimeUplift || 0), tier: selectedTier, isEstimate: true } });
       } else {
@@ -712,7 +716,9 @@ const ResidentialForm = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to submit');
+        const errorText = await response.text();
+        console.error('Server returned an error:', response.status, errorText);
+        throw new Error(`Failed to submit: ${response.status} ${errorText}`);
       }
 
       const data = await response.json();
