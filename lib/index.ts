@@ -1,8 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
 import cors from 'cors';
-import { quoteRouter } from './quote.js';
-import { testPdfRouter } from './testPdf.js';
 import { contactRouter } from './contact.js';
 
 const PORT = Number(process.env.PORT) || 3000;
@@ -20,8 +18,6 @@ app.get('/api/health', (_req, res) => {
   });
 });
 
-app.use('/api', quoteRouter);
-app.use('/api', testPdfRouter);
 app.use('/api', contactRouter);
 
 app.listen(PORT, () => {

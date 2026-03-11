@@ -61,8 +61,13 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       ok: true,
       message: 'Estimate submitted successfully.',
     });
-  } catch (e) {
+  } catch (e: unknown) {
     console.error('[email] Owner email failed:', e);
-    return res.status(500).json({ ok: false, error: 'Failed to submit estimate.' });
+    return res.status(500).json({ 
+      ok: false, 
+      error: 'Failed to submit estimate.', 
+      details: e instanceof Error ? e.message : String(e),
+      stack: e instanceof Error ? e.stack : undefined
+    });
   }
 }
