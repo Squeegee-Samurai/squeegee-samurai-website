@@ -33,7 +33,7 @@ export interface SubmitEstimateRequest {
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 
 // Logo URL for the email header (fallback path can be used if no PNG is found)
-const LOGO_URL = 'https://squeegeesamurai.com/images/squeegee-samurai-logo.png'; 
+const LOGO_URL = 'https://squeegeesamurai.com/images/SSamurai_Logo.png'; 
 
 const getEmailHeader = () => `
   <div style="text-align: center; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid #e2e8f0;">

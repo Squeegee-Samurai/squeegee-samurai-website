@@ -276,9 +276,9 @@ const FreeEstimate = () => {
       <PageHeader
         subtitle="Instant Pricing"
         title={
-          <span className="flex items-center justify-center gap-3">
+          <span className="flex flex-col items-center justify-center gap-3 md:gap-4 md:flex-row">
             <Clock className="h-10 w-10 sm:h-12 sm:w-12" />
-            Get Your Free Estimate in 2 Minutes!
+            <span className="text-center md:text-left">Get Your Free Estimate in 2 Minutes!</span>
           </span>
         }
         description="Tell us about your project and receive a fast, detailed pricing estimate."
