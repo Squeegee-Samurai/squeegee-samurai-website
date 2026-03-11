@@ -217,29 +217,44 @@ const FreeEstimate = () => {
 
 
 
-      const response = await fetch(`${apiUrl}/api/quote`, {
+      const response = await fetch(`${apiUrl}/api/submit-estimate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contact: { firstName: '', lastName: '', email: contactInfo.email, phone: contactInfo.phone || undefined },
-          formInput: {
-            propertyType: 'Commercial',
-            serviceType: selectedTier,
-            windowCount: inputs.paneCount,
-            screenCount: 0,
-            businessName: inputs.businessName,
-            additionalServices: [
-              ...(inputs.applyFirstTimeUplift ? ['First-Time Uplift'] : []),
-              ...(inputs.requestAdvancedCleaning ? ['High Traffic Kiritsu'] : []),
-            ],
-            specialRequests: contactInfo.notes ? `Notes: ${contactInfo.notes}` : undefined,
+          customer: {
+            name: inputs.businessName || 'Commercial Lead',
+            email: contactInfo.email,
+            phone: contactInfo.phone || undefined,
           },
+          property: {
+            address: 'Commercial Property',
+            type: 'commercial',
+          },
+          estimate: {
+            line_items: [
+              {
+                label: `${inputs.paneCount} panes - ${selectedTier}`,
+                quantity: inputs.paneCount,
+                unit_price: selectedQuote.ratePerPane,
+                total: selectedQuote.perVisit,
+              },
+              ...(selectedQuote.firstTimeUplift ? [{
+                label: 'First-Time Restore to Standard Uplift',
+                total: selectedQuote.firstTimeUplift,
+              }] : []),
+            ],
+            subtotal: selectedQuote.perVisit,
+            uplift: selectedQuote.firstTimeUplift || 0,
+            total: selectedQuote.perVisit + (selectedQuote.firstTimeUplift || 0),
+          },
+          notes: contactInfo.notes ? `Notes: ${contactInfo.notes}` : undefined,
+          timestamp: new Date().toISOString(),
         }),
       });
 
       const result = await response.json();
-      if (result.success) {
-        navigate('/thank-you', { state: { estimatedQuote: result.total, tier: selectedTier, isEstimate: true } });
+      if (result.ok) {
+        navigate('/thank-you', { state: { estimatedQuote: selectedQuote.perVisit + (selectedQuote.firstTimeUplift || 0), tier: selectedTier, isEstimate: true } });
       } else {
         alert(`Error: ${result.error || 'Failed to submit quote request'}`);
       }
@@ -662,30 +677,37 @@ const ResidentialForm = () => {
         .filter(Boolean)
         .join('\n');
 
-      const response = await fetch(`${apiUrl}/api/quote`, {
+      const response = await fetch(`${apiUrl}/api/submit-estimate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          contact: {
-            firstName: contactData.firstName,
-            lastName: contactData.lastName,
+          customer: {
+            name: `${contactData.firstName} ${contactData.lastName}`.trim() || 'Residential Lead',
             email: contactData.email,
             phone: contactData.phone || undefined,
           },
-          formInput: {
-            propertyType: 'Residential',
-            // Map 'Exterior Only' -> 'exterior', 'Interior + Exterior' -> 'both' or just pass raw string and handle in backend
-            serviceType: residentialInputs.interiorExterior, 
-            frequency: residentialInputs.serviceFrequency,
-            windowCount: residentialInputs.windowCount,
-            screenCount: residentialInputs.screenCount,
-            stories: residentialInputs.stories,
-            additionalServices: [
-              ...contactData.additionalServices,
-              ...(contactData.requestAdvancedCleaning ? ['High Traffic Kiritsu'] : [])
-            ],
-            specialRequests: specialRequests || undefined,
+          property: {
+            address: contactData.propertyAddress || 'Address not provided',
+            type: 'residential',
           },
+          estimate: {
+            line_items: [
+              {
+                label: `${residentialInputs.windowCount} Windows (${residentialInputs.interiorExterior}, ${residentialInputs.stories} Story)`,
+                quantity: residentialInputs.windowCount,
+                total: quote.windowCost,
+              },
+              ...(residentialInputs.screenCount > 0 ? [{
+                label: `${residentialInputs.screenCount} Screens`,
+                quantity: residentialInputs.screenCount,
+                total: quote.screenCost,
+              }] : []),
+            ],
+            subtotal: quote.baseTotal,
+            total: quote.baseTotal,
+          },
+          notes: specialRequests || undefined,
+          timestamp: new Date().toISOString(),
         }),
       });
 
