@@ -67,77 +67,77 @@ export async function sendOwnerEstimateEmail(payload: SubmitEstimateRequest): Pr
   const { customer, property, estimate, notes, timestamp, app_version } = payload;
   const timeString = new Date(timestamp).toLocaleString('en-US', { timeZone: 'America/New_York' });
   const subjectTotal = estimate.total.toFixed(2);
-  const subject = \`New Estimate Request — \${customer.name} — $\${subjectTotal}\`;
+  const subject = `New Estimate Request — ${customer.name} — $${subjectTotal}`;
 
-  const lineItemsHtml = estimate.line_items.map(item => \`
+  const lineItemsHtml = estimate.line_items.map(item => `
     <tr style="border-bottom: 1px solid #edf2f7;">
-      <td style="padding: 8px 10px; color: #2d3748;">\${item.label} \${item.quantity ? \`(x\${item.quantity})\` : ''}</td>
-      <td style="padding: 8px 10px; color: #2d3748; text-align: right;">$\${item.total.toFixed(2)}</td>
+      <td style="padding: 8px 10px; color: #2d3748;">${item.label} ${item.quantity ? `(x${item.quantity})` : ''}</td>
+      <td style="padding: 8px 10px; color: #2d3748; text-align: right;">$${item.total.toFixed(2)}</td>
     </tr>
-  \`).join('');
+  `).join('');
 
   try {
     await resend.emails.send({
       from: process.env.FROM_EMAIL || 'quotes@squeegee-samurai.com',
       to,
       subject,
-      html: \`
+      html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
-          \${getEmailHeader()}
+          ${getEmailHeader()}
           <h3 style="color: #1a202c; text-align: center; margin-top: 0;">New Estimate Request</h3>
           
           <div style="margin-bottom: 24px;">
             <h4 style="color: #4a5568; margin-bottom: 8px; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px;">Customer Info</h4>
-            <p style="margin: 4px 0; color: #2d3748;"><strong>Name:</strong> \${customer.name}</p>
-            <p style="margin: 4px 0; color: #2d3748;"><strong>Email:</strong> <a href="mailto:\${customer.email}" style="color: #e53e3e;">\${customer.email}</a></p>
-            \${customer.phone ? \`<p style="margin: 4px 0; color: #2d3748;"><strong>Phone:</strong> \${customer.phone}</p>\` : ''}
+            <p style="margin: 4px 0; color: #2d3748;"><strong>Name:</strong> ${customer.name}</p>
+            <p style="margin: 4px 0; color: #2d3748;"><strong>Email:</strong> <a href="mailto:${customer.email}" style="color: #e53e3e;">${customer.email}</a></p>
+            ${customer.phone ? `<p style="margin: 4px 0; color: #2d3748;"><strong>Phone:</strong> ${customer.phone}</p>` : ''}
           </div>
 
           <div style="margin-bottom: 24px;">
             <h4 style="color: #4a5568; margin-bottom: 8px; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px;">Property</h4>
-            <p style="margin: 4px 0; color: #2d3748;"><strong>Address:</strong> \${property.address}</p>
-            <p style="margin: 4px 0; color: #2d3748;"><strong>Type:</strong> <span style="text-transform: capitalize;">\${property.type}</span></p>
+            <p style="margin: 4px 0; color: #2d3748;"><strong>Address:</strong> ${property.address}</p>
+            <p style="margin: 4px 0; color: #2d3748;"><strong>Type:</strong> <span style="text-transform: capitalize;">${property.type}</span></p>
           </div>
 
           <div style="margin-bottom: 24px;">
             <h4 style="color: #4a5568; margin-bottom: 8px; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px;">Estimate Breakdown</h4>
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 14px;">
-              \${lineItemsHtml}
+              ${lineItemsHtml}
             </table>
             
             <table style="width: 100%; border-collapse: collapse; font-size: 15px;">
               <tr>
                 <td style="padding: 4px 10px; color: #4a5568; text-align: right; width: 70%;"><strong>Subtotal:</strong></td>
-                <td style="padding: 4px 10px; color: #2d3748; text-align: right;">$\${estimate.subtotal.toFixed(2)}</td>
+                <td style="padding: 4px 10px; color: #2d3748; text-align: right;">$${estimate.subtotal.toFixed(2)}</td>
               </tr>
-              \${estimate.uplift ? \`
+              ${estimate.uplift ? `
               <tr>
                 <td style="padding: 4px 10px; color: #4a5568; text-align: right;"><strong>Uplift/Adjustments:</strong></td>
-                <td style="padding: 4px 10px; color: #2d3748; text-align: right;">$\${estimate.uplift.toFixed(2)}</td>
+                <td style="padding: 4px 10px; color: #2d3748; text-align: right;">$${estimate.uplift.toFixed(2)}</td>
               </tr>
-              \` : ''}
+              ` : ''}
               <tr>
                 <td style="padding: 8px 10px; color: #1a202c; text-align: right; font-size: 18px;"><strong>Total:</strong></td>
-                <td style="padding: 8px 10px; color: #e53e3e; text-align: right; font-size: 18px; font-weight: bold;">$\${estimate.total.toFixed(2)}</td>
+                <td style="padding: 8px 10px; color: #e53e3e; text-align: right; font-size: 18px; font-weight: bold;">$${estimate.total.toFixed(2)}</td>
               </tr>
             </table>
           </div>
 
-          \${notes ? \`
+          ${notes ? `
           <div style="margin-bottom: 24px;">
             <h4 style="color: #4a5568; margin-bottom: 8px; border-bottom: 2px solid #e2e8f0; padding-bottom: 4px;">Notes</h4>
-            <p style="margin: 0; color: #2d3748; background: #f7fafc; padding: 12px; border-left: 4px solid #cbd5e0; white-space: pre-wrap;">\${notes}</p>
+            <p style="margin: 0; color: #2d3748; background: #f7fafc; padding: 12px; border-left: 4px solid #cbd5e0; white-space: pre-wrap;">${notes}</p>
           </div>
-          \` : ''}
+          ` : ''}
 
           <div style="font-size: 12px; color: #a0aec0; text-align: center;">
-            <p>Submitted at: \${timeString}</p>
-            \${app_version ? \`<p>App Version: \${app_version}</p>\` : ''}
+            <p>Submitted at: ${timeString}</p>
+            ${app_version ? `<p>App Version: ${app_version}</p>` : ''}
           </div>
 
-          \${getEmailFooter()}
+          ${getEmailFooter()}
         </div>
-      \`,
+      `,
     });
     console.log('[email] Owner notification sent successfully');
   } catch (error) {
@@ -156,12 +156,12 @@ export async function sendCustomerConfirmationEmail(payload: SubmitEstimateReque
   const greeting = customer.name.split(' ')[0] || 'Hello';
   const subjectTotal = estimate.total.toFixed(2);
 
-  const lineItemsHtml = estimate.line_items.map(item => \`
+  const lineItemsHtml = estimate.line_items.map(item => `
     <tr style="border-bottom: 1px solid #edf2f7;">
-      <td style="padding: 8px 10px; color: #2d3748;">\${item.label} \${item.quantity ? \`(x\${item.quantity})\` : ''}</td>
-      <td style="padding: 8px 10px; color: #2d3748; text-align: right;">$\${item.total.toFixed(2)}</td>
+      <td style="padding: 8px 10px; color: #2d3748;">${item.label} ${item.quantity ? `(x${item.quantity})` : ''}</td>
+      <td style="padding: 8px 10px; color: #2d3748; text-align: right;">$${item.total.toFixed(2)}</td>
     </tr>
-  \`).join('');
+  `).join('');
 
   try {
     await resend.emails.send({
@@ -169,24 +169,24 @@ export async function sendCustomerConfirmationEmail(payload: SubmitEstimateReque
       replyTo: process.env.REPLY_TO_EMAIL || process.env.OWNER_EMAIL,
       to: customer.email,
       subject: 'Your Squeegee Samurai Estimate',
-      html: \`
+      html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
-          \${getEmailHeader()}
+          ${getEmailHeader()}
           
-          <h2 style="color: #1a202c;">Hi \${greeting},</h2>
+          <h2 style="color: #1a202c;">Hi ${greeting},</h2>
           <p style="color: #2d3748; line-height: 1.6; font-size: 16px;">
-            Thank you for requesting an estimate from Squeegee Samurai. We have received your details for <strong>\${property.address}</strong> and computed your pricing below.
+            Thank you for requesting an estimate from Squeegee Samurai. We have received your details for <strong>${property.address}</strong> and computed your pricing below.
           </p>
 
           <div style="margin: 24px 0; background: #f7fafc; padding: 16px; border-radius: 6px; border: 1px solid #edf2f7;">
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 16px; font-size: 15px;">
-              \${lineItemsHtml}
+              ${lineItemsHtml}
             </table>
             
             <table style="width: 100%; border-collapse: collapse; font-size: 15px; border-top: 2px solid #e2e8f0; padding-top: 8px;">
               <tr>
                 <td style="padding: 8px 10px; color: #1a202c; text-align: right; font-size: 18px;"><strong>Estimated Total:</strong></td>
-                <td style="padding: 8px 10px; color: #e53e3e; text-align: right; font-size: 18px; font-weight: bold;">$\${subjectTotal}</td>
+                <td style="padding: 8px 10px; color: #e53e3e; text-align: right; font-size: 18px; font-weight: bold;">$${subjectTotal}</td>
               </tr>
             </table>
           </div>
@@ -199,9 +199,9 @@ export async function sendCustomerConfirmationEmail(payload: SubmitEstimateReque
             We will review your request and reach out shortly to discuss scheduling! If you have any immediate questions, feel free to reply directly to this email or call us.
           </p>
 
-          \${getEmailFooter()}
+          ${getEmailFooter()}
         </div>
-      \`,
+      `,
     });
     console.log('[email] Customer confirmation sent successfully');
   } catch (error) {
@@ -234,23 +234,23 @@ export async function sendContactEmail(data: {
     await resend.emails.send({
       from: process.env.FROM_EMAIL || 'contact@squeegee-samurai.com',
       to,
-      subject: \`New Contact: \${data.subject} - \${data.name}\`,
+      subject: `New Contact: ${data.subject} - ${data.name}`,
       replyTo: data.email,
-      html: \`
+      html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
-          \${getEmailHeader()}
+          ${getEmailHeader()}
           <h3 style="color: #1a202c;">New Contact Message</h3>
-          <p><strong>Name:</strong> \${data.name}</p>
-          <p><strong>Email:</strong> \${data.email}</p>
-          \${data.phone ? \`<p><strong>Phone:</strong> \${data.phone}</p>\` : ''}
-          <p><strong>Subject:</strong> \${data.subject}</p>
+          <p><strong>Name:</strong> ${data.name}</p>
+          <p><strong>Email:</strong> ${data.email}</p>
+          ${data.phone ? `<p><strong>Phone:</strong> ${data.phone}</p>` : ''}
+          <p><strong>Subject:</strong> ${data.subject}</p>
           <div style="margin: 20px 0; padding: 15px; background: #f7fafc; border-left: 4px solid #4299e1;">
             <strong>Message:</strong><br/>
-            <span style="white-space: pre-wrap;">\${data.message}</span>
+            <span style="white-space: pre-wrap;">${data.message}</span>
           </div>
-          \${getEmailFooter()}
+          ${getEmailFooter()}
         </div>
-      \`
+      `
     });
   } catch (e) {
     console.error('[email] Failed to send contact email:', e);
@@ -274,28 +274,28 @@ export async function sendApplicationEmail(data: {
     await resend.emails.send({
       from: process.env.FROM_EMAIL || 'careers@squeegee-samurai.com',
       to,
-      subject: \`New Job Application: \${data.position} - \${data.name}\`,
+      subject: `New Job Application: ${data.position} - ${data.name}`,
       replyTo: data.email,
-      html: \`
+      html: `
          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background: #ffffff; padding: 20px; border: 1px solid #e2e8f0; border-radius: 8px;">
-          \${getEmailHeader()}
+          ${getEmailHeader()}
           <h3 style="color: #1a202c;">New Job Application</h3>
-          <p><strong>Position:</strong> \${data.position}</p>
-          <p><strong>Name:</strong> \${data.name}</p>
-          <p><strong>Email:</strong> \${data.email}</p>
-          <p><strong>Phone:</strong> \${data.phone}</p>
-          <p><strong>Availability:</strong> \${data.availability || 'N/A'}</p>
+          <p><strong>Position:</strong> ${data.position}</p>
+          <p><strong>Name:</strong> ${data.name}</p>
+          <p><strong>Email:</strong> ${data.email}</p>
+          <p><strong>Phone:</strong> ${data.phone}</p>
+          <p><strong>Availability:</strong> ${data.availability || 'N/A'}</p>
           <div style="margin: 20px 0; padding: 15px; background: #f7fafc; border-left: 4px solid #48bb78;">
             <strong>Experience:</strong><br/>
-            <span style="white-space: pre-wrap;">\${data.experience || 'N/A'}</span>
+            <span style="white-space: pre-wrap;">${data.experience || 'N/A'}</span>
           </div>
           <div style="margin: 20px 0; padding: 15px; background: #f7fafc; border-left: 4px solid #4299e1;">
             <strong>Message:</strong><br/>
-            <span style="white-space: pre-wrap;">\${data.message || 'N/A'}</span>
+            <span style="white-space: pre-wrap;">${data.message || 'N/A'}</span>
           </div>
-          \${getEmailFooter()}
+          ${getEmailFooter()}
         </div>
-      \`
+      `
     });
   } catch (e) {
     console.error('[email] Failed application email:', e);
