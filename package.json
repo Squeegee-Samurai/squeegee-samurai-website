@@ -4,9 +4,9 @@
   "description": "squeegee-samurai",
   "private": true,
   "type": "module",
-  "packageManager": "npm@10",
+  "packageManager": "npm@10.0.0",
   "engines": {
-    "node": "20.x"
+    "node": "24.x"
   },
   "scripts": {
     "dev": "vite",
