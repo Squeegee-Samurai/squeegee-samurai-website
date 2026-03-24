@@ -63,7 +63,7 @@ const Home = () => {
         <div
           className="absolute inset-[-20%] bg-cover bg-center will-change-transform"
           style={{
-            backgroundImage: "url('/images/hero-storefront.jpg')",
+            backgroundImage: "url('/images/hero-storefront-playthepar.jpg')",
             transform: `translateY(${heroOffset}px)`,
           }}
         >
