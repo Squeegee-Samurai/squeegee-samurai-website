@@ -61,7 +61,7 @@ const Home = () => {
       <section ref={heroRef} className="relative overflow-hidden bg-sumi-900">
         {/* Parallax background image */}
         <div
-          className="absolute inset-[-20%] bg-cover bg-center will-change-transform"
+          className="absolute inset-[-20%] bg-cover bg-left md:bg-center will-change-transform"
           style={{
             backgroundImage: "url('/images/hero-storefront-playthepar.jpg')",
             transform: `translateY(${heroOffset}px)`,
