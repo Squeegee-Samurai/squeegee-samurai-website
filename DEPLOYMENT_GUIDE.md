@@ -1,45 +1,25 @@
 # Deployment Guide: Squeegee Samurai
 
-Use this guide to connect your new Vercel account, GitHub repo, and external services (Supabase, Resend).
+Use this guide to deploy Squeegee Samurai to Vercel and connect your Resend email service.
 
 ## 1. Prerequisites (Checklist)
 
 Ensure you have the following ready:
 - [ ] **GitHub Repo**: [squeegee-samurai-website](https://github.com/Squeegee-Samurai/squeegee-samurai-website) (pushed with latest code).
 - [ ] **Vercel Account**: [vercel.com](https://vercel.com)
-- [ ] **Supabase Project**: [supabase.com](https://supabase.com) (Database + Storage)
 - [ ] **Resend Account**: [resend.com](https://resend.com) (API Key + Verified Domain)
 
 ---
 
-## 2. Supabase Setup (Database & Storage)
-
-1.  **Create Project**: Create a new project in Supabase.
-2.  **Database Schema**:
-    - Go to **SQL Editor**.
-    - Copy the content of [`api/schema.sql`](https://github.com/Squeegee-Samurai/squeegee-samurai-website/blob/main/api/schema.sql).
-    - Run the SQL to create the `quotes` table.
-3.  **Storage Bucket**:
-    - Go to **Storage**.
-    - Create a new bucket named `quotes`.
-    - **IMPORTANT**: Set "Public" to **OFF** (Private).
-4.  **Get Credentials**:
-    - Go to **Project Settings** -> **API**.
-    - Copy:
-        - `Project URL`
-        - `service_role` secret (used for backend server uploads).
-
----
-
-## 3. Resend Setup (Email)
+## 2. Resend Setup (Email)
 
 1.  **API Key**: Create a new API Key in Resend (e.g., "Squeegee Production").
 2.  **Verify Domain**: Ensure your sending domain (e.g., `squeegee-samurai.com`) is verified in Resend.
-3.  **Note Sender Email**: Decide on the sender email (e.g., `quotes@squeegee-samurai.com`).
+3.  **Sender Email**: Decide on the sender email (e.g., `quotes@squeegee-samurai.com`).
 
 ---
 
-## 4. Vercel Project Setup
+## 3. Vercel Project Setup
 
 1.  **Import Project**:
     - Go to Vercel Dashboard -> **Add New...** -> **Project**.
@@ -47,22 +27,26 @@ Ensure you have the following ready:
 2.  **Framework Preset**: Select **Vite** (it should auto-detect).
 3.  **Root Directory**:
     - **IMPORTANT**: Leave this as `./` (root).
-    - *Note: Vercel might suggest `frontend`, but our `vercel.json` handles the routing for both frontend and api-serverless from the root.*
+    - *Note: Vercel might suggest `frontend`, but our `vercel.json` at the root handles the routing for both the frontend SPA and the api-serverless functions.*
 4.  **Environment Variables**:
-    - Expand "Environment Variables" section.
-    - Add the following (copy from your local `.env` or see list below).
+    - Expand the "Environment Variables" section.
+    - Add the following variables:
 
 ### Required Environment Variables
 
-| Variable | Value Source |
-| :--- | :--- |
-| `VITE_API_URL` | `/` (This forces frontend to use relative path to hit Vercel functions) |
-| `SUPABASE_URL` | Supabase Project Settings -> API -> Project URL |
-| `SUPABASE_SERVICE_ROLE_KEY` | Supabase Project Settings -> API -> `service_role` secret |
-| `SUPABASE_STORAGE_BUCKET` | `quotes` |
-| `RESEND_API_KEY` | Resend Dashboard -> API Keys |
-| `RESEND_FROM_EMAIL` | e.g. `quotes@squeegee-samurai.com` |
-| `NOTIFY_EMAIL` | Owner email (where you want to receive leads) |
+| Variable | Value Source / Example | Purpose |
+| :--- | :--- | :--- |
+| `VITE_API_URL` | `/` | Directs the frontend client to call serverless endpoints relatively |
+| `RESEND_API_KEY` | `re_...` | Resend API Key |
+| `OWNER_EMAIL` | e.g. `owner@squeegeesamurai.com` | Primary recipient of lead estimate notifications |
+
+### Optional Environment Variables
+
+| Variable | Value Source / Example | Purpose |
+| :--- | :--- | :--- |
+| `FROM_EMAIL` | e.g. `quotes@squeegee-samurai.com` | Verified domain sending address in Resend (defaults to `quotes@squeegee-samurai.com`) |
+| `REPLY_TO_EMAIL` | e.g. `owner@squeegeesamurai.com` | Customer reply-to address (defaults to `OWNER_EMAIL`) |
+| `ENABLE_CUSTOMER_CONFIRMATION` | `true` | Set to `true` to send a summary estimate email to the customer |
 
 5.  **Build Settings**:
     - Build Command: `npm run build` (Default)
@@ -72,19 +56,26 @@ Ensure you have the following ready:
 
 ---
 
-## 5. Verification
+## 4. Verification
 
 Once deployed:
 1.  **Visit URL**: Go to your Vercel deployment URL.
-2.  **Test Quote**: Submit a "Free Estimate" request.
-    - Verify you receive an email.
-    - Verify PDF link in email works.
-    - Verify data appears in Supabase `quotes` table.
-3.  **Test Contact**: Submit a contact form.
-    - Verify owner receives notification email.
+2.  **Test Quote (Full Flow)**:
+    - Navigate to the "Free Estimate" page.
+    - Submit a Residential Quote.
+    - Verify you receive a success alert.
+    - Check the owner's email box (`OWNER_EMAIL`) for the lead notification.
+    - If `ENABLE_CUSTOMER_CONFIRMATION` is set to `true`, check the customer's email box for the estimate summary.
+3.  **Test Contact Form**:
+    - Go to "Contact".
+    - Send a test message.
+    - Verify the owner receives the contact email.
+4.  **Job Application**:
+    - Go to "Now Hiring".
+    - Submit a test application.
+    - Verify the owner receives the application details.
 
 ## Troubleshooting
 
-- **404 on API calls?**: Ensure `VITE_API_URL` is set to `/` (or empty) so the frontend calls `/api-serverless/...` relative to the domain.
-- **PDF Upload Failed?**: Check `SUPABASE_SERVICE_ROLE_KEY` (must be `service_role`, not `anon`).
-- **Email Failed?**: Check Resend logs in Resend Dashboard.
+- **404 on API calls?**: Ensure `Root Directory` is set to `./` (root) and not `frontend` in your Vercel settings so Vercel builds the serverless functions in `/api`.
+- **Email not sending?**: Check the "Logs" tab inside your Resend Dashboard for bounces or "API Key invalid" errors.

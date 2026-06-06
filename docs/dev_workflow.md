@@ -45,9 +45,9 @@ Agents must **not reintroduce these systems** unless explicitly instructed.
 
 Frontend
 
-- Next.js
-- React
+- React SPA (Vite)
 - TypeScript
+- Tailwind CSS
 
 Backend
 
@@ -243,19 +243,17 @@ Frontend should implement one of:
 Recommended structure:
 
 ```
-/app
-/components
-/lib
-/lib/email
-/api
-/api/submit-estimate
-/docs
+/frontend/src/components  # Shared UI Components
+/frontend/src/pages       # SPA Page Views
+/lib                      # Serverless shared library code
+/api                      # Vercel Serverless Function entrypoints
+/docs                     # Architecture contract files
 ```
 
-Email logic should live in:
+Email logic lives in:
 
 ```
-/lib/email
+/lib/email.ts
 ```
 
 ---

@@ -4,56 +4,47 @@ Business website and automated quote system for a window cleaning service.
 
 ## Quick Start
 
-### Frontend (React SPA)
-```bash
-cd frontend
-npm install
-npm run dev
-```
-Open http://localhost:5173
+### Local Development (Frontend + API Functions)
+To run the application locally, you can use the Vercel CLI which runs both the Vite frontend and Vercel Serverless Functions:
 
-### API (Express — local dev)
+1. Install dependencies in the root:
+   ```bash
+   npm install
+   ```
+2. Set up your local environment variables in a `.env` file (see the deployment guide for details).
+3. Run the development environment:
+   ```bash
+   npx vercel dev
+   ```
+   This will boot the app on `http://localhost:3000` (or similar).
+
+Alternatively, to run only the frontend client:
 ```bash
-cd api
-npm install
-cp .env.example .env   # configure all variables
 npm run dev
 ```
-API at http://localhost:3000
 
 ## Project Structure
 
 ```
 squeegee-samurai/
-├── frontend/           # React + Vite + Tailwind
-├── api/                # Express API (local dev)
-│   └── src/
-│       ├── pdf/        # PDF template + assets
-│       ├── services/   # PDF generation, email
-│       └── ...
-├── api-serverless/     # Vercel serverless functions (production)
-├── docs/               # Architecture, schema, workflow docs
-├── scripts/            # Utilities (sitemap generation)
-└── vercel.json         # Vercel deployment config
+├── frontend/           # React SPA (Vite + Tailwind CSS)
+├── api/                # Vercel serverless functions (submit-estimate, career, contact)
+├── lib/                # Shared email formatting and utility functions
+├── docs/               # Architecture spec and workflow rules
+├── scripts/            # Build utilities (sitemap generation)
+└── vercel.json         # Vercel deployment routing config
 ```
 
 ## Tech Stack
 
 - **Frontend**: React, TypeScript, Vite, Tailwind CSS
-- **API**: Node.js, TypeScript, Express / Vercel Serverless
-- **Database**: PostgreSQL (Supabase)
-- **PDF**: @react-pdf/renderer
-- **Email**: Resend
-- **Storage**: Supabase Storage
+- **Backend**: Vercel Serverless Functions
+- **Email**: Resend API
 - **Hosting**: Vercel
 
 ## Documentation
 
-See [`docs/`](./docs/) for full documentation:
-- [Architecture](./docs/architecture.md)
-- [Tech Stack](./docs/tech-stack.md)
-- [API Contract](./docs/api-contract.md)
-- [Database Schema](./docs/schema.md)
-- [Development Workflow](./docs/dev_workflow.md)
-- [PDF Implementation](./docs/pdf-implimentation/pdf-implementation-complete.md)
+See [`docs/`](./docs/) for the specifications:
+- [Development Workflow](./docs/dev_workflow.md) — Architectual guidelines and developer workflow constraints.
+- [API Spec](./docs/API_SPEC.md) — Canonical API contract for the estimate submission flow.
 # squeegee-samurai-website
